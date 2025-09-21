@@ -72,9 +72,13 @@ public class SecurityConfig {
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/v3/api-docs.yaml",
-                    "/v3/api-docs.json",
+                    "/v3/api-docs.json", 
                     "/Autenticacion/login",
                     "/usuarios/**",
+                    "/grupos/**",
+                    "/grados/**",
+                    "/materias/**",
+                    "/ciclosescolares/**",
                     "/alumnos/**"
                 ).permitAll()
                 .anyRequest().authenticated()

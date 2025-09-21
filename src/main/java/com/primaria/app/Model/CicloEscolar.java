@@ -1,5 +1,6 @@
 package com.primaria.app.Model;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -12,7 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
-public class Grupo {
+public class CicloEscolar {
 
 	   @Id
 	    @GeneratedValue(generator = "UUID")
@@ -20,13 +21,12 @@ public class Grupo {
 	    @Column(name = "id", updatable = false, nullable = false, length = 36)
 	    private String id;
 
-    private String nombre;
+	   
+	private LocalDate fechaInicio;
+    private LocalDate fechaFin;
     @Enumerated(EnumType.STRING)
-    private Estatus estatus;
-
-    
+    private Estatus estatus; 
     // Getters y Setters
-
     public String getId() {
         return id;
     }
@@ -35,13 +35,22 @@ public class Grupo {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+    
     public Estatus getEstatus() {
         return estatus;
     }

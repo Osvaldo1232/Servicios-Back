@@ -12,41 +12,40 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
-public class Grupo {
-
+public class Grado {
+	
 	   @Id
 	    @GeneratedValue(generator = "UUID")
 	    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	    @Column(name = "id", updatable = false, nullable = false, length = 36)
 	    private String id;
 
-    private String nombre;
-    @Enumerated(EnumType.STRING)
-    private Estatus estatus;
+	 private String nombre;
+	 
+	 @Enumerated(EnumType.STRING)
+	    private Estatus estatus;
+	 
+	  public String getId() {
+	        return id;
+	    }
 
-    
-    // Getters y Setters
+	    public void setId(String id) {
+	        this.id = id;
+	    }
 
-    public String getId() {
-        return id;
-    }
+	    public String getNombre() {
+	        return nombre;
+	    }
+	    
+	    public void setNombre(String nombre) {
+	        this.nombre = nombre;
+	    }
+	    
+	    public Estatus getEstatus() {
+	        return estatus;
+	    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    public Estatus getEstatus() {
-        return estatus;
-    }
-
-    public void setEstatus(Estatus estatus) {
-        this.estatus = estatus;
-    }
+	    public void setEstatus(Estatus estatus) {
+	        this.estatus = estatus;
+	    }
 }

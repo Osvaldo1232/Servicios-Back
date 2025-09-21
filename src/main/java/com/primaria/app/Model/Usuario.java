@@ -1,30 +1,33 @@
 package com.primaria.app.Model;
 
 import jakarta.persistence.*;
-import java.util.UUID;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Usuario {
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, length = 36)
+    private String id;
 
     private String nombre;
     private String email;
     private String password;
+    private String apellidos;
 
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
     // Getters y Setters
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -58,5 +61,13 @@ public abstract class Usuario {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 }

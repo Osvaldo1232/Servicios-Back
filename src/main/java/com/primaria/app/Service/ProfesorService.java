@@ -22,7 +22,7 @@ public class ProfesorService {
         return profesorRepository.findAll();
     }
 
-    public Optional<Profesor> findById(UUID id) {
+    public Optional<Profesor> findById(String id) {
         return profesorRepository.findById(id);
     }
 
@@ -30,7 +30,7 @@ public class ProfesorService {
         return profesorRepository.save(profesor);
     }
 
-    public void deleteById(UUID id) {
+    public void deleteById(String id) {
         profesorRepository.deleteById(id);
     }
 }

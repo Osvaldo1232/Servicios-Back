@@ -19,7 +19,7 @@ public class JwtUtil {
 
     private final long EXPIRATION_TIME = 86400000; // 1 día en ms
 
-    public String generateToken(UUID userId, String rol) {
+    public String generateToken(String userId, String rol) {
         return Jwts.builder()
                 .setSubject(userId.toString())
                 .claim("rol", rol)

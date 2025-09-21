@@ -10,9 +10,11 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Grupo {
+public class Materia {
 
 	   @Id
 	    @GeneratedValue(generator = "UUID")
@@ -22,8 +24,12 @@ public class Grupo {
 
     private String nombre;
     @Enumerated(EnumType.STRING)
-    private Estatus estatus;
+    private Estatus estatus; 
 
+    
+    @ManyToOne
+    @JoinColumn(name = "campo_formativo_id", nullable = false)
+    private CampoFormativo campoFormativo;
     
     // Getters y Setters
 
@@ -35,18 +41,29 @@ public class Grupo {
         this.id = id;
     }
 
+
     public String getNombre() {
         return nombre;
     }
-
+    
+    
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+    
     public Estatus getEstatus() {
         return estatus;
     }
 
     public void setEstatus(Estatus estatus) {
         this.estatus = estatus;
+    }
+    
+    public CampoFormativo getCampoFormativo() {
+        return campoFormativo;
+    }
+
+    public void setCampoFormativo(CampoFormativo campoFormativo) {
+        this.campoFormativo = campoFormativo;
     }
 }

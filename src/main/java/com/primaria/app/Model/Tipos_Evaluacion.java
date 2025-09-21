@@ -10,10 +10,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-
 @Entity
-public class Grupo {
-
+public class Tipos_Evaluacion {
 	   @Id
 	    @GeneratedValue(generator = "UUID")
 	    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -21,9 +19,9 @@ public class Grupo {
 	    private String id;
 
     private String nombre;
+   
     @Enumerated(EnumType.STRING)
-    private Estatus estatus;
-
+    private Estatus estatus; 
     
     // Getters y Setters
 
@@ -35,13 +33,14 @@ public class Grupo {
         this.id = id;
     }
 
+
     public String getNombre() {
         return nombre;
     }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+    
     public Estatus getEstatus() {
         return estatus;
     }

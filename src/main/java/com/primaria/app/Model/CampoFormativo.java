@@ -1,18 +1,12 @@
 package com.primaria.app.Model;
 
-import java.util.UUID;
-
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import java.util.UUID;
 
 @Entity
-public class Grupo {
+public class CampoFormativo {
 
 	   @Id
 	    @GeneratedValue(generator = "UUID")
@@ -21,11 +15,15 @@ public class Grupo {
 	    private String id;
 
     private String nombre;
-    @Enumerated(EnumType.STRING)
-    private Estatus estatus;
 
+    @Enumerated(EnumType.STRING)
+    private Estatus estatus; 
     
-    // Getters y Setters
+    @ManyToOne
+    @JoinColumn(name = "id_grado")
+    private Grado grado;
+
+    // Getters y setters
 
     public String getId() {
         return id;
@@ -42,6 +40,15 @@ public class Grupo {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    public Grado getGrado() {
+        return grado;
+    }
+
+    public void setGrado(Grado grado) {
+        this.grado = grado;
+    }
+    
     public Estatus getEstatus() {
         return estatus;
     }

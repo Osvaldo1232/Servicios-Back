@@ -20,7 +20,7 @@ public class DirectorService {
         return directorRepository.findAll();
     }
 
-    public Optional<Director> findById(UUID id) {
+    public Optional<Director> findById(String id) {
         return directorRepository.findById(id);
     }
 
@@ -28,7 +28,7 @@ public class DirectorService {
         return directorRepository.save(director);
     }
 
-    public void deleteById(UUID id) {
+    public void deleteById(String id) {
         directorRepository.deleteById(id);
     }
 }

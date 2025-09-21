@@ -8,6 +8,11 @@ import com.primaria.app.Service.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +38,13 @@ public class UsuarioController {
         estudiante.setCurp(dto.getCurp());
         estudiante.setRol(Rol.ESTUDIANTE);
         usuarioService.save(estudiante);
-        return ResponseEntity.ok("Estudiante registrado exitosamente");
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Estudiante registrado exitosamente");
+        response.put("id", estudiante.getId());
+
+        return ResponseEntity.ok(response);
+        
+        
     }
 
     @PostMapping("/profesor")
@@ -60,5 +71,12 @@ public class UsuarioController {
         director.setRol(Rol.DIRECTOR);
         usuarioService.save(director);
         return ResponseEntity.ok("Director registrado exitosamente");
+    }
+    
+    @Operation(summary = "Obtener usuario por ID con detalles según el rol")
+    @GetMapping("/BuscarUsuario/{id}")
+    public ResponseEntity<?> obtenerPorId(@PathVariable String id) {
+        Object usuario = usuarioService.buscarUsuarioPorId(id);
+        return ResponseEntity.ok(usuario);
     }
 }
