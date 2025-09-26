@@ -7,9 +7,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import com.primaria.app.DTO.MateriaDTO;
+import com.primaria.app.Model.CampoFormativo;
 import com.primaria.app.Model.Materia;
 
 import com.primaria.app.Service.MateriasService;
+import com.primaria.app.repository.CampoFormativoRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,6 +60,7 @@ public class MateriasController {
 	        Materia grupo = new Materia();
 	        grupo.setNombre(dto.getNombre());
 	       grupo.setEstatus(dto.getEstatus());
+	       
 	        materiasService.save(grupo);
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("message", "Grupo registrado exitosamente");
@@ -67,6 +70,32 @@ public class MateriasController {
 	        
 	        
 	    }
+
+
+	    @Autowired
+	    private CampoFormativoRepository campoFormativoRepository;
+
+	    @PostMapping("/nueva")
+	    @Operation(summary = "Registrar nueva materia")
+	    public ResponseEntity<?> registrarMateria(@RequestBody MateriaDTO dto) {
+	        CampoFormativo campo = campoFormativoRepository.findById(dto.getCampoFormativoId())
+	            .orElseThrow(() -> new RuntimeException("Campo formativo no encontrado"));
+
+	        Materia materia = new Materia();
+	        materia.setNombre(dto.getNombre());
+	        materia.setEstatus(dto.getEstatus());
+	        materia.setCampoFormativo(campo);
+
+	        Materia guardada = materiasService.save(materia);
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("message", "Materia registrada exitosamente");
+	        response.put("id", guardada.getId());
+
+	        return ResponseEntity.ok(response);
+	    }
+
+
 
 	    @Operation(summary = "Actualizar un materia existente")
 	    @PutMapping("Actualizar/{uuid}")

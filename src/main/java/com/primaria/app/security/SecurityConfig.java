@@ -78,8 +78,10 @@ public class SecurityConfig {
                     "/grupos/**",
                     "/grados/**",
                     "/materias/**",
+                    "/campoFormativo/**",
                     "/ciclosescolares/**",
-                    "/alumnos/**"
+                    "/alumnos/**",
+                    "/Trimestres/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

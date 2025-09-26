@@ -7,15 +7,15 @@ public class CampoFormativoDTO {
 
     private UUID id;
     private String nombre;
-    private UUID gradoId;
+
     private Estatus estatus;
     // Constructores
     public CampoFormativoDTO() {}
 
-    public CampoFormativoDTO(UUID id, String nombre, UUID gradoId) {
+    public CampoFormativoDTO(UUID id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.gradoId = gradoId;
+       
     }
 
     // Getters y setters
@@ -36,13 +36,7 @@ public class CampoFormativoDTO {
         this.nombre = nombre;
     }
 
-    public UUID getGradoId() {
-        return gradoId;
-    }
-
-    public void setGradoId(UUID gradoId) {
-        this.gradoId = gradoId;
-    }
+   
 
     public Estatus getEstatus() {
         return estatus;

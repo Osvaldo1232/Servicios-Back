@@ -27,6 +27,7 @@ public class Materia {
     private Estatus estatus; 
 
     
+    
     @ManyToOne
     @JoinColumn(name = "campo_formativo_id", nullable = false)
     private CampoFormativo campoFormativo;
