@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,19 +31,24 @@ public class UsuarioController {
     public ResponseEntity<?> registrarEstudiante(@RequestBody EstudianteDTO dto) {
         Estudiante estudiante = new Estudiante();
         estudiante.setNombre(dto.getNombre());
+        estudiante.setApellidos(dto.getApellidos());
         estudiante.setEmail(dto.getEmail());
         estudiante.setPassword(dto.getPassword());
         estudiante.setMatricula(dto.getMatricula());
         estudiante.setCurp(dto.getCurp());
         estudiante.setRol(Rol.ESTUDIANTE);
+
+        //  Nuevos campos
+        estudiante.setFechaNacimiento(dto.getFechaNacimiento());
+        estudiante.setSexo(dto.getSexo());
+
         usuarioService.save(estudiante);
+
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Estudiante registrado exitosamente");
         response.put("id", estudiante.getId());
 
         return ResponseEntity.ok(response);
-        
-        
     }
 
     @PostMapping("/profesor")
@@ -52,10 +56,15 @@ public class UsuarioController {
     public ResponseEntity<?> registrarProfesor(@RequestBody ProfesorDTO dto) {
         Profesor profesor = new Profesor();
         profesor.setNombre(dto.getNombre());
+        profesor.setApellidos(dto.getApellidos());
         profesor.setEmail(dto.getEmail());
         profesor.setPassword(dto.getPassword());
-       
         profesor.setRol(Rol.PROFESOR);
+
+        //  Nuevos campos
+        profesor.setFechaNacimiento(dto.getFechaNacimiento());
+        profesor.setSexo(dto.getSexo());
+
         usuarioService.save(profesor);
         return ResponseEntity.ok("Profesor registrado exitosamente");
     }
@@ -65,10 +74,16 @@ public class UsuarioController {
     public ResponseEntity<?> registrarDirector(@RequestBody DirectorDTO dto) {
         Director director = new Director();
         director.setNombre(dto.getNombre());
+        director.setApellidos(dto.getApellidos());
         director.setEmail(dto.getEmail());
         director.setPassword(dto.getPassword());
         director.setDepartamento(dto.getDepartamento());
         director.setRol(Rol.DIRECTOR);
+
+        //  Nuevos campos
+        director.setFechaNacimiento(dto.getFechaNacimiento());
+        director.setSexo(dto.getSexo());
+
         usuarioService.save(director);
         return ResponseEntity.ok("Director registrado exitosamente");
     }
