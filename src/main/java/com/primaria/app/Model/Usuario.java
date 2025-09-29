@@ -2,6 +2,7 @@ package com.primaria.app.Model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
+import java.time.LocalDate;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -21,8 +22,15 @@ public abstract class Usuario {
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
-    // Getters y Setters
+    // 🔹 Nuevos campos
+    @Column(name = "fecha_nacimiento", nullable = false)
+    private LocalDate fechaNacimiento;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sexo", nullable = false)
+    private Sexo sexo;
+
+    // Getters y Setters
     public String getId() {
         return id;
     }
@@ -69,5 +77,21 @@ public abstract class Usuario {
 
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
+    }
+
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
     }
 }
