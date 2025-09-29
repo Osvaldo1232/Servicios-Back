@@ -23,11 +23,11 @@ public abstract class Usuario {
     private Rol rol;
 
     // 🔹 Nuevos campos
-    @Column(name = "fecha_nacimiento", nullable = false)
+    @Column(name = "fecha_nacimiento", nullable = true)
     private LocalDate fechaNacimiento;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "sexo", nullable = false)
+    @Column(name = "sexo", nullable = true)
     private Sexo sexo;
 
     // Getters y Setters
