@@ -35,7 +35,7 @@ public class MateriasController {
 	    private MateriasService materiasService;
 
 	    @Operation(summary = "Listar todos las materias")
-	    @GetMapping
+	    @GetMapping("mostrarmaterias")
 	    public ResponseEntity<Page<MateriaDTO>> listarMaterias(
 	            @RequestParam(defaultValue = "0") int page,
 	            @RequestParam(defaultValue = "10") int size,
