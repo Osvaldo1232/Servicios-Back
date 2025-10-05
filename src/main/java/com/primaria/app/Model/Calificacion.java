@@ -3,17 +3,14 @@ package com.primaria.app.Model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.UUID;
-
 @Entity
 public class Calificacion {
 
-	   @Id
-	    @GeneratedValue(generator = "UUID")
-	    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	    @Column(name = "id", updatable = false, nullable = false, length = 36)
-	    private String id;
-
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, length = 36)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "id_actividad")
@@ -23,15 +20,13 @@ public class Calificacion {
     @JoinColumn(name = "id_alumno")
     private Estudiante alumno;
 
-    private Double calificacion;
-
-    
     @ManyToOne
     @JoinColumn(name = "id_ciclo")
     private CicloEscolar ciclo;
-    
-    // Getters y setters
 
+    private Double calificacion;
+
+    // Getters y Setters
     public String getId() {
         return id;
     }
@@ -56,18 +51,19 @@ public class Calificacion {
         this.alumno = alumno;
     }
 
-    public Double getCalificacion() {
-        return calificacion;
-    }
-
-    public void setCalificacion(Double calificacion) {
-        this.calificacion = calificacion;
-    }
     public CicloEscolar getCiclo() {
         return ciclo;
     }
 
     public void setCiclo(CicloEscolar ciclo) {
         this.ciclo = ciclo;
+    }
+
+    public Double getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(Double calificacion) {
+        this.calificacion = calificacion;
     }
 }

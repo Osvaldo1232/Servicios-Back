@@ -18,10 +18,7 @@ public class Actividad {
     @JoinColumn(name = "id_docente")
     private Profesor docente;
 
-    @ManyToOne
-    @JoinColumn(name = "id_alumno")
-    private Estudiante alumno;
-
+   
     @ManyToOne
     @JoinColumn(name = "id_ciclo")
     private CicloEscolar ciclo;
@@ -69,13 +66,6 @@ public class Actividad {
         this.docente = docente;
     }
 
-    public Estudiante getAlumno() {
-        return alumno;
-    }
-
-    public void setAlumno(Estudiante alumno) {
-        this.alumno = alumno;
-    }
 
     public Materia getMateria() {
         return materia;

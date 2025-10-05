@@ -9,10 +9,11 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 public class AsignacionMateriaGrado {
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID id;
+	   @Id
+	    @GeneratedValue(generator = "UUID")
+	    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	    @Column(name = "id", updatable = false, nullable = false, length = 36)
+	    private String id;
 
     @ManyToOne
     @JoinColumn(name = "id_materia")
@@ -24,11 +25,11 @@ public class AsignacionMateriaGrado {
 
     // Getters y Setters
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

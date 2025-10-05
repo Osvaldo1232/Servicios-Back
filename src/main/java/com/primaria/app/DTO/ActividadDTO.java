@@ -1,135 +1,55 @@
 package com.primaria.app.DTO;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class ActividadDTO {
 
-    private UUID id;
+    private String id;
+    private String idDocente;
+  
+    private String idCiclo;
+    private String idMateria;
+    private String idGrado;
+    private String idGrupo;
+    private String idTrimestre;
+    private String idTipoEvaluacion;
 
-    private String docenteId;
-    private String alumnoId;
-    private String materiaId;
-    private String gradoId;
-    private String grupoId;
-    private String trimestreId;
-    private String tipoEvaluacionId;
-    private String cicloId; 
     private String nombre;
     private LocalDate fecha;
     private Double valor;
 
-    // Constructores
-    public ActividadDTO() {}
+    // Getters y Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public ActividadDTO(UUID id, String docenteId, String alumnoId, String materiaId, String gradoId, String grupoId, String trimestreId, String tipoEvaluacionId, String nombre, LocalDate fecha, Double valor) {
-        this.id = id;
-        this.docenteId = docenteId;
-        this.alumnoId = alumnoId;
-        this.materiaId = materiaId;
-        this.gradoId = gradoId;
-        this.grupoId = grupoId;
-        this.trimestreId = trimestreId;
-        this.tipoEvaluacionId = tipoEvaluacionId;
-        this.nombre = nombre;
-        this.fecha = fecha;
-        this.valor = valor;
-    }
+    public String getIdDocente() { return idDocente; }
+    public void setIdDocente(String idDocente) { this.idDocente = idDocente; }
 
-    // Getters y setters
-    public UUID getId() {
-        return id;
-    }
+ 
+    public String getIdCiclo() { return idCiclo; }
+    public void setIdCiclo(String idCiclo) { this.idCiclo = idCiclo; }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    public String getIdMateria() { return idMateria; }
+    public void setIdMateria(String idMateria) { this.idMateria = idMateria; }
 
-    public String getDocenteId() {
-        return docenteId;
-    }
+    public String getIdGrado() { return idGrado; }
+    public void setIdGrado(String idGrado) { this.idGrado = idGrado; }
 
-    public void setDocenteId(String docenteId) {
-        this.docenteId = docenteId;
-    }
+    public String getIdGrupo() { return idGrupo; }
+    public void setIdGrupo(String idGrupo) { this.idGrupo = idGrupo; }
 
-    public String getAlumnoId() {
-        return alumnoId;
-    }
+    public String getIdTrimestre() { return idTrimestre; }
+    public void setIdTrimestre(String idTrimestre) { this.idTrimestre = idTrimestre; }
 
-    public void setAlumnoId(String alumnoId) {
-        this.alumnoId = alumnoId;
-    }
+    public String getIdTipoEvaluacion() { return idTipoEvaluacion; }
+    public void setIdTipoEvaluacion(String idTipoEvaluacion) { this.idTipoEvaluacion = idTipoEvaluacion; }
 
-    public String getMateriaId() {
-        return materiaId;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public void setMateriaId(String materiaId) {
-        this.materiaId = materiaId;
-    }
+    public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 
-    public String getGradoId() {
-        return gradoId;
-    }
-
-    public void setGradoId(String gradoId) {
-        this.gradoId = gradoId;
-    }
-
-    public String getGrupoId() {
-        return grupoId;
-    }
-
-    public void setGrupoId(String grupoId) {
-        this.grupoId = grupoId;
-    }
-
-    public String getTrimestreId() {
-        return trimestreId;
-    }
-
-    public void setTrimestreId(String trimestreId) {
-        this.trimestreId = trimestreId;
-    }
-
-    public String getTipoEvaluacionId() {
-        return tipoEvaluacionId;
-    }
-
-    public void setTipoEvaluacionId(String tipoEvaluacionId) {
-        this.tipoEvaluacionId = tipoEvaluacionId;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public Double getValor() {
-        return valor;
-    }
-
-    public void setValor(Double valor) {
-        this.valor = valor;
-    }
-    public String getCicloId() {
-        return cicloId;
-    }
-
-    public void setCicloId(String cicloId) {
-        this.cicloId = cicloId;
-    }
-    
+    public Double getValor() { return valor; }
+    public void setValor(Double valor) { this.valor = valor; }
 }

@@ -5,51 +5,23 @@ import java.util.UUID;
 import com.primaria.app.Model.Estatus;
 public class AsignacionMateriaGradoDTO {
 
-	   private UUID id;
-	    private UUID materiaId;
-	    private UUID gradoId;
-	    private Estatus estatus;
-	    // Constructores
+    private String idMateria;
+    private String idGrado;
 
-	    public AsignacionMateriaGradoDTO() {}
+    // Getters y Setters
+    public String getIdMateria() {
+        return idMateria;
+    }
 
-	    public AsignacionMateriaGradoDTO(UUID id, UUID materiaId, UUID gradoId) {
-	        this.id = id;
-	        this.materiaId = materiaId;
-	        this.gradoId = gradoId;
-	    }
+    public void setIdMateria(String idMateria) {
+        this.idMateria = idMateria;
+    }
 
-	    // Getters y Setters
+    public String getIdGrado() {
+        return idGrado;
+    }
 
-	    public UUID getId() {
-	        return id;
-	    }
-
-	    public void setId(UUID id) {
-	        this.id = id;
-	    }
-
-	    public UUID getMateriaId() {
-	        return materiaId;
-	    }
-
-	    public void setMateriaId(UUID materiaId) {
-	        this.materiaId = materiaId;
-	    }
-
-	    public UUID getGradoId() {
-	        return gradoId;
-	    }
-
-	    public void setGradoId(UUID gradoId) {
-	        this.gradoId = gradoId;
-	    }
-
-	    public Estatus getEstatus() {
-	        return estatus;
-	    }
-
-	    public void setEstatus(Estatus estatus) {
-	        this.estatus = estatus;
-	    }
+    public void setIdGrado(String idGrado) {
+        this.idGrado = idGrado;
+    }
 }

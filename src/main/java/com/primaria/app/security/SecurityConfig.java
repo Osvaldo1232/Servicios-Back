@@ -81,7 +81,13 @@ public class SecurityConfig {
                     "/campoFormativo/**",
                     "/ciclosescolares/**",
                     "/alumnos/**",
-                    "/Trimestres/**"
+                    "/Trimestres/**",
+                    "/asignacion/**",
+                    "/inscripcion/**",
+                    "/asignacion-docente/**",
+                    "/actividad/**",
+                    "/calificacion/**",
+                    "/actividad-alumno/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

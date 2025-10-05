@@ -1,48 +1,35 @@
 package com.primaria.app.DTO;
 
-import java.util.UUID;
-
 public class CalificacionDTO {
-	private UUID id;
-    private UUID actividadId;
-    private UUID alumnoId;
+
+    private String actividadId;
+    private String alumnoId;
+    private String cicloId;
     private Double calificacion;
-    private String cicloId; 
-    // Constructores
 
-    public CalificacionDTO() {}
-
-    public CalificacionDTO(UUID id, UUID actividadId, UUID alumnoId, Double calificacion) {
-        this.id = id;
-        this.actividadId = actividadId;
-        this.alumnoId = alumnoId;
-        this.calificacion = calificacion;
-    }
-
-    // Getters y setters
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getActividadId() {
+    // Getters y Setters
+    public String getActividadId() {
         return actividadId;
     }
 
-    public void setActividadId(UUID actividadId) {
+    public void setActividadId(String actividadId) {
         this.actividadId = actividadId;
     }
 
-    public UUID getAlumnoId() {
+    public String getAlumnoId() {
         return alumnoId;
     }
 
-    public void setAlumnoId(UUID alumnoId) {
+    public void setAlumnoId(String alumnoId) {
         this.alumnoId = alumnoId;
+    }
+
+    public String getCicloId() {
+        return cicloId;
+    }
+
+    public void setCicloId(String cicloId) {
+        this.cicloId = cicloId;
     }
 
     public Double getCalificacion() {
@@ -51,13 +38,5 @@ public class CalificacionDTO {
 
     public void setCalificacion(Double calificacion) {
         this.calificacion = calificacion;
-    }
-    
-    public String getCicloId() {
-        return cicloId;
-    }
-
-    public void setCicloId(String cicloId) {
-        this.cicloId = cicloId;
     }
 }
