@@ -8,11 +8,11 @@ import org.springframework.data.domain.Sort;
 
 import com.primaria.app.DTO.CampoFormativoDTO;
 import com.primaria.app.DTO.CampoFormativoResumenDTO;
-import com.primaria.app.DTO.MateriaDTO;
+
 import com.primaria.app.Model.CampoFormativo;
-import com.primaria.app.Model.Materia;
+
 import com.primaria.app.Service.CampoFormativoService;
-import com.primaria.app.Service.MateriasService;
+
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

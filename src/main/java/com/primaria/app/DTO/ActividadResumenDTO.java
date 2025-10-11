@@ -1,6 +1,5 @@
 package com.primaria.app.DTO;
 
-
 import java.time.LocalDate;
 
 public class ActividadResumenDTO {
@@ -13,27 +12,21 @@ public class ActividadResumenDTO {
     private String idDocente;
     private String nombreDocente;
 
-
     private String nombreGrado;
-    private String nombreGrupo;
     private String nombreMateria;
-    private String nombreCiclo;
 
     // Constructor
     public ActividadResumenDTO(String idActividad, String nombreActividad, LocalDate fecha, Double valor,
                                String idDocente, String nombreDocente,
-                               String nombreGrado, String nombreGrupo, String nombreMateria, String nombreCiclo) {
+                               String nombreGrado, String nombreMateria) {
         this.idActividad = idActividad;
         this.nombreActividad = nombreActividad;
         this.fecha = fecha;
         this.valor = valor;
         this.idDocente = idDocente;
         this.nombreDocente = nombreDocente;
-        
         this.nombreGrado = nombreGrado;
-        this.nombreGrupo = nombreGrupo;
         this.nombreMateria = nombreMateria;
-        this.nombreCiclo = nombreCiclo;
     }
 
     // Getters y setters
@@ -55,17 +48,9 @@ public class ActividadResumenDTO {
     public String getNombreDocente() { return nombreDocente; }
     public void setNombreDocente(String nombreDocente) { this.nombreDocente = nombreDocente; }
 
-   
-
     public String getNombreGrado() { return nombreGrado; }
     public void setNombreGrado(String nombreGrado) { this.nombreGrado = nombreGrado; }
 
-    public String getNombreGrupo() { return nombreGrupo; }
-    public void setNombreGrupo(String nombreGrupo) { this.nombreGrupo = nombreGrupo; }
-
     public String getNombreMateria() { return nombreMateria; }
     public void setNombreMateria(String nombreMateria) { this.nombreMateria = nombreMateria; }
-
-    public String getNombreCiclo() { return nombreCiclo; }
-    public void setNombreCiclo(String nombreCiclo) { this.nombreCiclo = nombreCiclo; }
 }

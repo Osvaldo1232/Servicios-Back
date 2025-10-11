@@ -4,6 +4,7 @@ public class DirectorDTO extends UsuarioDTO {
 
     private String departamento;
 
+    private String telefono;
     // Getters y Setters
 
     public String getDepartamento() {
@@ -12,5 +13,13 @@ public class DirectorDTO extends UsuarioDTO {
 
     public void setDepartamento(String departamento) {
         this.departamento = departamento;
+    }
+    
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 }

@@ -5,51 +5,86 @@ import java.time.LocalDate;
 public class ActividadDTO {
 
     private String id;
-    private String idDocente;
-  
-    private String idCiclo;
-    private String idMateria;
-    private String idGrado;
-    private String idGrupo;
-    private String idTrimestre;
-    private String idTipoEvaluacion;
-
     private String nombre;
     private LocalDate fecha;
     private Double valor;
 
-    // Getters y Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    // IDs de relaciones
+    private String docenteId;
+    private String asignacionMateriaGradoId;
+    private String trimestreId;
+    private String tipoEvaluacionId;
 
-    public String getIdDocente() { return idDocente; }
-    public void setIdDocente(String idDocente) { this.idDocente = idDocente; }
+    // Constructores
+    public ActividadDTO() {}
 
- 
-    public String getIdCiclo() { return idCiclo; }
-    public void setIdCiclo(String idCiclo) { this.idCiclo = idCiclo; }
+    public ActividadDTO(String id, String nombre, LocalDate fecha, Double valor,
+                        String docenteId, String asignacionMateriaGradoId,
+                        String trimestreId, String tipoEvaluacionId) {
+        this.id = id;
+        this.nombre = nombre;
+        this.fecha = fecha;
+        this.valor = valor;
+        this.docenteId = docenteId;
+        this.asignacionMateriaGradoId = asignacionMateriaGradoId;
+        this.trimestreId = trimestreId;
+        this.tipoEvaluacionId = tipoEvaluacionId;
+    }
 
-    public String getIdMateria() { return idMateria; }
-    public void setIdMateria(String idMateria) { this.idMateria = idMateria; }
+    // GETTERS Y SETTERS
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getIdGrado() { return idGrado; }
-    public void setIdGrado(String idGrado) { this.idGrado = idGrado; }
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public String getIdGrupo() { return idGrupo; }
-    public void setIdGrupo(String idGrupo) { this.idGrupo = idGrupo; }
+    public LocalDate getFecha() {
+        return fecha;
+    }
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
 
-    public String getIdTrimestre() { return idTrimestre; }
-    public void setIdTrimestre(String idTrimestre) { this.idTrimestre = idTrimestre; }
+    public Double getValor() {
+        return valor;
+    }
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
 
-    public String getIdTipoEvaluacion() { return idTipoEvaluacion; }
-    public void setIdTipoEvaluacion(String idTipoEvaluacion) { this.idTipoEvaluacion = idTipoEvaluacion; }
+    public String getDocenteId() {
+        return docenteId;
+    }
+    public void setDocenteId(String docenteId) {
+        this.docenteId = docenteId;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getAsignacionMateriaGradoId() {
+        return asignacionMateriaGradoId;
+    }
+    public void setAsignacionMateriaGradoId(String asignacionMateriaGradoId) {
+        this.asignacionMateriaGradoId = asignacionMateriaGradoId;
+    }
 
-    public LocalDate getFecha() { return fecha; }
-    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
+    public String getTrimestreId() {
+        return trimestreId;
+    }
+    public void setTrimestreId(String trimestreId) {
+        this.trimestreId = trimestreId;
+    }
 
-    public Double getValor() { return valor; }
-    public void setValor(Double valor) { this.valor = valor; }
+    public String getTipoEvaluacionId() {
+        return tipoEvaluacionId;
+    }
+    public void setTipoEvaluacionId(String tipoEvaluacionId) {
+        this.tipoEvaluacionId = tipoEvaluacionId;
+    }
 }

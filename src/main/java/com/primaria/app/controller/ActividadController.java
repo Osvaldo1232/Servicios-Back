@@ -1,7 +1,5 @@
 package com.primaria.app.controller;
 
-
-
 import com.primaria.app.DTO.ActividadDTO;
 import com.primaria.app.DTO.ActividadResumenDTO;
 import com.primaria.app.Model.Actividad;
@@ -26,7 +24,6 @@ public class ActividadController {
     @Autowired
     private ActividadService service;
 
-    // Guardar actividad
     @PostMapping("/guardar")
     @Operation(summary = "Guardar actividad", description = "Crea una nueva actividad")
     @ApiResponses(value = {
@@ -53,9 +50,8 @@ public class ActividadController {
         }
     }
 
-    // Filtrar actividades
     @GetMapping("/filtrar")
-    @Operation(summary = "Filtrar actividades", description = "Filtra actividades por docente, alumno, grado, grupo, materia o ciclo")
+    @Operation(summary = "Filtrar actividades", description = "Filtra actividades por docente, asignación, trimestre o tipo de evaluación")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta exitosa"),
             @ApiResponse(responseCode = "404", description = "No se encontraron actividades"),
@@ -63,14 +59,12 @@ public class ActividadController {
     })
     public ResponseEntity<?> filtrar(
             @RequestParam(required = false) String docenteId,
-            @RequestParam(required = false) String alumnoId,
-            @RequestParam(required = false) String gradoId,
-            @RequestParam(required = false) String grupoId,
-            @RequestParam(required = false) String materiaId,
-            @RequestParam(required = false) String cicloId
+            @RequestParam(required = false) String asignacionId,
+            @RequestParam(required = false) String trimestreId,
+            @RequestParam(required = false) String tipoEvaluacionId
     ) {
         try {
-            List<Actividad> lista = service.filtrarActividades(docenteId, gradoId, grupoId, materiaId, cicloId);
+            List<Actividad> lista = service.filtrarActividades(docenteId, asignacionId, trimestreId, tipoEvaluacionId);
 
             List<ActividadResumenDTO> resumen = lista.stream().map(a -> new ActividadResumenDTO(
                     a.getId(),
@@ -79,12 +73,8 @@ public class ActividadController {
                     a.getValor(),
                     a.getDocente() != null ? a.getDocente().getId() : "",
                     a.getDocente() != null ? a.getDocente().getNombre() + " " + a.getDocente().getApellidos() : "",
-                   
-
-                    a.getGrado() != null ? a.getGrado().getNombre() : "",
-                    a.getGrupo() != null ? a.getGrupo().getNombre() : "",
-                    a.getMateria() != null ? a.getMateria().getNombre() : "",
-                    a.getCiclo() != null ? a.getCiclo().getFechaInicio() + "-" + a.getCiclo().getFechaFin() : ""
+                    a.getAsignacionMateriaGrado() != null ? a.getAsignacionMateriaGrado().getGrado().getNombre() : "",
+                    a.getAsignacionMateriaGrado() != null ? a.getAsignacionMateriaGrado().getMateria().getNombre() : ""
             )).collect(Collectors.toList());
 
             return ResponseEntity.ok(resumen);

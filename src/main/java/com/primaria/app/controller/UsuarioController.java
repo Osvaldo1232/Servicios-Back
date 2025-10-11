@@ -77,6 +77,8 @@ public class UsuarioController {
         director.setApellidos(dto.getApellidos());
         director.setEmail(dto.getEmail());
         director.setPassword(dto.getPassword());
+        director.setTelefono(dto.getTelefono());
+        
         director.setDepartamento(dto.getDepartamento());
         director.setRol(Rol.DIRECTOR);
 

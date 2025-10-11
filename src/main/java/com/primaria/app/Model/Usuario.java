@@ -14,9 +14,14 @@ public abstract class Usuario {
     @Column(name = "id", updatable = false, nullable = false, length = 36)
     private String id;
 
+   
+    @Column(name = "nombre", length = 50, nullable = false)
     private String nombre;
+    
     private String email;
     private String password;
+   
+    @Column(name = "apellidos", length = 50, nullable = false)
     private String apellidos;
 
     @Enumerated(EnumType.STRING)

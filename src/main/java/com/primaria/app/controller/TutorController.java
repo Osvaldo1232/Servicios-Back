@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/Tutor")
-@Tag(name = "CampoFormativo", description = "Operaciones relacionadas con los grupos")
+@Tag(name = "Tutores", description = "Operaciones relacionadas con los grupos")
 public class TutorController {
 
 	 @Autowired
