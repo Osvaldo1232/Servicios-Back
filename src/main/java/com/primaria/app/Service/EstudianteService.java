@@ -66,4 +66,13 @@ public class EstudianteService {
         }
     }
     
+    public void eliminarPorId(String id) {
+        Optional<Estudiante> estudianteOpt = estudianteRepository.findById(id);
+        if (estudianteOpt.isPresent()) {
+            estudianteRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("No se puede eliminar. Estudiante con ID '" + id + "' no encontrado");
+        }
+    }
+    
 }

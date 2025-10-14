@@ -56,6 +56,15 @@ public class AlumnoController {
     	alumnoService.eliminarPorMatricula(matricula);
         return ResponseEntity.ok("Estudiante eliminado correctamente");
     }
-  
+    @DeleteMapping("/id/{id}")
+    @Operation(summary = "Eliminar estudiante por ID")
+    public ResponseEntity<String> eliminarPorId(@PathVariable String id) {
+        try {
+        	alumnoService.eliminarPorId(id);
+            return ResponseEntity.ok("Estudiante con ID '" + id + "' eliminado correctamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
   
 }

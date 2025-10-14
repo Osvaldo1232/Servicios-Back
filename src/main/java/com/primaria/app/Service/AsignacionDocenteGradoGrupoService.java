@@ -71,7 +71,7 @@ public class AsignacionDocenteGradoGrupoService {
         return resultado.stream().map(a -> {
             String nombreProfesor = a.getDocente() != null ? a.getDocente().getNombre() + " " + a.getDocente().getApellidos() : "";
             String rfc = a.getDocente() != null ? a.getDocente().getRfc() : "";
-            String clave = a.getDocente() != null ? a.getDocente().getclave_Pesupuestal() : "";
+            String clave = a.getDocente() != null ? a.getDocente().getClavePresupuestal() : "";
 
             String nombreGrado = a.getGrado() != null ? a.getGrado().getNombre() : "";
             String nombreGrupo = a.getGrupo() != null ? a.getGrupo().getNombre() : "";

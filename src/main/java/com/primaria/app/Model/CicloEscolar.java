@@ -15,11 +15,14 @@ import jakarta.persistence.Id;
 @Entity
 public class CicloEscolar {
 
+	
 	   @Id
 	    @GeneratedValue(generator = "UUID")
 	    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
 	    @Column(name = "id", updatable = false, nullable = false, length = 36)
 	    private String id;
+	   
+	  
 
 	   
 	private LocalDate fechaInicio;

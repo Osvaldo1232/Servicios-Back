@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 public class UsuarioDTO {
 
+	 private String id;
     private String nombre;
     private String apellidos; 
     private String email;
@@ -25,6 +26,15 @@ public class UsuarioDTO {
 
     public String getEmail() {
         return email;
+    }
+
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setEmail(String email) {

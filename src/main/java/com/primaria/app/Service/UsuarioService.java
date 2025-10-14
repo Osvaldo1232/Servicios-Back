@@ -1,6 +1,6 @@
 package com.primaria.app.Service;
 import java.util.Optional;
-import java.util.UUID;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.primaria.app.DTO.EstudianteDTO;
 import com.primaria.app.Model.Director;
 import com.primaria.app.Model.Estudiante;
 import com.primaria.app.Model.Profesor;
@@ -37,6 +36,18 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    public Optional<Usuario> findById(String id) {
+        return usuarioRepository.findById(id);
+    }
+
+    public Usuario update(Usuario usuario, String nuevaPassword) {
+        if (nuevaPassword != null && !nuevaPassword.isBlank()) {
+            usuario.setPassword(passwordEncoder.encode(nuevaPassword));
+        }
+        return usuarioRepository.save(usuario);
+    }
+
+    
     public Optional<Usuario> authenticate(String email, String password) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
 
@@ -71,5 +82,7 @@ public class UsuarioService {
             return usuario;
         }
     }
+    
+  
 
 }

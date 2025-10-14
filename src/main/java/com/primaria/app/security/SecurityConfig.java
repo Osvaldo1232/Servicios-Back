@@ -104,14 +104,20 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(
-                "http://localhost:4200",  // Angular clásico
-                "http://localhost:8100"   // Ionic
-            ));
-        
+
+        // Permitir ambos orígenes: Angular y Ionic
+        config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8100"));
+
+        // Permitir todos los métodos HTTP (GET, POST, PUT, DELETE, OPTIONS)
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Permitir todos los headers
         config.setAllowedHeaders(List.of("*"));
+
+        // Permitir credenciales (cookies, Authorization headers)
         config.setAllowCredentials(true);
+
+        // Duración de cache para preflight
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -119,6 +125,7 @@ public class SecurityConfig {
 
         return source;
     }
+
     
     // AuthenticationManager para poder usarlo en controladores si se necesita
     @Bean

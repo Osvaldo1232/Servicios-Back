@@ -3,19 +3,20 @@ package com.primaria.app.Model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "profesor")
 public class Profesor extends Usuario {
 
     private String especialidad;
-    
     private String telefono;
     private String rfc;
-    private String clave_Pesupuestal;
-    
+    private String clavePresupuestal;
+
     @Enumerated(EnumType.STRING)
-    private Estatus estatus; 
-    
+    private Estatus estatus;
+
     // Getters y Setters
 
     public String getEspecialidad() {
@@ -25,17 +26,7 @@ public class Profesor extends Usuario {
     public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
-    
-    
-    
-    public String getRfc() {
-        return rfc;
-    }
 
-    public void setRfc(String rfc) {
-        this.rfc = rfc;
-    }
-    
     public String getTelefono() {
         return telefono;
     }
@@ -43,14 +34,23 @@ public class Profesor extends Usuario {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
- 
-    public String getclave_Pesupuestal() {
-        return clave_Pesupuestal;
+
+    public String getRfc() {
+        return rfc;
     }
 
-    public void setclave_Pesupuestal(String clave_Pesupuestal) {
-        this.clave_Pesupuestal = clave_Pesupuestal;
+    public void setRfc(String rfc) {
+        this.rfc = rfc;
     }
+
+    public String getClavePresupuestal() {
+        return clavePresupuestal;
+    }
+
+    public void setClavePresupuestal(String clavePresupuestal) {
+        this.clavePresupuestal = clavePresupuestal;
+    }
+
     public Estatus getEstatus() {
         return estatus;
     }

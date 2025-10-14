@@ -1,11 +1,11 @@
 package com.primaria.app.controller;
 
 
-import com.primaria.app.DTO.EstudianteDTO;
+
 import com.primaria.app.DTO.GrupoDTO;
-import com.primaria.app.Model.Estudiante;
+
 import com.primaria.app.Model.Grupo;
-import com.primaria.app.Model.Rol;
+
 import com.primaria.app.Service.GrupoService;
 
 import io.swagger.v3.oas.annotations.Operation;

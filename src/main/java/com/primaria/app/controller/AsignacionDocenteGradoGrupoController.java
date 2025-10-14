@@ -4,7 +4,7 @@ package com.primaria.app.controller;
 
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoDTO;
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoResumenDTO;
-import com.primaria.app.Model.AsignacionDocenteGradoGrupo;
+
 import com.primaria.app.Service.AsignacionDocenteGradoGrupoService;
 
 import io.swagger.v3.oas.annotations.Operation;
