@@ -9,14 +9,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
+import com.primaria.app.DTO.AlumnoInfoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
+import com.primaria.app.DTO.MateriaCalificacionDTO;
 import com.primaria.app.Model.*;
 import com.primaria.app.repository.*;
 
 @Service
 public class InscritoAlumnoService {
 
+	 @Autowired
+	  
+    private AsignacionMateriaGradoRepository asignacionMateriaGradoRepository;
+    
     @Autowired
     private InscritoAlumnoRepository inscritoAlumnoRepository;
 
@@ -99,5 +105,30 @@ public class InscritoAlumnoService {
                     nombreProfesor
             );
         }).collect(Collectors.toList());
+    }
+    
+    
+    public AlumnoInfoDTO obtenerInfoAlumno(String idAlumno) {
+        // 1️⃣ Buscar la última inscripción
+        InscritoAlumno inscripcion = inscritoAlumnoRepository.encontrarUltimaInscripcionPorAlumno(idAlumno);
+        if (inscripcion == null) {
+            throw new RuntimeException("El alumno no tiene inscripciones registradas");
+        }
+
+        // 2️⃣ Obtener las materias del grado del alumno
+        List<AsignacionMateriaGrado> asignaciones = asignacionMateriaGradoRepository.findByGradoId(inscripcion.getGrado().getId());
+
+        // 3️⃣ Mapear materias a DTOs (sin calificación aún)
+        List<MateriaCalificacionDTO> materias = asignaciones.stream()
+                .map(a -> new MateriaCalificacionDTO(a.getMateria().getNombre(), null)) // calificación null por ahora
+                .collect(Collectors.toList());
+
+        // 4️⃣ Retornar el DTO completo
+        return new AlumnoInfoDTO(
+                inscripcion.getCiclo().getId(),
+                inscripcion.getGrado().getNombre(),
+                inscripcion.getGrupo().getNombre(),
+                materias
+        );
     }
 }

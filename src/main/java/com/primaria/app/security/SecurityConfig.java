@@ -84,12 +84,13 @@ public class SecurityConfig {
                     "/asignacion/**",
                     "/inscripcion/**",
                     "/asignacion-docente/**",
-                    "/actividad/**",
+                    
                     "/calificacion/**",
-                    "/actividad-alumno/**",
+                    
                     "/Tutor/**",
-                    "/Tipos_Evaluacion/**",
-                    "/AlumnoTutor/**"
+                   
+                    "/AlumnoTutor/**",
+                    "/Profesores/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

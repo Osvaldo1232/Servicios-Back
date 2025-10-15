@@ -1,22 +1,35 @@
 package com.primaria.app.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.primaria.app.DTO.EstatusDTO;
 import com.primaria.app.DTO.EstudianteDTO;
+import com.primaria.app.DTO.ProfesorDTO;
 import com.primaria.app.Model.Estudiante;
+import com.primaria.app.Model.Profesor;
+import com.primaria.app.Model.Usuario;
 import com.primaria.app.Service.EstudianteService;
+import com.primaria.app.Service.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/alumnos")
@@ -29,6 +42,9 @@ public class AlumnoController {
         this.alumnoService = alumnoService;
     }
 
+    @Autowired
+    private  UsuarioService usuarioService;
+	
     @GetMapping("/usuario/{id}")
     @Operation(summary = "Obtener  Estudiante")
     public ResponseEntity<?> getAlumnoPorUsuarioId(@PathVariable String id) {
@@ -67,4 +83,44 @@ public class AlumnoController {
         }
     }
   
+    
+    @PutMapping("/alumno/{id}")
+    @Operation(summary = "Actualizar alumno")
+    public ResponseEntity<?> actualizarProfesor(@PathVariable String id, @RequestBody EstudianteDTO dto) {
+        Optional<Usuario> optUsuario = usuarioService.findById(id);
+        if (optUsuario.isEmpty() || !(optUsuario.get() instanceof Estudiante)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profesor no encontrado");
+        }
+        Estudiante estudiante = (Estudiante) optUsuario.get();
+
+        estudiante.setNombre(dto.getNombre());
+        estudiante.setApellidos(dto.getApellidos());
+        estudiante.setEmail(dto.getEmail());
+        estudiante.setFechaNacimiento(dto.getFechaNacimiento());
+        estudiante.setSexo(dto.getSexo());
+        estudiante.setCurp(dto.getCurp());
+        estudiante.setMatricula(dto.getMatricula());
+        estudiante.setEstatus(dto.getEstatus());
+        
+        usuarioService.update(estudiante, dto.getPassword());
+
+        return ResponseEntity.ok("Estudiante actualizado exitosamente");
+    }
+    
+    
+    @PatchMapping("/alumno/{id}/estatus")
+	  @Operation(summary = "Actualizar Estatus de Alumno", description = "Actualiza únicamente el estatus de un alumno existente por su ID")
+	  public ResponseEntity<?> actualizarEstatusProfesor(
+	          @PathVariable String id,
+	          @Valid @RequestBody EstatusDTO dto) {
+	      Optional<Usuario> optUsuario = usuarioService.findById(id);
+	      if (optUsuario.isEmpty() || !(optUsuario.get() instanceof Estudiante)) {
+	          return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                  .body(Map.of("error", "Profesor no encontrado"));
+	      }
+	      Estudiante estudiante = (Estudiante) optUsuario.get();
+	      estudiante.setEstatus(dto.getEstatus());
+	      usuarioService.update(estudiante, null);
+	      return ResponseEntity.ok(Map.of("message", "Estatus actualizado exitosamente"));
+	  }
 }

@@ -29,7 +29,7 @@ public class Materia {
     
     
     @ManyToOne
-    @JoinColumn(name = "campo_formativo_id", nullable = false)
+    @JoinColumn(name = "campo_formativo", nullable = false)
     private CampoFormativo campoFormativo;
     
     // Getters y Setters

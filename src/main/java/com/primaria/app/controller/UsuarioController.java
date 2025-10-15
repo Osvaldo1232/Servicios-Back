@@ -103,63 +103,6 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
     
-    @PutMapping("/profesor/{id}")
-    @Operation(summary = "Actualizar Profesor")
-    public ResponseEntity<?> actualizarProfesor(@PathVariable String id, @RequestBody ProfesorDTO dto) {
-        Optional<Usuario> optUsuario = usuarioService.findById(id);
-
-        if (optUsuario.isEmpty() || !(optUsuario.get() instanceof Profesor)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profesor no encontrado");
-        }
-
-        Profesor profesor = (Profesor) optUsuario.get();
-
-        // Actualiza los campos
-        profesor.setNombre(dto.getNombre());
-        profesor.setApellidos(dto.getApellidos());
-        profesor.setEmail(dto.getEmail());
-        profesor.setFechaNacimiento(dto.getFechaNacimiento());
-        profesor.setSexo(dto.getSexo());
-        profesor.setEspecialidad(dto.getEspecialidad());
-        profesor.setEstatus(dto.getEstatus());
-        profesor.setTelefono(dto.getTelefono());
-        profesor.setRfc(dto.getRfc());
-        profesor.setClavePresupuestal(dto.getClavePresupuestal());
-
-        // Si viene una nueva contraseña, la re-encripta
-        usuarioService.update(profesor, dto.getPassword());
-
-        return ResponseEntity.ok("Profesor actualizado exitosamente");
-    }
-    
-
-    @PatchMapping(path = "/profesor/{id}/estatus", consumes = "application/json", produces = "application/json")
-    @Operation(
-        summary = "Actualizar Estatus de Profesor",
-        description = "Actualiza únicamente el estatus de un profesor existente por su ID",
-        tags = { "Profesores" }
-    )
-    public ResponseEntity<?> actualizarEstatusProfesor(@PathVariable String id, @RequestBody Map<String, String> request) {
-        Optional<Usuario> optUsuario = usuarioService.findById(id);
-
-        if (optUsuario.isEmpty() || !(optUsuario.get() instanceof Profesor)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Profesor no encontrado"));
-        }
-
-        Profesor profesor = (Profesor) optUsuario.get();
-
-        // Obtener estatus del JSON
-        String nuevoEstatus = request.get("estatus");
-        if (nuevoEstatus == null || nuevoEstatus.isBlank()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Debe enviar un estatus válido"));
-        }
-
-        profesor.setEstatus(Estatus.valueOf(nuevoEstatus.toUpperCase()));
-
-        usuarioService.update(profesor, null); // null porque no estamos actualizando la contraseña
-
-        return ResponseEntity.ok(Map.of("message", "Estatus actualizado exitosamente"));
-    }
-
+  
 
 }

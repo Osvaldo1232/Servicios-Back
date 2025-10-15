@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.primaria.app.DTO.AsignacionMateriaGradoDTO;
+import com.primaria.app.DTO.DocenteMateriaDTO;
 import com.primaria.app.Model.AsignacionMateriaGrado;
 import com.primaria.app.Service.AsignacionMateriaGradoService;
+import com.primaria.app.repository.DocenteGradoGrupoRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,6 +26,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Asignación de Materia a Grado", description = "Endpoints para administrar las asignaciones de materias a grados escolares")
 public class AsignacionMateriaGradoController {
 
+	
+	@Autowired
+	private DocenteGradoGrupoRepository docenteGradoGrupoRepository;
     @Autowired
     private AsignacionMateriaGradoService asignacionMateriaGradoService;
 
@@ -67,5 +72,29 @@ public class AsignacionMateriaGradoController {
 
         return materias;
     }
+    
+    @GetMapping("/docente/{idDocente}/ciclo/{idCiclo}/materias")
+    @Operation(
+        summary = "Obtener materias asignadas a un docente en un ciclo escolar",
+        description = "Devuelve grado, grupo y nombre de materias del docente filtradas por ciclo escolar"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Listado de materias obtenido correctamente"),
+        @ApiResponse(responseCode = "404", description = "No se encontraron asignaciones para este docente y ciclo"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public List<DocenteMateriaDTO> obtenerMateriasPorDocenteYCiclo(
+            @PathVariable String idDocente,
+            @PathVariable String idCiclo) {
+
+        List<DocenteMateriaDTO> materias = docenteGradoGrupoRepository.obtenerMateriasPorDocenteYCiclo(idDocente, idCiclo);
+
+        if (materias.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontraron materias para este docente en el ciclo indicado");
+        }
+
+        return materias;
+    }
+   
 }
     

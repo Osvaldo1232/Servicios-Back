@@ -22,6 +22,8 @@ public class AsignacionMateriaGrado {
     @ManyToOne
     @JoinColumn(name = "id_grado")
     private Grado grado;
+    
+    
 
     // Getters y Setters
 

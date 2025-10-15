@@ -24,5 +24,16 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
 	            @Param("grupoId") String grupoId,
 	            @Param("cicloId") String cicloId
 	    );
+	  
+	  
+	  
+	  @Query("""
+		        SELECT ia
+		        FROM InscritoAlumno ia
+		        WHERE ia.alumno.id = :idAlumno
+		        ORDER BY ia.ciclo.fechaInicio DESC
+		        LIMIT 1
+		    """)
+		    InscritoAlumno encontrarUltimaInscripcionPorAlumno(@Param("idAlumno") String idAlumno);
 }
 

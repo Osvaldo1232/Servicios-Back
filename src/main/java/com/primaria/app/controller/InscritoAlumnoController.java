@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.primaria.app.DTO.AlumnoInfoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
 import com.primaria.app.Model.InscritoAlumno;
@@ -116,4 +119,22 @@ public class InscritoAlumnoController {
         }
     }
 
+    
+    @Operation(
+            summary = "Obtener información del alumno",
+            description = "Devuelve el ciclo más reciente, grado, grupo y materias asignadas a un alumno específico"
+        )
+        @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Información del alumno obtenida correctamente"),
+            @ApiResponse(responseCode = "404", description = "No se encontró información para el alumno"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        })
+        @GetMapping("/{idAlumno}/info")
+        public AlumnoInfoDTO obtenerInfoAlumno(@PathVariable String idAlumno) {
+            try {
+                return inscritoAlumnoService.obtenerInfoAlumno(idAlumno);
+            } catch (RuntimeException e) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            }
+        }
 }
