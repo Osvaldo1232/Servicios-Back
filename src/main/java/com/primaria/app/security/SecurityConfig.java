@@ -107,7 +107,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Permitir ambos orígenes: Angular y Ionic
-        config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8100", "http://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app"));
+        config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8100", "http://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app", "https://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app"));
 
         // Permitir todos los métodos HTTP (GET, POST, PUT, DELETE, OPTIONS)
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
