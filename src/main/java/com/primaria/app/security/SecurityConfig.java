@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -20,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.primaria.app.Service.UsuarioService;
 
+import io.swagger.v3.oas.models.OpenAPI;
 
 import java.util.List;
 
@@ -106,27 +107,29 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // Permitir ambos orígenes: Angular y Ionic
-        config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8100", "http://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app", "https://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app"));
-
-        // Permitir todos los métodos HTTP (GET, POST, PUT, DELETE, OPTIONS)
+        config.setAllowedOrigins(List.of(
+            "http://localhost:4200",
+            "http://localhost:8100",
+            "https://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-        // Permitir todos los headers
         config.setAllowedHeaders(List.of("*"));
-
-        // Permitir credenciales (cookies, Authorization headers)
         config.setAllowCredentials(true);
-
-        // Duración de cache para preflight
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-
         return source;
     }
 
+    // OpenAPI para Swagger con HTTPS
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .servers(List.of(
+                    new Server().url("https://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app")
+                ));
+    }
     
     // AuthenticationManager para poder usarlo en controladores si se necesita
     @Bean
