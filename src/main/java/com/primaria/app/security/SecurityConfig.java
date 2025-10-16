@@ -107,7 +107,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Permitir ambos orígenes: Angular y Ionic
-        config.setAllowedOrigins(List.of("*"));
+        config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8100", "http://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app"));
 
         // Permitir todos los métodos HTTP (GET, POST, PUT, DELETE, OPTIONS)
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
@@ -116,7 +116,7 @@ public class SecurityConfig {
         config.setAllowedHeaders(List.of("*"));
 
         // Permitir credenciales (cookies, Authorization headers)
-        config.setAllowCredentials(false);
+        config.setAllowCredentials(true);
 
         // Duración de cache para preflight
         config.setMaxAge(3600L);
