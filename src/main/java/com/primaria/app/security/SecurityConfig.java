@@ -110,6 +110,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
             "http://localhost:4200",
             "http://localhost:8100",
+            "http://localhost:8000",
             "https://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
