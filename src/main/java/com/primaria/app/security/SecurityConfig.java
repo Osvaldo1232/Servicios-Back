@@ -87,6 +87,7 @@ public class SecurityConfig {
                     "/asignacion-docente/**",
                     
                     "/calificacion/**",
+                    "/calificaciones/**",
                     
                     "/Tutor/**",
                    
