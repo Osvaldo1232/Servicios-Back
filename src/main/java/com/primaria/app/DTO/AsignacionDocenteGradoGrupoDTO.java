@@ -7,7 +7,8 @@ public class AsignacionDocenteGradoGrupoDTO {
     private String idGrado;
     private String idGrupo;
     private String idCiclo;
-    private String estatus; 
+    private String estatus;
+    private String fechaCreado; // ISO string, por ejemplo "2025-10-25T21:00:00"
 
     // Getters y Setters
     public String getId() { return id; }
@@ -27,4 +28,7 @@ public class AsignacionDocenteGradoGrupoDTO {
 
     public String getEstatus() { return estatus; }
     public void setEstatus(String estatus) { this.estatus = estatus; }
+
+    public String getFechaCreado() { return fechaCreado; }
+    public void setFechaCreado(String fechaCreado) { this.fechaCreado = fechaCreado; }
 }

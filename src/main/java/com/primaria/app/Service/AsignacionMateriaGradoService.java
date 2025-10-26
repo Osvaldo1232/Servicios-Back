@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.primaria.app.DTO.AsignacionMateriaGradoDTO;
+import com.primaria.app.DTO.AsignacionMateriaGradoResumeDTO;
 import com.primaria.app.Model.AsignacionMateriaGrado;
 import com.primaria.app.Model.Grado;
 import com.primaria.app.Model.Materia;
@@ -53,5 +54,25 @@ public class AsignacionMateriaGradoService {
             "idMateria", a.getMateria().getId(),
             "nombreMateria", a.getMateria().getNombre()
         )).collect(Collectors.toList());
+    }
+    
+    public List<AsignacionMateriaGradoResumeDTO> listarAsignacionesPorGrado(String idGrado) {
+        return asignacionMateriaGradoRepository.findAll().stream()
+                .filter(a -> a.getGrado() != null && a.getGrado().getId().equals(idGrado))
+                .map(a -> {
+                    String idMateria = a.getMateria() != null ? a.getMateria().getId() : "";
+                    String nombreMateria = a.getMateria() != null ? a.getMateria().getNombre() : "";
+
+                    String idCampoFormativo = (a.getMateria() != null && a.getMateria().getCampoFormativo() != null) 
+                                              ? a.getMateria().getCampoFormativo().getId() : "";
+                    String nombreCampoFormativo = (a.getMateria() != null && a.getMateria().getCampoFormativo() != null) 
+                                                  ? a.getMateria().getCampoFormativo().getNombre() : "";
+
+                    return new AsignacionMateriaGradoResumeDTO(
+                            idGrado, a.getGrado().getNombre(),
+                            idMateria, nombreMateria,
+                            idCampoFormativo, nombreCampoFormativo
+                    );
+                }).toList();
     }
 }

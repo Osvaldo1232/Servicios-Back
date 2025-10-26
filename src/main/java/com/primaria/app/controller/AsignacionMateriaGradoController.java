@@ -6,10 +6,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.primaria.app.DTO.AsignacionMateriaGradoDTO;
+import com.primaria.app.DTO.AsignacionMateriaGradoResumeDTO;
 import com.primaria.app.DTO.DocenteMateriaDTO;
 import com.primaria.app.Model.AsignacionMateriaGrado;
 import com.primaria.app.Service.AsignacionMateriaGradoService;
@@ -95,6 +97,26 @@ public class AsignacionMateriaGradoController {
 
         return materias;
     }
-   
+    @GetMapping("/listar-por-grado")
+    @Operation(summary = "Lista de materias y campos formativos por grado")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Consulta exitosa"),
+        @ApiResponse(responseCode = "404", description = "No se encontraron asignaciones"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<?> listarPorGrado(@RequestParam String idGrado) {
+        try {
+            List<AsignacionMateriaGradoResumeDTO> resultado = asignacionMateriaGradoService.listarAsignacionesPorGrado(idGrado);
+            if (resultado.isEmpty()) {
+                return ResponseEntity.ok(List.of()); // respuesta vacía válida
+            }
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of(
+                "mensaje", "Error interno del servidor",
+                "detalle", e.getMessage()
+            ));
+        }
+    }
 }
     

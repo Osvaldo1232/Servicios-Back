@@ -1,9 +1,10 @@
 package com.primaria.app.Model;
 
-
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "asignacion_docente_grado_grupo")
@@ -34,6 +35,11 @@ public class AsignacionDocenteGradoGrupo {
     @Enumerated(EnumType.STRING)
     private Estatus estatus;
 
+    // Fecha de creación (se llena automáticamente con Hibernate)
+    @CreationTimestamp
+    @Column(name = "fecha_creado", updatable = false)
+    private LocalDateTime fechaCreado;
+
     // Getters y Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -52,4 +58,7 @@ public class AsignacionDocenteGradoGrupo {
 
     public Estatus getEstatus() { return estatus; }
     public void setEstatus(Estatus estatus) { this.estatus = estatus; }
+
+    public LocalDateTime getFechaCreado() { return fechaCreado; }
+    public void setFechaCreado(LocalDateTime fechaCreado) { this.fechaCreado = fechaCreado; }
 }

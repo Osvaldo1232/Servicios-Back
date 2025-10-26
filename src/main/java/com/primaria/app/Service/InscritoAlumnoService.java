@@ -1,6 +1,7 @@
 package com.primaria.app.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,37 +42,40 @@ public class InscritoAlumnoService {
     @Autowired
     private CicloEscolaresRepository cicloRepository;
 
-    public InscritoAlumno guardarInscripcion(InscritoAlumnoDTO dto) {
-        // Buscar entidades relacionadas por ID
-        Estudiante alumno = estudianteRepository.findById(dto.getAlumnoId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alumno no encontrado"));
+   public InscritoAlumno guardarInscripcion(InscritoAlumnoDTO dto) {
+    // Buscar entidades relacionadas por ID
+    Estudiante alumno = estudianteRepository.findById(dto.getAlumnoId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alumno no encontrado"));
 
-        Profesor docente = profesorRepository.findById(dto.getDocenteId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Docente no encontrado"));
+    Profesor docente = profesorRepository.findById(dto.getDocenteId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Docente no encontrado"));
 
-        Grado grado = gradoRepository.findById(dto.getGradoId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grado no encontrado"));
+    Grado grado = gradoRepository.findById(dto.getGradoId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grado no encontrado"));
 
-        Grupo grupo = grupoRepository.findById(dto.getGrupoId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grupo no encontrado"));
+    Grupo grupo = grupoRepository.findById(dto.getGrupoId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grupo no encontrado"));
 
-        CicloEscolar ciclo = cicloRepository.findById(dto.getCicloId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ciclo escolar no encontrado"));
+    CicloEscolar ciclo = cicloRepository.findById(dto.getCicloId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ciclo escolar no encontrado"));
 
-        // Crear la inscripción
-        InscritoAlumno inscripcion = new InscritoAlumno();
-        inscripcion.setAlumno(alumno);
-        inscripcion.setDocente(docente);
-        inscripcion.setGrado(grado);
-        inscripcion.setGrupo(grupo);
-        inscripcion.setCiclo(ciclo);
-        inscripcion.setFechaInscripcion(dto.getFechaInscripcion() != null ? dto.getFechaInscripcion() : LocalDate.now());
-        inscripcion.setEstatus(dto.getEstatus());
-
-        // Guardar y devolver
-        return inscritoAlumnoRepository.save(inscripcion);
-    }
+    // Crear la inscripción
+    InscritoAlumno inscripcion = new InscritoAlumno();
+    inscripcion.setAlumno(alumno);
+    inscripcion.setDocente(docente);
+    inscripcion.setGrado(grado);
+    inscripcion.setGrupo(grupo);
+    inscripcion.setCiclo(ciclo);
     
+    inscripcion.setFechaInscripcion(dto.getFechaInscripcion() != null ? dto.getFechaInscripcion() : LocalDateTime.now());
+
+
+    inscripcion.setEstatus(dto.getEstatus());
+
+    // Guardar y devolver
+    return inscritoAlumnoRepository.save(inscripcion);
+}
+
     
     public List<InscritoAlumnoDetalleDTO> filtrarInscripciones(String gradoId, String grupoId, String cicloId) {
 

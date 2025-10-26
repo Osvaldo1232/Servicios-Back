@@ -1,10 +1,8 @@
 package com.primaria.app.controller;
 
-
-
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoDTO;
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoResumenDTO;
-
+import com.primaria.app.DTO.AsignacionGradoGrupoCicloDTO;
 import com.primaria.app.Service.AsignacionDocenteGradoGrupoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,10 +70,29 @@ public class AsignacionDocenteGradoGrupoController {
             List<AsignacionDocenteGradoGrupoResumenDTO> resultado = service.filtrarAsignacionesResumen(docenteId, gradoId, grupoId, cicloId);
             return ResponseEntity.ok(resultado);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.status(404).body(Map.of("mensaje", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno del servidor: " + e.getMessage());
+            return ResponseEntity.status(500).body(Map.of("mensaje", "Error interno del servidor", "detalle", e.getMessage()));
         }
     }
+    
+    
+    @GetMapping("/resumen-profesor/reciente")
+    @Operation(summary = "Grado, Grupo y Ciclo de la asignación más reciente de un profesor")
+    public ResponseEntity<?> obtenerMasRecientePorProfesor(@RequestParam String idProfesor) {
+        try {
+            AsignacionGradoGrupoCicloDTO resultado = service.obtenerMasRecientePorProfesor(idProfesor);
+            if (resultado == null) {
+                return ResponseEntity.status(404).body(Map.of("mensaje", "No se encontraron asignaciones para el profesor"));
+            }
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of(
+                "mensaje", "Error interno del servidor",
+                "detalle", e.getMessage()
+            ));
+        }
+    }
+
 
 }

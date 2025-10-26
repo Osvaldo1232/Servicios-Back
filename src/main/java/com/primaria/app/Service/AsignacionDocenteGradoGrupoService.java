@@ -1,8 +1,8 @@
 package com.primaria.app.Service;
 
-
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoDTO;
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoResumenDTO;
+import com.primaria.app.DTO.AsignacionGradoGrupoCicloDTO;
 import com.primaria.app.Model.AsignacionDocenteGradoGrupo;
 
 import com.primaria.app.Model.Grado;
@@ -19,6 +19,8 @@ import com.primaria.app.repository.ProfesorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -39,6 +41,8 @@ public class AsignacionDocenteGradoGrupoService {
     @Autowired
     private CicloEscolaresRepository cicloRepository;
 
+    private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
     public String guardarAsignacion(AsignacionDocenteGradoGrupoDTO dto) {
         Profesor docente = docenteRepository.findById(dto.getIdDocente()).orElse(null);
         Grado grado = gradoRepository.findById(dto.getIdGrado()).orElse(null);
@@ -56,6 +60,7 @@ public class AsignacionDocenteGradoGrupoService {
         asignacion.setCiclo(ciclo);
         asignacion.setEstatus(Estatus.ACTIVO);
 
+        // No seteamos fechaCreado: @CreationTimestamp se encargará de eso
         AsignacionDocenteGradoGrupo saved = repository.save(asignacion);
         return saved.getId(); // Solo regresamos el ID
     }
@@ -77,6 +82,10 @@ public class AsignacionDocenteGradoGrupoService {
             String nombreGrupo = a.getGrupo() != null ? a.getGrupo().getNombre() : "";
             String nombreCiclo = a.getCiclo() != null ? a.getCiclo().getFechaInicio() + "-" + a.getCiclo().getFechaFin() : "";
 
+            String fechaCreadoIso = a.getFechaCreado() != null ? a.getFechaCreado().format(ISO_FORMATTER) : "";
+
+            // AsignacionDocenteGradoGrupoResumenDTO debe tener un campo para fecha si quieres retornarlo.
+            // Aquí supongo su constructor actual (ajusta si tu DTO es distinto).
             return new AsignacionDocenteGradoGrupoResumenDTO(
                     a.getDocente() != null ? a.getDocente().getId() : "",
                     nombreProfesor,
@@ -84,9 +93,43 @@ public class AsignacionDocenteGradoGrupoService {
                     clave,
                     nombreGrado,
                     nombreGrupo,
-                    nombreCiclo
+                    nombreCiclo,
+                    fechaCreadoIso // si tu DTO no tiene este parámetro, elimina o adapta
             );
         }).toList();
+    }
+
+    
+    public AsignacionGradoGrupoCicloDTO obtenerMasRecientePorProfesor(String idProfesor) {
+        // Filtrar solo asignaciones del profesor dado
+        List<AsignacionDocenteGradoGrupo> asignaciones = repository.findAll().stream()
+                .filter(a -> a.getDocente() != null && a.getDocente().getId().equals(idProfesor))
+                .toList();
+
+        if (asignaciones.isEmpty()) {
+            return null; // o lanza excepción si prefieres
+        }
+
+        // Tomar la más reciente según fechaCreado
+        AsignacionDocenteGradoGrupo masReciente = asignaciones.stream()
+                .max(Comparator.comparing(AsignacionDocenteGradoGrupo::getFechaCreado))
+                .orElseThrow();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        String cicloFormateado = "";
+        if (masReciente.getCiclo() != null) {
+            cicloFormateado = masReciente.getCiclo().getFechaInicio().format(formatter)
+                             + "-" + masReciente.getCiclo().getFechaFin().format(formatter);
+        }
+
+        return new AsignacionGradoGrupoCicloDTO(
+                masReciente.getGrado() != null ? masReciente.getGrado().getId() : "",
+                masReciente.getGrado() != null ? masReciente.getGrado().getNombre() : "",
+                masReciente.getGrupo() != null ? masReciente.getGrupo().getId() : "",
+                masReciente.getGrupo() != null ? masReciente.getGrupo().getNombre() : "",
+                masReciente.getCiclo() != null ? masReciente.getCiclo().getId() : "",
+                cicloFormateado
+        );
     }
 
 }

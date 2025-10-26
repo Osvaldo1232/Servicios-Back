@@ -1,6 +1,6 @@
 package com.primaria.app.DTO;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import com.primaria.app.Model.Estatus;
 
 public class InscritoAlumnoDTO {
@@ -12,7 +12,7 @@ public class InscritoAlumnoDTO {
     private String grupoId;
     private String cicloId;
     private Estatus estatus;
-    private LocalDate fechaInscripcion;
+    private LocalDateTime fechaInscripcion;
 
     // Constructors
     public InscritoAlumnoDTO() {}
@@ -27,67 +27,27 @@ public class InscritoAlumnoDTO {
     }
 
     // Getters y Setters
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getAlumnoId() { return alumnoId; }
+    public void setAlumnoId(String alumnoId) { this.alumnoId = alumnoId; }
 
-    public String getAlumnoId() {
-        return alumnoId;
-    }
+    public String getDocenteId() { return docenteId; }
+    public void setDocenteId(String docenteId) { this.docenteId = docenteId; }
 
-    public void setAlumnoId(String alumnoId) {
-        this.alumnoId = alumnoId;
-    }
+    public String getGradoId() { return gradoId; }
+    public void setGradoId(String gradoId) { this.gradoId = gradoId; }
 
-    public String getDocenteId() {
-        return docenteId;
-    }
+    public String getGrupoId() { return grupoId; }
+    public void setGrupoId(String grupoId) { this.grupoId = grupoId; }
 
-    public void setDocenteId(String docenteId) {
-        this.docenteId = docenteId;
-    }
+    public String getCicloId() { return cicloId; }
+    public void setCicloId(String cicloId) { this.cicloId = cicloId; }
 
-    public String getGradoId() {
-        return gradoId;
-    }
+    public Estatus getEstatus() { return estatus; }
+    public void setEstatus(Estatus estatus) { this.estatus = estatus; }
 
-    public void setGradoId(String gradoId) {
-        this.gradoId = gradoId;
-    }
-
-    public String getGrupoId() {
-        return grupoId;
-    }
-
-    public void setGrupoId(String grupoId) {
-        this.grupoId = grupoId;
-    }
-
-    public String getCicloId() {
-        return cicloId;
-    }
-
-    public void setCicloId(String cicloId) {
-        this.cicloId = cicloId;
-    }
-
-    public Estatus getEstatus() {
-        return estatus;
-    }
-
-    public void setEstatus(Estatus estatus) {
-        this.estatus = estatus;
-    }
-
-    public LocalDate getFechaInscripcion() {
-        return fechaInscripcion;
-    }
-
-    public void setFechaInscripcion(LocalDate fechaInscripcion) {
-        this.fechaInscripcion = fechaInscripcion;
-    }
+    public LocalDateTime getFechaInscripcion() { return fechaInscripcion; }
+    public void setFechaInscripcion(LocalDateTime fechaInscripcion) { this.fechaInscripcion = fechaInscripcion; }
 }
