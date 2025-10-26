@@ -1,6 +1,7 @@
 package com.primaria.app.Service;
-import java.util.Optional;
 
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,8 +17,7 @@ import com.primaria.app.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
-
-	
+    
     public final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -46,14 +46,11 @@ public class UsuarioService {
         }
         return usuarioRepository.save(usuario);
     }
-
     
     public Optional<Usuario> authenticate(String email, String password) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
-
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
-
             // Compara contraseña hasheada
             if (passwordEncoder.matches(password, usuario.getPassword())) {
                 return Optional.of(usuario);
@@ -66,12 +63,14 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
     
-    
+    // ⬇️ AGREGAR ESTE MÉTODO
+    public List<Usuario> findAll() {
+        return usuarioRepository.findAll();
+    }
     
     public Object buscarUsuarioPorId(String id) {
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
-
         if (usuario instanceof Estudiante) {
             return (Estudiante) usuario;
         } else if (usuario instanceof Profesor) {
@@ -82,7 +81,4 @@ public class UsuarioService {
             return usuario;
         }
     }
-    
-  
-
 }
