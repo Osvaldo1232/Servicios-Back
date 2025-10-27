@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import com.primaria.app.DTO.AlumnoInfoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
+import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
 import com.primaria.app.DTO.MateriaCalificacionDTO;
 import com.primaria.app.Model.*;
 import com.primaria.app.repository.*;
@@ -133,6 +134,45 @@ public class InscritoAlumnoService {
                 inscripcion.getGrado().getNombre(),
                 inscripcion.getGrupo().getNombre(),
                 materias
+        );
+    }
+    
+    public InscritoAlumnoRecienteDTO obtenerUltimoPorAlumno(String alumnoId) {
+        InscritoAlumno inscrito = inscritoAlumnoRepository.findTopByAlumno_IdOrderByFechaInscripcionDesc(alumnoId);
+
+        if (inscrito == null) return null;
+
+        // Formato del ciclo escolar
+        String cicloFormateado = null;
+        if (inscrito.getCiclo() != null &&
+            inscrito.getCiclo().getFechaInicio() != null &&
+            inscrito.getCiclo().getFechaFin() != null) {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            cicloFormateado = inscrito.getCiclo().getFechaInicio().format(fmt)
+                    + "/" + inscrito.getCiclo().getFechaFin().format(fmt);
+        }
+
+        // Datos del profesor
+        String nombreProfesorCompleto = null;
+        String telefonoProfesor = null;
+        if (inscrito.getDocente() != null) {
+            var docente = inscrito.getDocente();
+            nombreProfesorCompleto = docente.getNombre() +
+                    (docente.getApellidos() != null ? " " + docente.getApellidos() : "");
+            telefonoProfesor = docente.getTelefono();
+        }
+
+        // Construimos el DTO
+        return new InscritoAlumnoRecienteDTO(
+                inscrito.getId(),
+                inscrito.getGrado() != null ? inscrito.getGrado().getId() : null,
+                inscrito.getGrado() != null ? inscrito.getGrado().getNombre() : null,
+                inscrito.getGrupo() != null ? inscrito.getGrupo().getId() : null,
+                inscrito.getGrupo() != null ? inscrito.getGrupo().getNombre() : null,
+                inscrito.getCiclo() != null ? inscrito.getCiclo().getId() : null,
+                cicloFormateado,
+                nombreProfesorCompleto,
+                telefonoProfesor
         );
     }
 }

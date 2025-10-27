@@ -5,6 +5,7 @@ import com.primaria.app.DTO.MensajeDTO;
 import com.primaria.app.Model.Calificacion_final;
 import com.primaria.app.Service.CalificacionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.primaria.app.DTO.AlumnoCalificacionesDTO;
 import com.primaria.app.DTO.FiltroCalificacionesDTO;
+import com.primaria.app.DTO.MateriaTrimestresDTO;
 
 @RestController
 @RequestMapping("/calificaciones")
@@ -30,9 +32,15 @@ public class CalificacionController {
     @PostMapping("/asignar")
     @Operation(summary = "Asignar calificación", description = "Asigna una calificación a un alumno en una materia y trimestre específico")
     public ResponseEntity<MensajeDTO> asignarCalificacion(@Valid @RequestBody CalificacionFinalDTO dto) {
-        calificacionService.asignarCalificacion(dto); // Solo guardamos
-        return ResponseEntity.ok(new MensajeDTO("Registro exitoso"));
+        try {
+            calificacionService.asignarCalificacion(dto);
+            return ResponseEntity.ok(new MensajeDTO("Registro exitoso"));
+        } catch (RuntimeException e) {
+            // Aquí devolvemos el mensaje del error
+            return ResponseEntity.badRequest().body(new MensajeDTO(e.getMessage()));
+        }
     }
+
 
 
     @Operation(summary = "Obtener calificación por ID", description = "Obtiene una calificación por su ID")
@@ -51,5 +59,19 @@ public class CalificacionController {
     public ResponseEntity<List<AlumnoCalificacionesDTO>> listarPorGrupo(@RequestBody FiltroCalificacionesDTO filtro) {
         List<AlumnoCalificacionesDTO> lista = calificacionService.listarCalificacionesPorGrupo(filtro);
         return ResponseEntity.ok(lista);
+    }
+    
+    @GetMapping("/alumno/{alumnoId}/ciclo/{cicloId}")
+    @Operation(
+        summary = "Obtener calificaciones por alumno y ciclo",
+        description = "Devuelve las calificaciones agrupadas por materia y ordenadas por trimestre"
+    )
+    public List<MateriaTrimestresDTO> obtenerCalificaciones(
+            @Parameter(description = "ID del alumno", example = "bf10a76b-985c-4eab-a123-xxxxxxxx")
+            @PathVariable String alumnoId,
+            @Parameter(description = "ID del ciclo", example = "ciclo2025")
+            @PathVariable String cicloId) {
+
+        return calificacionService.obtenerCalificacionesPorAlumnoYCiclo(alumnoId, cicloId);
     }
 }

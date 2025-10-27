@@ -4,6 +4,8 @@ package com.primaria.app.Service;
 
 import com.primaria.app.DTO.CalificacionFinalDTO;
 import com.primaria.app.DTO.FiltroCalificacionesDTO;
+import com.primaria.app.DTO.MateriaCalificacionResDTO;
+import com.primaria.app.DTO.MateriaTrimestresDTO;
 import com.primaria.app.Model.Calificacion_final;
 import com.primaria.app.Model.CicloEscolar;
 import com.primaria.app.Model.Estudiante;
@@ -20,10 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CalificacionService {
@@ -114,5 +118,67 @@ public class CalificacionService {
         return new ArrayList<>(mapAlumnos.values());
     }
 
+    public List<MateriaCalificacionResDTO> obtenerCalificacionesPorAlumnoYciclo(String alumnoId, String cicloId) {
+        List<Calificacion_final> calificaciones = calificacionRepo.findByAlumno_IdAndCiclo_Id(alumnoId, cicloId);
 
+        // Agrupar por materia
+        Map<String, List<Calificacion_final>> porMateria = calificaciones.stream()
+                .collect(Collectors.groupingBy(c -> c.getMateria().getId()));
+
+        List<MateriaCalificacionResDTO> resultado = new ArrayList<>();
+
+        for (List<Calificacion_final> calList : porMateria.values()) {
+            // Tomamos información de la primera calificación de la materia
+            Calificacion_final ejemplo = calList.get(0);
+            String nombreMateria = ejemplo.getMateria().getNombre();
+            String nombreCampoFormativo = ejemplo.getMateria().getCampoFormativo() != null ? ejemplo.getMateria().getCampoFormativo().getNombre() : "";
+           
+
+            // Promedio de los trimestres
+            double suma = calList.stream().mapToDouble(Calificacion_final::getPromedio).sum();
+            double promedio = suma / calList.size();
+
+            resultado.add(new MateriaCalificacionResDTO(
+                    nombreMateria,
+                    nombreCampoFormativo,
+                   
+                    promedio
+            ));
+        }
+
+        return resultado;
+    }
+
+    public List<MateriaTrimestresDTO> obtenerCalificacionesPorAlumnoYCiclo(String alumnoId, String cicloId) {
+        List<Calificacion_final> calificaciones = calificacionRepo.findByAlumno_IdAndCiclo_Id(alumnoId, cicloId);
+
+        // Agrupar por materia
+        Map<String, List<Calificacion_final>> porMateria = calificaciones.stream()
+                .collect(Collectors.groupingBy(c -> c.getMateria().getId()));
+
+        List<MateriaTrimestresDTO> resultado = new ArrayList<>();
+
+        for (List<Calificacion_final> listaMateria : porMateria.values()) {
+            Calificacion_final ejemplo = listaMateria.get(0);
+
+            String nombreAlumno = ejemplo.getAlumno().getNombre();
+           
+            String nombreMateria = ejemplo.getMateria().getNombre();
+
+            MateriaTrimestresDTO dto = new MateriaTrimestresDTO(nombreAlumno, nombreMateria);
+
+            // Ordenar por nombre de trimestre (Primer, Segundo, Tercer…)
+            listaMateria.sort(Comparator.comparing(c -> c.getTrimestre().getNombre()));
+
+            int contador = 1;
+            for (Calificacion_final c : listaMateria) {
+                dto.agregarCalificacion("calificacionTrimestral" + contador, c.getPromedio());
+                contador++;
+            }
+
+            resultado.add(dto);
+        }
+
+        return resultado;
+    }
 }

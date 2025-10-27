@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
 import com.primaria.app.Model.Estudiante;
 import com.primaria.app.Model.InscritoAlumno;
 
 public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, String> {
-	
+	InscritoAlumno findTopByAlumno_IdOrderByFechaInscripcionDesc(String alumnoId);
 	List<InscritoAlumno> findByGradoId(String idGrado);
 	List<InscritoAlumno> findByGrupoId(String idGrupo);
 	List<InscritoAlumno> findByCicloId(String idCiclo);
@@ -52,5 +53,7 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
 		        @Param("idGrado") String idGrado,
 		        @Param("idGrupo") String idGrupo
 		    );
+	  
+	  
 }
 

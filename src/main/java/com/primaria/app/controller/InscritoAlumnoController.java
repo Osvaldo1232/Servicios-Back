@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.primaria.app.DTO.AlumnoInfoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
+import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
 import com.primaria.app.Model.InscritoAlumno;
 import com.primaria.app.Service.InscritoAlumnoService;
 
@@ -136,5 +137,18 @@ public class InscritoAlumnoController {
             } catch (RuntimeException e) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
             }
+        }
+    
+    
+    @Operation(
+            summary = "Obtener la inscripción más reciente de un alumno",
+            description = "Devuelve el último registro de inscripción del alumno indicado, con grado, grupo, ciclo y profesor."
+        )
+        @GetMapping("/reciente/{alumnoId}")
+        public InscritoAlumnoRecienteDTO obtenerUltimoPorAlumno(
+                @Parameter(description = "UUID del alumno a consultar") 
+                @PathVariable String alumnoId) {
+
+            return inscritoAlumnoService.obtenerUltimoPorAlumno(alumnoId);
         }
 }
