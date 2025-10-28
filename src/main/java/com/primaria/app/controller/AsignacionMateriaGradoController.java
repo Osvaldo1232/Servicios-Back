@@ -98,7 +98,7 @@ public class AsignacionMateriaGradoController {
         return materias;
     }
     @GetMapping("/listar-por-grado")
-    @Operation(summary = "Lista de materias y campos formativos por grado")
+    @Operation(summary = "RFC2.3 Lista de materias y campos formativos por grado")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Consulta exitosa"),
         @ApiResponse(responseCode = "404", description = "No se encontraron asignaciones"),

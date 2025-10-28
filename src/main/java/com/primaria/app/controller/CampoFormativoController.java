@@ -29,23 +29,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/campoFormativo")
-@Tag(name = "CampoFormativo", description = "Operaciones relacionadas con los grupos")
+@Tag(name = "CampoFormativo", description = "Operaciones relacionadas con los campos formativos")
 public class CampoFormativoController {
 
 	 @Autowired
 	    private CampoFormativoService campoFormativoService;
 
-	    @Operation(summary = "Listar todos las materias")
-	    @GetMapping
-	    public ResponseEntity<Page<CampoFormativoDTO>> listarMaterias(
-	            @RequestParam(defaultValue = "0") int page,
-	            @RequestParam(defaultValue = "10") int size,
-	            @RequestParam(defaultValue = "id") String sortBy
-	    ) {
-	        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-	        Page<CampoFormativoDTO> materias = campoFormativoService.listarTodos(pageable);
-	        return ResponseEntity.ok(materias);
-	    }
+	 @Operation(summary = "Listar todos los campos formativos")
+	 @GetMapping
+	 public ResponseEntity<List<CampoFormativoDTO>> listarCamposFormativos() {
+	     List<CampoFormativoDTO> campos = campoFormativoService.listarTodos();
+	     return ResponseEntity.ok(campos);
+	 }
+
 	    
 	    @Operation(summary = "Obtener un Campo Formativo por UUID")
 	    @GetMapping("Obtener/{uuid}")
@@ -56,23 +52,19 @@ public class CampoFormativoController {
 	    }
 
 	    @PostMapping("/NuevoCampo")
-	    @Operation(summary = "Registrar Campo Formativo")
+	    @Operation(summary = " RF4.13 Registrar Campo Formativo")
 	    public ResponseEntity<?> registrarGrupo(@RequestBody CampoFormativoDTO dto) {
 	    	CampoFormativo grupo = new CampoFormativo();
 	        grupo.setNombre(dto.getNombre());
 	       grupo.setEstatus(dto.getEstatus());
-	       
 	       campoFormativoService.save(grupo);
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("message", "Grupo registrado exitosamente");
 	        response.put("id", grupo.getId());
-
 	        return ResponseEntity.ok(response);
-	        
-	        
 	    }
 
-	    @Operation(summary = "Actualizar un Campo Formativo existente")
+	    @Operation(summary = " RF4.14 Actualizar un Campo Formativo existente")
 	    @PutMapping("Actualizar/{uuid}")
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody CampoFormativoDTO campoFormativoDTO) {
 	        boolean actualizado = campoFormativoService.actualizar(uuid, campoFormativoDTO);

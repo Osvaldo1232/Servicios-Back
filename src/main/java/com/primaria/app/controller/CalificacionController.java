@@ -63,13 +63,13 @@ public class CalificacionController {
     
     @GetMapping("/alumno/{alumnoId}/ciclo/{cicloId}")
     @Operation(
-        summary = "Obtener calificaciones por alumno y ciclo",
+        summary = "RF3.1 Obtener calificaciones por alumno y ciclo",
         description = "Devuelve las calificaciones agrupadas por materia y ordenadas por trimestre"
     )
     public List<MateriaTrimestresDTO> obtenerCalificaciones(
-            @Parameter(description = "ID del alumno", example = "bf10a76b-985c-4eab-a123-xxxxxxxx")
+            @Parameter(description = "ID del alumno")
             @PathVariable String alumnoId,
-            @Parameter(description = "ID del ciclo", example = "ciclo2025")
+            @Parameter(description = "ID del ciclo")
             @PathVariable String cicloId) {
 
         return calificacionService.obtenerCalificacionesPorAlumnoYCiclo(alumnoId, cicloId);

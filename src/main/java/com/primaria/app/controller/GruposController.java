@@ -43,7 +43,7 @@ public class GruposController {
 	    }
 
 	    @PostMapping("/NuevoGrupo")
-	    @Operation(summary = "Registrar Grupo")
+	    @Operation(summary = "RF4.21 Registrar Grupo")
 	    public ResponseEntity<?> registrarGrupo(@RequestBody GrupoDTO dto) {
 	        Grupo grupo = new Grupo();
 	        grupo.setNombre(dto.getNombre());
@@ -52,13 +52,11 @@ public class GruposController {
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("message", "Grupo registrado exitosamente");
 	        response.put("id", grupo.getId());
-
 	        return ResponseEntity.ok(response);
-	        
 	        
 	    }
 
-	    @Operation(summary = "Actualizar un grupo existente")
+	    @Operation(summary = "RF4.22 Actualizar un grupo existente")
 	    @PutMapping("Actualizar/{uuid}")
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody GrupoDTO grupoDTO) {
 	        boolean actualizado = grupoService.actualizar(uuid, grupoDTO);

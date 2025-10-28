@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.primaria.app.DTO.EstatusDTO;
 import com.primaria.app.DTO.ProfesorDTO;
-import com.primaria.app.Model.Estatus;
+
 import com.primaria.app.Model.Profesor;
 import com.primaria.app.Model.Usuario;
 import com.primaria.app.Service.UsuarioService;
@@ -31,9 +31,9 @@ public class ProfesorController {
         this.usuarioService = usuarioService;
     }
     
-    // ⬇️ AGREGAR ESTE MÉTODO
+    
     @GetMapping
-    @Operation(summary = "Obtener todos los Profesores")
+    @Operation(summary = "RF4.4 Obtener todos los Profesores")
     public ResponseEntity<List<Profesor>> obtenerProfesores() {
         List<Usuario> usuarios = usuarioService.findAll();
         List<Profesor> profesores = usuarios.stream()
@@ -44,7 +44,7 @@ public class ProfesorController {
     }
     
     @PutMapping("/profesor/{id}")
-    @Operation(summary = "Actualizar Profesor")
+    @Operation(summary = "RF4.2 y RF2.2  Actualizar Profesor")
     public ResponseEntity<?> actualizarProfesor(@PathVariable String id, @RequestBody ProfesorDTO dto) {
         Optional<Usuario> optUsuario = usuarioService.findById(id);
         if (optUsuario.isEmpty() || !(optUsuario.get() instanceof Profesor)) {
@@ -66,7 +66,7 @@ public class ProfesorController {
     }
     
     @PatchMapping("/profesor/{id}/estatus")
-    @Operation(summary = "Actualizar Estatus de Profesor", description = "Actualiza únicamente el estatus de un profesor existente por su ID")
+    @Operation(summary = "RF4.3 Actualizar Estatus de Profesor", description = "Actualiza únicamente el estatus de un profesor existente por su ID")
     public ResponseEntity<?> actualizarEstatusProfesor(
             @PathVariable String id,
             @Valid @RequestBody EstatusDTO dto) {

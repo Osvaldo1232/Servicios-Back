@@ -33,11 +33,13 @@ public class CampoFormativoService {
 	    private ModelMapper modelMapper;
 	    
 	    
-	    public Page<CampoFormativoDTO> listarTodos(Pageable pageable) {
-	        return campoFormativoRepository.findAll(pageable)
-	            .map(materia -> modelMapper.map(materia, CampoFormativoDTO.class));
+	    public List<CampoFormativoDTO> listarTodos() {
+	        return campoFormativoRepository.findAll()
+	                .stream()
+	                .map(campo -> modelMapper.map(campo, CampoFormativoDTO.class))
+	                .toList();
 	    }
-	    
+
 	   
 	    public Optional<CampoFormativoDTO> obtenerPorUuid(String uuid) {
 	        return campoFormativoRepository.findById(uuid)

@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @Operation(
-        summary = "Iniciar sesión",
+        summary = "RF1.1 y RF1.2 Iniciar sesión",
         description = "Autentica al usuario con su email y contraseña. Devuelve un token JWT si las credenciales son válidas.",
         responses = {
             @ApiResponse(responseCode = "200", description = "Login exitoso",

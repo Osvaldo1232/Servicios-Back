@@ -1,18 +1,12 @@
 package com.primaria.app.controller;
-
-
 import com.primaria.app.DTO.GradoDTO;
 import com.primaria.app.Model.Grado;
 import com.primaria.app.Service.GradosService;
-import com.primaria.app.Service.GrupoService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +20,7 @@ public class GradosController {
 	 @Autowired
 	    private GradosService gradoService;
 
-	    @Operation(summary = "Listar todos los grupos")
+	    @Operation(summary = "Listar todos los grapos")
 	    @GetMapping
 	    public ResponseEntity<List<GradoDTO>> listarTodos() {
 	        return ResponseEntity.ok(gradoService.listarTodos());
@@ -41,7 +35,7 @@ public class GradosController {
 	    }
 
 	    @PostMapping("/NuevoGrado")
-	    @Operation(summary = "Registrar Grupo")
+	    @Operation(summary = "RF4.19  Registrar Grado")
 	    public ResponseEntity<?> registrarGrupo(@RequestBody GradoDTO dto) {
 	        Grado grupo = new Grado();
 	        grupo.setNombre(dto.getNombre());
@@ -56,7 +50,7 @@ public class GradosController {
 	        
 	    }
 
-	    @Operation(summary = "Actualizar un grupo existente")
+	    @Operation(summary = "RF4.20 Actualizar un grado existente")
 	    @PutMapping("Actualizar/{uuid}")
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody GradoDTO gradoDTO) {
 	        boolean actualizado = gradoService.actualizar(uuid, gradoDTO);

@@ -7,8 +7,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 import com.primaria.app.DTO.TutorDTO;
@@ -28,11 +27,13 @@ public class TutorService {
 	    private ModelMapper modelMapper;
 	    
 	    
-	    public Page<TutorDTO> listarTodos(Pageable pageable) {
-	        return tutorRepository.findAll(pageable)
-	            .map(materia -> modelMapper.map(materia, TutorDTO.class));
+	    public List<TutorDTO> listarTodos() {
+	        return tutorRepository.findAll()
+	                .stream()
+	                .map(tutor -> modelMapper.map(tutor, TutorDTO.class))
+	                .toList();
 	    }
-	    
+
 	   
 	    public Optional<TutorDTO> obtenerPorUuid(String uuid) {
 	        return tutorRepository.findById(uuid)
@@ -49,8 +50,8 @@ public class TutorService {
 	    }
 
 	    
-	    public Tutor save(Tutor materia) {
-	        return tutorRepository.save(materia);
+	    public Tutor save(Tutor tutor) {
+	        return tutorRepository.save(tutor);
 	    }
 
 	    
@@ -62,7 +63,7 @@ public class TutorService {
 	           ciclo.setEstatus(dto.getEstatus());
 	           ciclo.setApellidos(dto.getApellidos());
 	           ciclo.setCorreo(dto.getCorreo());
-	           ciclo.setParentesco(dto.getParentesco());
+	          
 	           ciclo.setTelefono(dto.getTelefono());
 	           
 	           tutorRepository.save(ciclo);
@@ -86,4 +87,24 @@ public class TutorService {
 	                .map(campo -> new TutorResumenDTO(campo.getId(), campo.getNombre()))
 	                .collect(Collectors.toList());
 	    }
+	    
+	    public boolean cambiarEstatus(String uuid) {
+	        try {
+	            Optional<Tutor> optionalTutor = tutorRepository.findById(uuid);
+	            if (optionalTutor.isPresent()) {
+	                Tutor tutor = optionalTutor.get();
+	                if (tutor.getEstatus() == Estatus.ACTIVO) {
+	                    tutor.setEstatus(Estatus.INACTIVO);
+	                } else {
+	                    tutor.setEstatus(Estatus.ACTIVO);
+	                }
+	                tutorRepository.save(tutor);
+	                return true;
+	            }
+	            return false;
+	        } catch (IllegalArgumentException e) {
+	            return false;
+	        }
+	    }
+
 }

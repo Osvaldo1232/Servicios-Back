@@ -33,11 +33,13 @@ public class TrimestresService {
 	    private ModelMapper modelMapper;
 	    
 	    
-	    public Page<TrimestresDTO> listarTodos(Pageable pageable) {
-	        return trimestreRepository.findAll(pageable)
-	            .map(materia -> modelMapper.map(materia, TrimestresDTO.class));
+	    public List<TrimestresDTO> listarTodos() {
+	        return trimestreRepository.findAll()
+	                .stream()
+	                .map(trimestre -> modelMapper.map(trimestre, TrimestresDTO.class))
+	                .toList();
 	    }
-	    
+
 	   
 	    public Optional<TrimestresDTO> obtenerPorUuid(String uuid) {
 	        return trimestreRepository.findById(uuid)

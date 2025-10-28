@@ -3,12 +3,12 @@ package com.primaria.app.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.primaria.app.DTO.EstatusDTO;
 import com.primaria.app.DTO.EstudianteDTO;
-import com.primaria.app.DTO.ProfesorDTO;
+
 import com.primaria.app.Model.Estudiante;
-import com.primaria.app.Model.Profesor;
+
 import com.primaria.app.Model.Usuario;
 import com.primaria.app.Service.EstudianteService;
 import com.primaria.app.Service.UsuarioService;
@@ -46,7 +46,7 @@ public class AlumnoController {
     private  UsuarioService usuarioService;
 	
     @GetMapping("/usuario/{id}")
-    @Operation(summary = "Obtener  Estudiante")
+    @Operation(summary = "RF3.6:  Obtener  Estudiante")
     public ResponseEntity<?> getAlumnoPorUsuarioId(@PathVariable String id) {
         return alumnoService.findById(id)
                 .map(alumno -> ResponseEntity.ok().body(alumno))
@@ -55,7 +55,7 @@ public class AlumnoController {
     
     
     @GetMapping("/todosestudiantes")
-    @Operation(summary = "Obtener todos los estudiantes")
+    @Operation(summary = "RF4.8 Obtener todos los estudiantes")
     public List<EstudianteDTO> obtenerTodosEstudiantes() {
         return alumnoService.listarTodos();
     }
@@ -85,7 +85,7 @@ public class AlumnoController {
   
     
     @PutMapping("/alumno/{id}")
-    @Operation(summary = "Actualizar alumno")
+    @Operation(summary = "RF4.6:  Actualizar alumno")
     public ResponseEntity<?> actualizarProfesor(@PathVariable String id, @RequestBody EstudianteDTO dto) {
         Optional<Usuario> optUsuario = usuarioService.findById(id);
         if (optUsuario.isEmpty() || !(optUsuario.get() instanceof Estudiante)) {
@@ -109,7 +109,7 @@ public class AlumnoController {
     
     
     @PatchMapping("/alumno/{id}/estatus")
-	  @Operation(summary = "Actualizar Estatus de Alumno", description = "Actualiza únicamente el estatus de un alumno existente por su ID")
+	  @Operation(summary = "RF4.7 Actualizar Estatus de Alumno", description = "Actualiza únicamente el estatus de un alumno existente por su ID")
 	  public ResponseEntity<?> actualizarEstatusProfesor(
 	          @PathVariable String id,
 	          @Valid @RequestBody EstatusDTO dto) {

@@ -32,17 +32,13 @@ public class TrimestreController {
 	 @Autowired
 	    private TrimestresService trimestresService;
 
-	    @Operation(summary = "Listar todos las materias")
-	    @GetMapping
-	    public ResponseEntity<Page<TrimestresDTO>> listarMaterias(
-	            @RequestParam(defaultValue = "0") int page,
-	            @RequestParam(defaultValue = "10") int size,
-	            @RequestParam(defaultValue = "id") String sortBy
-	    ) {
-	        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-	        Page<TrimestresDTO> materias = trimestresService.listarTodos(pageable);
-	        return ResponseEntity.ok(materias);
-	    }
+	 @Operation(summary = "Listar todos los trimestres")
+	 @GetMapping
+	 public ResponseEntity<List<TrimestresDTO>> listarTrimestres() {
+	     List<TrimestresDTO> trimestres = trimestresService.listarTodos();
+	     return ResponseEntity.ok(trimestres);
+	 }
+
 	    
 	    @Operation(summary = "Obtener un Campo Formativo por UUID")
 	    @GetMapping("Obtener/{uuid}")
@@ -53,7 +49,7 @@ public class TrimestreController {
 	    }
 
 	    @PostMapping("/NuevoCampo")
-	    @Operation(summary = "Registrar Campo Formativo")
+	    @Operation(summary = "RF4.23 Registrar Campo Formativo")
 	    public ResponseEntity<?> registrarGrupo(@RequestBody TrimestresDTO dto) {
 	    	Trimestres grupo = new Trimestres();
 	        grupo.setNombre(dto.getNombre());
@@ -69,7 +65,7 @@ public class TrimestreController {
 	        
 	    }
 
-	    @Operation(summary = "Actualizar un Campo Formativo existente")
+	    @Operation(summary = "RF4.24 Actualizar un Campo Formativo existente")
 	    @PutMapping("Actualizar/{uuid}")
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody TrimestresDTO campoFormativoDTO) {
 	        boolean actualizado = trimestresService.actualizar(uuid, campoFormativoDTO);

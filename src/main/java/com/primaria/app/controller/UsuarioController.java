@@ -11,9 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +27,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/estudiante")
-    @Operation(summary = "Registrar Estudiante")
+    @Operation(summary = "RF4.5 Registrar Estudiante")
     public ResponseEntity<?> registrarEstudiante(@RequestBody EstudianteDTO dto) {
         Estudiante estudiante = new Estudiante();
         estudiante.setNombre(dto.getNombre());
@@ -54,7 +52,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/profesor")
-    @Operation(summary = "Registrar Profesor")
+    @Operation(summary = "RF4.1 Registrar Profesor")
     public ResponseEntity<?> registrarProfesor(@RequestBody ProfesorDTO dto) {
         Profesor profesor = new Profesor();
         profesor.setNombre(dto.getNombre());
@@ -96,7 +94,7 @@ public class UsuarioController {
         return ResponseEntity.ok("Director registrado exitosamente");
     }
     
-    @Operation(summary = "Obtener usuario por ID con detalles según el rol")
+    @Operation(summary = "RF2.1 Obtener usuario por ID con detalles según el rol")
     @GetMapping("/BuscarUsuario/{id}")
     public ResponseEntity<?> obtenerPorId(@PathVariable String id) {
         Object usuario = usuarioService.buscarUsuarioPorId(id);

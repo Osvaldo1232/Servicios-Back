@@ -1,11 +1,6 @@
 package com.primaria.app.controller;
 
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-
+import java.util.List;
 import com.primaria.app.DTO.MateriaDTO;
 import com.primaria.app.Model.CampoFormativo;
 import com.primaria.app.Model.Materia;
@@ -20,63 +15,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
-
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/materias")
-@Tag(name = "Materias", description = "Operaciones relacionadas con los grupos")
+@Tag(name = "Materias", description = "Operaciones relacionadas con las materias")
 public class MateriasController {
 
 	 @Autowired
 	    private MateriasService materiasService;
 
-	    @Operation(summary = "Listar todos las materias")
-	    @GetMapping("mostrarmaterias")
-	    public ResponseEntity<Page<MateriaDTO>> listarMaterias(
-	            @RequestParam(defaultValue = "0") int page,
-	            @RequestParam(defaultValue = "10") int size,
-	            @RequestParam(defaultValue = "id") String sortBy
-	    ) {
-	        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-	        Page<MateriaDTO> materias = materiasService.listarTodos(pageable);
-	        return ResponseEntity.ok(materias);
-	    }
-	    
-	    @Operation(summary = "Obtener un Materia por UUID")
-	    @GetMapping("Obtener/{uuid}")
-	    public ResponseEntity<MateriaDTO> obtenerPorUuid(@PathVariable String uuid) {
-	        Optional<MateriaDTO> grupo = materiasService.obtenerPorUuid(uuid);
-	        return grupo.map(ResponseEntity::ok)
-	                    .orElse(ResponseEntity.notFound().build());
-	    }
-
-	    @PostMapping("/NuevoGrupo")
-	    @Operation(summary = "Registrar Materia")
-	    public ResponseEntity<?> registrarGrupo(@RequestBody MateriaDTO dto) {
-	        Materia grupo = new Materia();
-	        grupo.setNombre(dto.getNombre());
-	       grupo.setEstatus(dto.getEstatus());
-	       
-	        materiasService.save(grupo);
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("message", "Grupo registrado exitosamente");
-	        response.put("id", grupo.getId());
-
-	        return ResponseEntity.ok(response);
-	        
-	        
-	    }
-
-
+	 @Operation(summary = "Listar todas las materias")
+	 @GetMapping("mostrarmaterias")
+	 public ResponseEntity<List<MateriaDTO>> listarMaterias() {
+	     List<MateriaDTO> materias = materiasService.listarTodos();
+	     return ResponseEntity.ok(materias);
+	 }
 	    @Autowired
 	    private CampoFormativoRepository campoFormativoRepository;
-
 	    @PostMapping("/nueva")
-	    @Operation(summary = "Registrar nueva materia")
+	    @Operation(summary = "RF4.15  Registrar nueva materia")
 	    public ResponseEntity<?> registrarMateria(@RequestBody MateriaDTO dto) {
 	        CampoFormativo campo = campoFormativoRepository.findById(dto.getCampoFormativoId())
 	            .orElseThrow(() -> new RuntimeException("Campo formativo no encontrado"));
@@ -85,19 +44,14 @@ public class MateriasController {
 	        materia.setNombre(dto.getNombre());
 	        materia.setEstatus(dto.getEstatus());
 	        materia.setCampoFormativo(campo);
-
 	        Materia guardada = materiasService.save(materia);
-
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("message", "Materia registrada exitosamente");
 	        response.put("id", guardada.getId());
 
 	        return ResponseEntity.ok(response);
 	    }
-
-
-
-	    @Operation(summary = "Actualizar un materia existente")
+	    @Operation(summary = "RF4.16  Actualizar un materia existente")
 	    @PutMapping("Actualizar/{uuid}")
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody MateriaDTO grupoDTO) {
 	        boolean actualizado = materiasService.actualizar(uuid, grupoDTO);

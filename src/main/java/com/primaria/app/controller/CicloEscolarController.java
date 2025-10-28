@@ -1,24 +1,14 @@
 package com.primaria.app.controller;
-
-
-
 import com.primaria.app.DTO.CicloEscolarDTO;
-import com.primaria.app.DTO.GrupoDTO;
 import com.primaria.app.Model.CicloEscolar;
-import com.primaria.app.Model.Grupo;
 import com.primaria.app.Service.CicloEscolarService;
-import com.primaria.app.Service.GrupoService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,24 +34,20 @@ public class CicloEscolarController {
 	    }
 
 	    @PostMapping("/NuevoCiclo")
-	    @Operation(summary = "Registrar Ciclo Escolar")
+	    @Operation(summary = "RF4.17  Registrar Ciclo Escolar")
 	    public ResponseEntity<?> registrarGrupo(@RequestBody CicloEscolarDTO dto) {
 	        CicloEscolar ciclo = new CicloEscolar();
 	        ciclo.setFechaInicio(dto.getFechaInicio());
 	        ciclo.setFechaFin(dto.getFechaFin());
 	        ciclo.setEstatus(dto.getEstatus());
-	     
 	       cicloEscolarService.save(ciclo);
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("message", "Ciclo Escolar registrado exitosamente");
 	        response.put("id", ciclo.getId());
-
-	        return ResponseEntity.ok(response);
-	        
-	        
+	        return ResponseEntity.ok(response);	        	        
 	    }
 
-	    @Operation(summary = "Actualizar un ciclo existente")
+	    @Operation(summary = "RF4.18  Actualizar un ciclo existente")
 	    @PutMapping("Actualizar/{uuid}")
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody CicloEscolarDTO cicloEscolarDTO) {
 	        boolean actualizado = cicloEscolarService.actualizar(uuid, cicloEscolarDTO);

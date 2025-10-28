@@ -10,19 +10,19 @@ public class TutorDTO {
     private String nombre;
     private String apellidos;
     private String correo;
-    private String parentesco;
+   
     private String telefono;
     private Estatus estatus;
     // Constructores
 
     public TutorDTO() {}
 
-    public TutorDTO(UUID id, String nombre, String apellidos, String correo, String parentesco, String telefono) {
+    public TutorDTO(UUID id, String nombre, String apellidos, String correo,  String telefono) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.correo = correo;
-        this.parentesco = parentesco;
+        
         this.telefono = telefono;
     }
 
@@ -60,13 +60,7 @@ public class TutorDTO {
         this.correo = correo;
     }
 
-    public String getParentesco() {
-        return parentesco;
-    }
-
-    public void setParentesco(String parentesco) {
-        this.parentesco = parentesco;
-    }
+  
 
     public String getTelefono() {
         return telefono;

@@ -41,7 +41,7 @@ public class CalificacionFinalMateriaController {
     }
     
     
-    @Operation(summary = "Obtener calificaciones por alumno y ciclo")
+    @Operation(summary = "RF3.2:  Obtener calificaciones por alumno y ciclo")
     @GetMapping("/alumno/{alumnoId}/ciclo/{cicloId}")
     public List<MateriaCalificacionResDTO> obtenerCalificaciones(
             @PathVariable String alumnoId,

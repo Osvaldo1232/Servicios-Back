@@ -89,9 +89,9 @@ public class InscritoAlumnoController {
         return respuesta;
     }
     
-    
+     
     @GetMapping("/filtrar")
-    @Operation(summary = "Filtrar alumnos inscritos",
+    @Operation(summary = "RF2.7 Filtrar alumnos inscritos",
                description = "Permite filtrar alumnos inscritos por grado, grupo y/o ciclo escolar. Al menos un parámetro es obligatorio.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consulta exitosa"),
@@ -141,7 +141,7 @@ public class InscritoAlumnoController {
     
     
     @Operation(
-            summary = "Obtener la inscripción más reciente de un alumno",
+            summary = " RF3.7 Obtener la inscripción más reciente de un alumno",
             description = "Devuelve el último registro de inscripción del alumno indicado, con grado, grupo, ciclo y profesor."
         )
         @GetMapping("/reciente/{alumnoId}")
