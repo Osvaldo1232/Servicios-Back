@@ -37,7 +37,7 @@ public class AsignacionDocenteGradoGrupo {
 
     // Fecha de creación (se llena automáticamente con Hibernate)
     @CreationTimestamp
-    @Column(name = "fecha_creado", updatable = false)
+    @Column(name = "fecha_creado", updatable = false, columnDefinition = "datetime")
     private LocalDateTime fechaCreado;
 
     // Getters y Setters

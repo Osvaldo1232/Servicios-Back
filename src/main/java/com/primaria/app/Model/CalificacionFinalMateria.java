@@ -38,7 +38,7 @@ public class CalificacionFinalMateria {
 
     // 🕒 Fecha de creación automática
     @CreationTimestamp
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    @Column(name = "fecha_creacion", nullable = false, updatable = false, columnDefinition = "datetime")
     private LocalDateTime fechaCreacion;
 
     @ManyToOne(fetch = FetchType.LAZY)

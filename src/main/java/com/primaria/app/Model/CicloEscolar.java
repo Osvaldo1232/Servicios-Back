@@ -22,7 +22,7 @@ public class CicloEscolar {
     private Estatus estatus;
 
     @CreationTimestamp
-    @Column(name = "fecha_creado", updatable = false)
+    @Column(name = "fecha_creado", updatable = false, columnDefinition = "datetime")
     private LocalDateTime fechaCreado;
 
     // Getters y Setters

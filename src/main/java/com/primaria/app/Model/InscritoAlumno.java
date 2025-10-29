@@ -39,8 +39,9 @@ public class InscritoAlumno {
     private Estatus estatus;
 
     @CreationTimestamp
-    @Column(name = "fecha_inscripcion", updatable = false)
+    @Column(name = "fecha_inscripcion", updatable = false, columnDefinition = "datetime")
     private LocalDateTime fechaInscripcion;
+
 
     // Getters y Setters
 
