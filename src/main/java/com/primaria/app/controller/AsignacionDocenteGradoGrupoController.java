@@ -26,7 +26,7 @@ public class AsignacionDocenteGradoGrupoController {
     @Autowired
     private AsignacionDocenteGradoGrupoService service;
 
-    @Operation(summary = "Guardar una asignación de docente")
+    @Operation(summary = "RF4.25 Guardar una asignación de docente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Asignación creada exitosamente"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos o referencias no encontradas"),

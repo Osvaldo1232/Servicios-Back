@@ -13,38 +13,39 @@ public class Calificacion_final {
     @Column(name = "id", updatable = false, nullable = false, length = 36)
     private String id;
 
-    // Relación con Alumno
+    // Relaciones
     @ManyToOne
     @JoinColumn(name = "id_alumno", nullable = false)
     private Estudiante alumno;
 
-    // Relación con Materia
     @ManyToOne
     @JoinColumn(name = "id_materia", nullable = false)
     private Materia materia;
 
-    // Relación con Trimestre
     @ManyToOne
     @JoinColumn(name = "id_trimestre", nullable = false)
     private Trimestres trimestre;
 
-    // Relación con Ciclo Escolar
     @ManyToOne
     @JoinColumn(name = "id_ciclo", nullable = false)
     private CicloEscolar ciclo;
 
-    // Promedio final del trimestre
+    @ManyToOne
+    @JoinColumn(name = "id_grado", nullable = false)
+    private Grado grado;
+
     @Column(name = "promedio", nullable = false)
     private Double promedio;
 
     // Constructores
     public Calificacion_final() {}
 
-    public Calificacion_final(Estudiante alumno, Materia materia, Trimestres trimestre, CicloEscolar ciclo, Double promedio) {
+    public Calificacion_final(Estudiante alumno, Materia materia, Trimestres trimestre, CicloEscolar ciclo, Grado grado, Double promedio) {
         this.alumno = alumno;
         this.materia = materia;
         this.trimestre = trimestre;
         this.ciclo = ciclo;
+        this.grado = grado;
         this.promedio = promedio;
     }
 
@@ -63,6 +64,9 @@ public class Calificacion_final {
 
     public CicloEscolar getCiclo() { return ciclo; }
     public void setCiclo(CicloEscolar ciclo) { this.ciclo = ciclo; }
+
+    public Grado getGrado() { return grado; }
+    public void setGrado(Grado grado) { this.grado = grado; }
 
     public Double getPromedio() { return promedio; }
     public void setPromedio(Double promedio) { this.promedio = promedio; }

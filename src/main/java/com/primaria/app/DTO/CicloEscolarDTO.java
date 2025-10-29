@@ -1,56 +1,69 @@
 package com.primaria.app.DTO;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.primaria.app.Model.Estatus;
 
 public class CicloEscolarDTO {
-	
-	 private UUID id;
-	    private LocalDate fechaInicio;
-	    private LocalDate fechaFin;
 
-	    private Estatus estatus; 
-	    
-	    public CicloEscolarDTO() {}
+    private UUID id;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+    private Estatus estatus;
+    private LocalDateTime fechaCreado; // Nuevo campo
 
-	    
-	    public CicloEscolarDTO(UUID id, LocalDate fechaInicio, LocalDate fechaFin) {
-	        this.id = id;
-	        this.fechaInicio = fechaInicio;
-	        this.fechaFin = fechaFin;
-	    }
+    // Constructor vacío
+    public CicloEscolarDTO() {}
 
-	    // Getters y Setters
-	    public UUID getId() {
-	        return id;
-	    }
+    // Constructor con argumentos
+    public CicloEscolarDTO(UUID id, LocalDate fechaInicio, LocalDate fechaFin, Estatus estatus, LocalDateTime fechaCreado) {
+        this.id = id;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.estatus = estatus;
+        this.fechaCreado = fechaCreado;
+    }
 
-	    public void setId(UUID id) {
-	        this.id = id;
-	    }
+    // Getters y Setters
+    public UUID getId() {
+        return id;
+    }
 
-	    public LocalDate getFechaInicio() {
-	        return fechaInicio;
-	    }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	    public void setFechaInicio(LocalDate fechaInicio) {
-	        this.fechaInicio = fechaInicio;
-	    }
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
 
-	    public LocalDate getFechaFin() {
-	        return fechaFin;
-	    }
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
 
-	    public void setFechaFin(LocalDate fechaFin) {
-	        this.fechaFin = fechaFin;
-	    }
-	    public Estatus getEstatus() {
-	        return estatus;
-	    }
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
 
-	    public void setEstatus(Estatus estatus) {
-	        this.estatus = estatus;
-	    }
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public Estatus getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(Estatus estatus) {
+        this.estatus = estatus;
+    }
+
+    public LocalDateTime getFechaCreado() {
+        return fechaCreado;
+    }
+
+    public void setFechaCreado(LocalDateTime fechaCreado) {
+        this.fechaCreado = fechaCreado;
+    }
 }

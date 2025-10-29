@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
 import com.primaria.app.DTO.AlumnoInfoDTO;
+import com.primaria.app.DTO.InfoAlumnoTutorDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
 import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
@@ -34,6 +35,8 @@ public class InscritoAlumnoService {
     @Autowired
     private ProfesorRepository profesorRepository;
 
+    @Autowired
+    private AlumnoTutorRepository alumnoTutorRepository;
     @Autowired
     private GradosRepository gradoRepository;
 
@@ -175,4 +178,39 @@ public class InscritoAlumnoService {
                 telefonoProfesor
         );
     }
+    public InfoAlumnoTutorDTO obtenerInfoPorAlumno(String idAlumno) {
+        // Obtener inscripción más reciente
+        InscritoAlumno inscripcion = inscritoAlumnoRepository.findTopByAlumno_IdOrderByFechaInscripcionDesc(idAlumno);
+        if (inscripcion == null) {
+            throw new RuntimeException("No se encontró inscripción para el alumno con ID: " + idAlumno);
+        }
+
+        // Obtener relación alumno-tutor en el ciclo correspondiente
+        AlumnoTutor relacion = alumnoTutorRepository.findByAlumno_IdAndCiclo_Id(
+                idAlumno, inscripcion.getCiclo().getId()
+        ).orElseThrow(() -> new RuntimeException(
+                "No se encontró tutor asignado para el alumno en el ciclo actual."
+        ));
+
+        Estudiante alumno = inscripcion.getAlumno();
+        Tutor tutor = relacion.getTutor();
+        Grado grado = inscripcion.getGrado();
+        Grupo grupo = inscripcion.getGrupo();
+        CicloEscolar ciclo = inscripcion.getCiclo();
+
+        String nombreAlumno = alumno.getNombre() + " " + alumno.getApellidos();
+        String nombreTutor = tutor.getNombre() + " " + tutor.getApellidos();
+
+        return new InfoAlumnoTutorDTO(
+                alumno.getCurp(),
+                nombreAlumno,
+                nombreTutor,
+                alumno.getMatricula(),
+                grado.getNombre(),
+                grupo.getNombre(),
+                ciclo.getFechaInicio() + " - " + ciclo.getFechaFin()
+        );
+    }
+ 
+   
 }

@@ -41,15 +41,21 @@ public class CalificacionFinalMateria {
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_grado", nullable = false)
+    private Grado grado;
+    
     // 🧱 Constructores
     public CalificacionFinalMateria() {}
 
-    public CalificacionFinalMateria(Estudiante alumno, Materia materia, CicloEscolar cicloEscolar, BigDecimal promedio) {
+    public CalificacionFinalMateria(Estudiante alumno, Materia materia, CicloEscolar cicloEscolar, Grado grado, BigDecimal promedio) {
         this.alumno = alumno;
         this.materia = materia;
         this.cicloEscolar = cicloEscolar;
+        this.grado = grado;
         this.promedio = promedio;
     }
+
 
     // 🧩 Getters y Setters
     public String getId() { return id; }
@@ -67,4 +73,7 @@ public class CalificacionFinalMateria {
     public void setPromedio(BigDecimal promedio) { this.promedio = promedio; }
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    
+    public Grado getGrado() { return grado; }
+    public void setGrado(Grado grado) { this.grado = grado; }
 }

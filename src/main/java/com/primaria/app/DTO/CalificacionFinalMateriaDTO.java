@@ -11,19 +11,21 @@ public class CalificacionFinalMateriaDTO {
     private String cicloEscolarId;
     private BigDecimal promedio;
     private LocalDateTime fechaCreacion;
-
+    private String gradoId;
     // Constructor vacío
     public CalificacionFinalMateriaDTO() {}
 
     // Constructor completo
-    public CalificacionFinalMateriaDTO(String id, String alumnoId, String materiaId, String cicloEscolarId, BigDecimal promedio, LocalDateTime fechaCreacion) {
+    public CalificacionFinalMateriaDTO(String id, String alumnoId, String materiaId, String cicloEscolarId, String gradoId, BigDecimal promedio, LocalDateTime fechaCreacion) {
         this.id = id;
         this.alumnoId = alumnoId;
         this.materiaId = materiaId;
         this.cicloEscolarId = cicloEscolarId;
+        this.gradoId = gradoId;
         this.promedio = promedio;
         this.fechaCreacion = fechaCreacion;
     }
+
 
     // Getters y Setters
     public String getId() { return id; }
@@ -43,4 +45,7 @@ public class CalificacionFinalMateriaDTO {
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    
+    public String getGradoId() { return gradoId; }
+    public void setGradoId(String gradoId) { this.gradoId = gradoId; }
 }

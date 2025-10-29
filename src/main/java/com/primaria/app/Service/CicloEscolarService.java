@@ -77,4 +77,13 @@ public class CicloEscolarService {
         }
         return false;
     }
+    
+    public Optional<CicloEscolarDTO> obtenerCicloMasReciente() {
+        CicloEscolar ciclo = CicloEscolaresRepository.findTopByOrderByFechaCreadoDesc();
+        if (ciclo != null) {
+            return Optional.of(modelMapper.map(ciclo, CicloEscolarDTO.class));
+        }
+        return Optional.empty();
+    }
+
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.primaria.app.DTO.AlumnoInfoDTO;
+import com.primaria.app.DTO.InfoAlumnoTutorDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
 import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
@@ -34,7 +35,7 @@ public class InscritoAlumnoController {
 
     @PostMapping("/guardar")
     @Operation(
-        summary = "Guardar inscripción de un alumno",
+        summary = "RF4.26 Guardar inscripción de un alumno",
         description = "Crea la inscripción de un alumno en un grado, grupo y ciclo escolar"
     )
     @ApiResponses(value = {
@@ -58,7 +59,7 @@ public class InscritoAlumnoController {
     
     @PostMapping("/guardar-masivo")
     @Operation(
-        summary = "Guardar inscripciones de varios alumnos",
+        summary = "RF4.27 Guardar inscripciones de varios alumnos",
         description = "Permite inscribir varios alumnos en grado, grupo y ciclo escolar en un solo request"
     )
     @ApiResponses(value = {
@@ -151,4 +152,19 @@ public class InscritoAlumnoController {
 
             return inscritoAlumnoService.obtenerUltimoPorAlumno(alumnoId);
         }
+    
+    
+    @Operation(summary = "RF4.29 Obtener información de alumno y tutor por ID del alumno")
+    @GetMapping("/{idAlumno}")
+    public ResponseEntity<?> obtenerInfo(@PathVariable String idAlumno) {
+        try {
+            InfoAlumnoTutorDTO dto = inscritoAlumnoService.obtenerInfoPorAlumno(idAlumno);
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            return ResponseEntity.status(404)
+                    .body(java.util.Map.of("mensaje", e.getMessage()));
+        }
+    }
+    
+    
 }

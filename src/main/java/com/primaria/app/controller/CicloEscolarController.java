@@ -68,4 +68,15 @@ public class CicloEscolarController {
 	            return ResponseEntity.notFound().build();
 	        }
 	    }
+	    
+	    
+	    @Operation(summary = "Obtener el ciclo escolar más reciente")
+	    @GetMapping("/reciente")
+	    public ResponseEntity<?> obtenerCicloMasReciente() {
+	        return cicloEscolarService.obtenerCicloMasReciente()
+	                .<ResponseEntity<?>>map(ResponseEntity::ok)
+	                .orElse(ResponseEntity.status(404)
+	                        .body(Map.of("mensaje", "No se encontró ningún ciclo escolar registrado")));
+	    }
+
 }

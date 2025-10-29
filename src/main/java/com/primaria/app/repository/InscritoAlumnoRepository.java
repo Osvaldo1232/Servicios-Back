@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
 import com.primaria.app.Model.Estudiante;
 import com.primaria.app.Model.InscritoAlumno;
 
