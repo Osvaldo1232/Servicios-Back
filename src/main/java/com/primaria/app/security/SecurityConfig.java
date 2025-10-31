@@ -115,7 +115,7 @@ public class SecurityConfig {
             "https://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app",
             "https://pleasant-sara-utsemintegradora-0944b8c7.koyeb.app"
         ));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);

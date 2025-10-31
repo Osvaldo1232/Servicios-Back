@@ -1,5 +1,6 @@
 package com.primaria.app.DTO;
 
+import com.primaria.app.Model.Estatus;
 import com.primaria.app.Model.Sexo;
 import java.time.LocalDate;
 
@@ -14,6 +15,7 @@ public class UsuarioDTO {
     private LocalDate fechaNacimiento;
     private Sexo sexo; 
 
+    private Estatus estatus;
     // 🔹 Getters y Setters
     public String getId() {
         return id;
@@ -77,5 +79,13 @@ public class UsuarioDTO {
 
     public void setSexo(Sexo sexo) {
         this.sexo = sexo;
+    }
+    
+    public Estatus getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(Estatus estatus) {
+        this.estatus = estatus;
     }
 }

@@ -40,7 +40,9 @@ public abstract class Usuario {
     @Column(name = "sexo")
     private Sexo sexo;
 
- 
+    @Enumerated(EnumType.STRING)
+    private Estatus estatus;
+   
 
     // 🔹 Getters y Setters
     public String getId() {
@@ -115,5 +117,13 @@ public abstract class Usuario {
         this.sexo = sexo;
     }
 
+    public Estatus getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(Estatus estatus) {
+        this.estatus = estatus;
+    }
+    
     
 }

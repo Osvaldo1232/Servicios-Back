@@ -17,7 +17,7 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
 
     List<InscritoAlumno> findByGrado_IdAndGrupo_IdAndCiclo_Id(String gradoId, String grupoId, String cicloId);
     
-	
+   
 	  
 	  
 	  @Query("""

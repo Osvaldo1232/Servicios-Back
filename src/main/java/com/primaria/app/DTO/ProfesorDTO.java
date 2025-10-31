@@ -6,7 +6,7 @@ import com.primaria.app.Model.Estatus;
 public class ProfesorDTO extends UsuarioDTO {
 
     private String especialidad;
-    private Estatus estatus;
+   
     private String telefono;
     private String rfc;
     private String clavePresupuestal;
@@ -21,14 +21,7 @@ public class ProfesorDTO extends UsuarioDTO {
         this.especialidad = especialidad;
     }
 
-    public Estatus getEstatus() {
-        return estatus;
-    }
-
-    public void setEstatus(Estatus estatus) {
-        this.estatus = estatus;
-    }
-
+ 
     public String getTelefono() {
         return telefono;
     }

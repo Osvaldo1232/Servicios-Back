@@ -56,7 +56,6 @@ public class ProfesorController {
         profesor.setFechaNacimiento(dto.getFechaNacimiento());
         profesor.setSexo(dto.getSexo());
         profesor.setEspecialidad(dto.getEspecialidad());
-        profesor.setEstatus(dto.getEstatus());
         profesor.setTelefono(dto.getTelefono());
         profesor.setRfc(dto.getRfc());
         profesor.setClavePresupuestal(dto.getClavePresupuestal());
@@ -64,19 +63,5 @@ public class ProfesorController {
         return ResponseEntity.ok("Profesor actualizado exitosamente");
     }
     
-    @PatchMapping("/profesor/{id}/estatus")
-    @Operation(summary = "RF4.3 Actualizar Estatus de Profesor", description = "Actualiza únicamente el estatus de un profesor existente por su ID")
-    public ResponseEntity<?> actualizarEstatusProfesor(
-            @PathVariable String id,
-            @Valid @RequestBody EstatusDTO dto) {
-        Optional<Usuario> optUsuario = usuarioService.findById(id);
-        if (optUsuario.isEmpty() || !(optUsuario.get() instanceof Profesor)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Profesor no encontrado"));
-        }
-        Profesor profesor = (Profesor) optUsuario.get();
-        profesor.setEstatus(dto.getEstatus());
-        usuarioService.update(profesor, null);
-        return ResponseEntity.ok(Map.of("message", "Estatus actualizado exitosamente"));
-    }
+   
 }

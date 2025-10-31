@@ -10,13 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.primaria.app.DTO.AlumnoCargaDTO;
 import com.primaria.app.DTO.AlumnoInfoDTO;
+
 import com.primaria.app.DTO.InfoAlumnoTutorDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
 import com.primaria.app.DTO.InscritoAlumnoInfoBasicaDTO;
 import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
 import com.primaria.app.DTO.MateriaCalificacionDTO;
+import com.primaria.app.DTO.ProfesorRDTO;
 import com.primaria.app.Model.*;
 import com.primaria.app.repository.*;
 
@@ -227,5 +230,46 @@ public class InscritoAlumnoService {
                 })
                 .toList();
     }
+    
+    
+    public List<AlumnoCargaDTO> obtenerAlumnosPorCiclo(String cicloId) {
+        return inscritoAlumnoRepository.findByCicloId(cicloId)
+                .stream()
+                .map(inscrito -> {
+                    var alumno = inscrito.getAlumno();
+                    var grado = inscrito.getGrado();
+                    var grupo = inscrito.getGrupo();
+
+                    // Buscar tutor del alumno en ese ciclo (si existe)
+                    var tutor = alumnoTutorRepository.findByAlumno_IdAndCiclo_Id(alumno.getId(), cicloId)
+                            .map(AlumnoTutor::getTutor)
+                            .orElse(null);
+
+                    return new AlumnoCargaDTO(
+                            alumno.getNombre(),
+                            alumno.getApellidoPaterno(),
+                            alumno.getApellidoMaterno(),
+                            alumno.getMatricula(),
+                            alumno.getCurp(),
+                            grado != null ? grado.getNombre() : null,
+                            grupo != null ? grupo.getNombre() : null,
+                            tutor != null ? tutor.getNombre() : null,
+                            tutor != null ? tutor.getApellidoPaterno() : null,
+                            tutor != null ? tutor.getApellidoMaterno() : null
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+    
+    public List<ProfesorRDTO> obtenerDocentesPorGradoGrupoYCiclo(String gradoId, String grupoId, String cicloId) {
+        return inscritoAlumnoRepository.findByGrado_IdAndGrupo_IdAndCiclo_Id(gradoId, grupoId, cicloId)
+                .stream()
+                .map(InscritoAlumno::getDocente)
+                .distinct() // evita duplicados si hay varios alumnos del mismo docente
+                .map(profesor -> new ProfesorRDTO(profesor.getId(), profesor.getNombre()))
+                .collect(Collectors.toList());
+    }
+
+   
 
 }

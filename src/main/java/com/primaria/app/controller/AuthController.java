@@ -5,7 +5,7 @@ import com.primaria.app.DTO.LoginRequest;
 import com.primaria.app.Model.Usuario;
 import com.primaria.app.Service.UsuarioService;
 import com.primaria.app.security.JwtUtil;
-
+import com.primaria.app.exception.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -46,19 +46,22 @@ public class AuthController {
             )
         }
     )
+    
+    
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        String email = loginRequest.getEmail();
-        String password = loginRequest.getPassword();
-
-        Optional<Usuario> usuarioOpt = usuarioService.authenticate(email, password);
-
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
+        try {
+            Usuario usuario = usuarioService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
             String token = jwtUtil.generateToken(usuario.getId(), usuario.getRol().name());
-            return ResponseEntity.ok(Map.of("token", token,  "rol", usuario.getRol().name(), "uuid", usuario.getId() ));
-        } else {
-            return ResponseEntity.status(401).body(Map.of("error", "Credenciales inválidas"));
+            return ResponseEntity.ok(Map.of(
+                    "token", token,
+                    "rol", usuario.getRol().name(),
+                    "uuid", usuario.getId()
+            ));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(e.getCodigo() == 403 ? 403 : 401)
+                                 .body(Map.of("error", e.getMessage()));
         }
     }
+
 }

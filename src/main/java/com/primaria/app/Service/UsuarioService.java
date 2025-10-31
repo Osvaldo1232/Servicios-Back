@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.primaria.app.Model.Director;
+import com.primaria.app.Model.Estatus;
 import com.primaria.app.Model.Estudiante;
 import com.primaria.app.Model.Profesor;
 import com.primaria.app.Model.Usuario;
@@ -88,17 +88,26 @@ public class UsuarioService {
         }
         return usuarioRepository.save(usuario);
     }
-
-    public Optional<Usuario> authenticate(String email, String password) {
+    public Usuario authenticate(String email, String password) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
-        if (usuarioOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
-            if (passwordEncoder.matches(password, usuario.getPassword())) {
-                return Optional.of(usuario);
-            }
+        if (usuarioOpt.isEmpty()) {
+            throw new BusinessException(401, "Credenciales inválidas");
         }
-        return Optional.empty();
+
+        Usuario usuario = usuarioOpt.get();
+
+        if (!passwordEncoder.matches(password, usuario.getPassword())) {
+            throw new BusinessException(401, "Credenciales inválidas");
+        }
+
+        if (usuario.getEstatus() == null || usuario.getEstatus() != Estatus.ACTIVO) {
+            throw new BusinessException(403, "Usuario inactivo, contacte al administrador");
+        }
+
+        return usuario;
     }
+
+
 
     public Optional<Usuario> findByEmail(String email) {
         return usuarioRepository.findByEmail(email);
@@ -111,5 +120,16 @@ public class UsuarioService {
     public Object buscarUsuarioPorId(String id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(1000, "Usuario no encontrado"));
+    }
+    
+    public boolean actualizarEstatus(String usuarioId, Estatus estatus) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.setEstatus(estatus);
+            usuarioRepository.save(usuario);
+            return true;
+        }
+        return false;
     }
 }

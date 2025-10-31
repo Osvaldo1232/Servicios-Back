@@ -14,8 +14,7 @@ public class Profesor extends Usuario {
     private String rfc;
     private String clavePresupuestal;
 
-    @Enumerated(EnumType.STRING)
-    private Estatus estatus;
+    
 
     // Getters y Setters
 
@@ -51,11 +50,5 @@ public class Profesor extends Usuario {
         this.clavePresupuestal = clavePresupuestal;
     }
 
-    public Estatus getEstatus() {
-        return estatus;
-    }
-
-    public void setEstatus(Estatus estatus) {
-        this.estatus = estatus;
-    }
+   
 }

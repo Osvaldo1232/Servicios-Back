@@ -11,8 +11,7 @@ public class Estudiante extends Usuario {
     private String matricula;
     private String curp;
 
-    @Enumerated(EnumType.STRING)
-    private Estatus estatus;
+   
     
     // Getters y Setters
 
@@ -31,12 +30,5 @@ public class Estudiante extends Usuario {
     public void setCurp(String curp) {
         this.curp = curp;
     }
-    
-    public Estatus getEstatus() {
-        return estatus;
-    }
-
-    public void setEstatus(Estatus estatus) {
-        this.estatus = estatus;
-    }
+   
 }

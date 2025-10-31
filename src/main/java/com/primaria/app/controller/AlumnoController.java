@@ -100,7 +100,7 @@ public class AlumnoController {
         estudiante.setSexo(dto.getSexo());
         estudiante.setCurp(dto.getCurp());
         estudiante.setMatricula(dto.getMatricula());
-        estudiante.setEstatus(dto.getEstatus());
+      
         
         usuarioService.update(estudiante, dto.getPassword());
 
@@ -108,19 +108,5 @@ public class AlumnoController {
     }
     
     
-    @PatchMapping("/alumno/{id}/estatus")
-	  @Operation(summary = "RF4.7 Actualizar Estatus de Alumno", description = "Actualiza únicamente el estatus de un alumno existente por su ID")
-	  public ResponseEntity<?> actualizarEstatusProfesor(
-	          @PathVariable String id,
-	          @Valid @RequestBody EstatusDTO dto) {
-	      Optional<Usuario> optUsuario = usuarioService.findById(id);
-	      if (optUsuario.isEmpty() || !(optUsuario.get() instanceof Estudiante)) {
-	          return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                  .body(Map.of("error", "Profesor no encontrado"));
-	      }
-	      Estudiante estudiante = (Estudiante) optUsuario.get();
-	      estudiante.setEstatus(dto.getEstatus());
-	      usuarioService.update(estudiante, null);
-	      return ResponseEntity.ok(Map.of("message", "Estatus actualizado exitosamente"));
-	  }
+   
 }

@@ -11,12 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.primaria.app.DTO.AlumnoCargaDTO;
 import com.primaria.app.DTO.AlumnoInfoDTO;
+
 import com.primaria.app.DTO.InfoAlumnoTutorDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
-import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
 import com.primaria.app.DTO.InscritoAlumnoInfoBasicaDTO;
 import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
+import com.primaria.app.DTO.ProfesorDTO;
+import com.primaria.app.DTO.ProfesorRDTO;
 import com.primaria.app.Model.InscritoAlumno;
 import com.primaria.app.Service.InscritoAlumnoService;
 
@@ -159,4 +162,37 @@ public class InscritoAlumnoController {
             return ResponseEntity.ok(resultado); // HTTP 200 con la lista de inscripciones
         }
     
+   
+    @Operation(
+            summary = "RF2.8 Obtener alumnos inscritos por ciclo escolar",
+            description = "Devuelve una lista de alumnos con sus datos personales, grado, grupo y tutor, filtrados por ID del ciclo escolar."
+        )
+       
+        @GetMapping("/alumnos/{cicloId}")
+        public List<AlumnoCargaDTO> obtenerAlumnosPorCiclo(@PathVariable String cicloId) {
+            return inscritoAlumnoService.obtenerAlumnosPorCiclo(cicloId);
+        }
+    
+    @Operation(
+            summary = "Obtener docente por grado, grupo y ciclo",
+            description = "Devuelve el ID y nombre del docente correspondiente al grado, grupo y ciclo especificados.",
+            responses = {
+                @ApiResponse(responseCode = "200", description = "Docentes encontrados"),
+                @ApiResponse(responseCode = "404", description = "No se encontraron docentes")
+            }
+        )
+        @GetMapping("/docentes")
+        public ResponseEntity<List<ProfesorRDTO>> obtenerDocentePorGradoGrupoYCiclo(
+                @RequestParam String gradoId,
+                @RequestParam String grupoId,
+                @RequestParam String cicloId) {
+
+            List<ProfesorRDTO> docentes = inscritoAlumnoService.obtenerDocentesPorGradoGrupoYCiclo(gradoId, grupoId, cicloId);
+
+            if (docentes.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(docentes);
+        }
 }
