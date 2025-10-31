@@ -15,6 +15,7 @@ import com.primaria.app.DTO.AlumnoInfoDTO;
 import com.primaria.app.DTO.InfoAlumnoTutorDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
+import com.primaria.app.DTO.InscritoAlumnoInfoBasicaDTO;
 import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
 import com.primaria.app.Model.InscritoAlumno;
 import com.primaria.app.Service.InscritoAlumnoService;
@@ -91,35 +92,7 @@ public class InscritoAlumnoController {
     }
     
      
-    @GetMapping("/filtrar")
-    @Operation(summary = "RF2.7 Filtrar alumnos inscritos",
-               description = "Permite filtrar alumnos inscritos por grado, grupo y/o ciclo escolar. Al menos un parámetro es obligatorio.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Consulta exitosa"),
-            @ApiResponse(responseCode = "400", description = "Debe proporcionar al menos un parámetro de búsqueda"),
-            @ApiResponse(responseCode = "404", description = "No se encontraron alumnos inscritos"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
-    public ResponseEntity<?> filtrar(
-            @RequestParam(required = false) String gradoId,
-            @RequestParam(required = false) String grupoId,
-            @RequestParam(required = false) String cicloId
-    ) {
-        try {
-            List<InscritoAlumnoDetalleDTO> resultado = inscritoAlumnoService.filtrarInscripciones(gradoId, grupoId, cicloId);
 
-            if (resultado.isEmpty()) {
-                return ResponseEntity.status(404).body("No se encontraron alumnos inscritos con los filtros proporcionados.");
-            }
-
-            return ResponseEntity.ok(resultado);
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error interno del servidor: " + e.getMessage());
-        }
-    }
 
     
     @Operation(
@@ -166,5 +139,24 @@ public class InscritoAlumnoController {
         }
     }
     
+    @Operation(
+            summary = "RF2.7 Filtrar inscripciones por grado, grupo y ciclo escolar",
+            description = "Devuelve una lista con información básica del alumno, filtrada por grado, grupo y ciclo escolar."
+        )
+        @GetMapping("/filtrarAlumnos")
+        public ResponseEntity<List<InscritoAlumnoInfoBasicaDTO>> obtenerPorGradoGrupoCiclo(
+                @Parameter(description = "ID del grado ") @RequestParam(required = true) String gradoId,
+                @Parameter(description = "ID del grupo ") @RequestParam(required = true) String grupoId,
+                @Parameter(description = "ID del ciclo escolar ") @RequestParam(required = true) String cicloId
+        ) {
+            List<InscritoAlumnoInfoBasicaDTO> resultado =
+                    inscritoAlumnoService.obtenerPorGradoGrupoCiclo(gradoId, grupoId, cicloId);
+
+            if (resultado.isEmpty()) {
+                return ResponseEntity.noContent().build(); // HTTP 204 si no hay resultados
+            }
+
+            return ResponseEntity.ok(resultado); // HTTP 200 con la lista de inscripciones
+        }
     
 }

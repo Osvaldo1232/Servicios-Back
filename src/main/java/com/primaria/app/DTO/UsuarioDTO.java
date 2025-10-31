@@ -5,17 +5,24 @@ import java.time.LocalDate;
 
 public class UsuarioDTO {
 
-	 private String id;
+    private String id;
     private String nombre;
-    private String apellidos; 
+    private String apellidoPaterno;
+    private String apellidoMaterno;
     private String email;
     private String password;
-
-    // Nuevos campos
     private LocalDate fechaNacimiento;
-    private Sexo sexo;
+    private Sexo sexo; 
 
-    // Getters y Setters
+    // 🔹 Getters y Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -24,17 +31,24 @@ public class UsuarioDTO {
         this.nombre = nombre;
     }
 
+    public String getApellidoPaterno() {
+        return apellidoPaterno;
+    }
+
+    public void setApellidoPaterno(String apellidoPaterno) {
+        this.apellidoPaterno = apellidoPaterno;
+    }
+
+    public String getApellidoMaterno() {
+        return apellidoMaterno;
+    }
+
+    public void setApellidoMaterno(String apellidoMaterno) {
+        this.apellidoMaterno = apellidoMaterno;
+    }
+
     public String getEmail() {
         return email;
-    }
-
-    
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public void setEmail(String email) {
@@ -64,12 +78,4 @@ public class UsuarioDTO {
     public void setSexo(Sexo sexo) {
         this.sexo = sexo;
     }
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
 }

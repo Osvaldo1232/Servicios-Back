@@ -31,7 +31,9 @@ public class UsuarioController {
     public ResponseEntity<?> registrarEstudiante(@RequestBody EstudianteDTO dto) {
         Estudiante estudiante = new Estudiante();
         estudiante.setNombre(dto.getNombre());
-        estudiante.setApellidos(dto.getApellidos());
+        estudiante.setApellidoMaterno(dto.getApellidoMaterno());
+        estudiante.setApellidoPaterno(dto.getApellidoPaterno());
+        
         estudiante.setEmail(dto.getEmail());
         estudiante.setPassword(dto.getPassword());
         estudiante.setMatricula(dto.getMatricula());
@@ -56,7 +58,8 @@ public class UsuarioController {
     public ResponseEntity<?> registrarProfesor(@RequestBody ProfesorDTO dto) {
         Profesor profesor = new Profesor();
         profesor.setNombre(dto.getNombre());
-        profesor.setApellidos(dto.getApellidos());
+        profesor.setApellidoMaterno(dto.getApellidoMaterno());
+       profesor.setApellidoPaterno(dto.getApellidoPaterno());
         profesor.setEmail(dto.getEmail());
         profesor.setPassword(dto.getPassword());
         profesor.setRol(Rol.PROFESOR);
@@ -70,7 +73,10 @@ public class UsuarioController {
         profesor.setRfc(dto.getRfc());
         profesor.setClavePresupuestal(dto.getClavePresupuestal());
         usuarioService.save(profesor);
-        return ResponseEntity.ok("Profesor registrado exitosamente");
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Profesor registrado exitosamente");
+        response.put("id", profesor.getId());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/director")
@@ -78,7 +84,9 @@ public class UsuarioController {
     public ResponseEntity<?> registrarDirector(@RequestBody DirectorDTO dto) {
         Director director = new Director();
         director.setNombre(dto.getNombre());
-        director.setApellidos(dto.getApellidos());
+        director.setApellidoMaterno(dto.getApellidoMaterno());
+        director.setApellidoPaterno(dto.getApellidoPaterno());
+        
         director.setEmail(dto.getEmail());
         director.setPassword(dto.getPassword());
         director.setTelefono(dto.getTelefono());

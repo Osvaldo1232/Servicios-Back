@@ -1,11 +1,9 @@
 package com.primaria.app.controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-
+import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -19,6 +17,7 @@ import com.primaria.app.DTO.TrimestresResumenDTO;
 import com.primaria.app.Model.Trimestres;
 import com.primaria.app.Service.TrimestresService;
 
+import org.springframework.http.HttpHeaders;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,4 +90,24 @@ public class TrimestreController {
 	    public List<TrimestresResumenDTO> obtenerCamposActivos() {
 	        return trimestresService.obtenerActivos();
 	    }
+	    
+	    @GetMapping(value = "/imprimir", produces = MediaType.APPLICATION_PDF_VALUE)
+	    @Operation(summary = "Genera un PDF con la lista de todos los trimestres")
+	    public ResponseEntity<byte[]> generarPDF() {
+	        try {
+	            byte[] pdfBytes = trimestresService.generarPDF();
+
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.setContentType(MediaType.APPLICATION_PDF);
+	            headers.setContentDispositionFormData("filename", "trimestres.pdf");
+
+	            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+
+	        } catch (Exception e) {
+	            return ResponseEntity
+	                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                    .body(("Error al generar PDF: " + e.getMessage()).getBytes());
+	        }
+	    }
+
 }

@@ -8,20 +8,21 @@ public class AlumnoTutorDTO {
     private UUID alumnoId;
     private UUID tutorId;
     private UUID cicloId;
+    private String parentesco; // Nuevo campo agregado
 
-    // Constructores
-
+    // Constructor vacío
     public AlumnoTutorDTO() {}
 
-    public AlumnoTutorDTO(UUID id, UUID alumnoId, UUID tutorId, UUID cicloId) {
+    // Constructor con todos los campos
+    public AlumnoTutorDTO(UUID id, UUID alumnoId, UUID tutorId, UUID cicloId, String parentesco) {
         this.id = id;
         this.alumnoId = alumnoId;
         this.tutorId = tutorId;
         this.cicloId = cicloId;
+        this.parentesco = parentesco;
     }
 
-    // Getters y setters
-
+    // Getters y Setters
     public UUID getId() {
         return id;
     }
@@ -52,5 +53,13 @@ public class AlumnoTutorDTO {
 
     public void setCicloId(UUID cicloId) {
         this.cicloId = cicloId;
+    }
+
+    public String getParentesco() {
+        return parentesco;
+    }
+
+    public void setParentesco(String parentesco) {
+        this.parentesco = parentesco;
     }
 }

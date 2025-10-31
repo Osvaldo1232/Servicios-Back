@@ -15,17 +15,9 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
 	List<InscritoAlumno> findByGrupoId(String idGrupo);
 	List<InscritoAlumno> findByCicloId(String idCiclo);
 
+    List<InscritoAlumno> findByGrado_IdAndGrupo_IdAndCiclo_Id(String gradoId, String grupoId, String cicloId);
+    
 	
-	  @Query("SELECT i FROM InscritoAlumno i " +
-	           "WHERE (:gradoId IS NULL OR i.grado.id = :gradoId) " +
-	           "AND (:grupoId IS NULL OR i.grupo.id = :grupoId) " +
-	           "AND (:cicloId IS NULL OR i.ciclo.id = :cicloId)")
-	    List<InscritoAlumno> filtrar(
-	            @Param("gradoId") String gradoId,
-	            @Param("grupoId") String grupoId,
-	            @Param("cicloId") String cicloId
-	    );
-	  
 	  
 	  
 	  @Query("""

@@ -1,33 +1,32 @@
 package com.primaria.app.DTO;
 
 import java.util.UUID;
-
 import com.primaria.app.Model.Estatus;
 
 public class TutorDTO {
 
     private UUID id;
     private String nombre;
-    private String apellidos;
+    private String apellidoPaterno;
+    private String apellidoMaterno;
     private String correo;
-   
     private String telefono;
     private Estatus estatus;
-    // Constructores
 
+    // ===== Constructores =====
     public TutorDTO() {}
 
-    public TutorDTO(UUID id, String nombre, String apellidos, String correo,  String telefono) {
+    public TutorDTO(UUID id, String nombre, String apellidoPaterno, String apellidoMaterno,
+                    String correo, String telefono) {
         this.id = id;
         this.nombre = nombre;
-        this.apellidos = apellidos;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
         this.correo = correo;
-        
         this.telefono = telefono;
     }
 
-    // Getters y setters
-
+    // ===== Getters y Setters =====
     public UUID getId() {
         return id;
     }
@@ -44,12 +43,20 @@ public class TutorDTO {
         this.nombre = nombre;
     }
 
-    public String getApellidos() {
-        return apellidos;
+    public String getApellidoPaterno() {
+        return apellidoPaterno;
     }
 
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+    public void setApellidoPaterno(String apellidoPaterno) {
+        this.apellidoPaterno = apellidoPaterno;
+    }
+
+    public String getApellidoMaterno() {
+        return apellidoMaterno;
+    }
+
+    public void setApellidoMaterno(String apellidoMaterno) {
+        this.apellidoMaterno = apellidoMaterno;
     }
 
     public String getCorreo() {
@@ -60,8 +67,6 @@ public class TutorDTO {
         this.correo = correo;
     }
 
-  
-
     public String getTelefono() {
         return telefono;
     }
@@ -69,12 +74,20 @@ public class TutorDTO {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-    
+
     public Estatus getEstatus() {
         return estatus;
     }
 
     public void setEstatus(Estatus estatus) {
         this.estatus = estatus;
+    }
+
+    // ===== Método opcional para nombre completo =====
+    public String getNombreCompleto() {
+        return String.format("%s %s %s",
+                nombre != null ? nombre : "",
+                apellidoPaterno != null ? apellidoPaterno : "",
+                apellidoMaterno != null ? apellidoMaterno : "").trim();
     }
 }

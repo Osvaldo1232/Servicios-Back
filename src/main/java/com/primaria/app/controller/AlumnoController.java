@@ -92,9 +92,9 @@ public class AlumnoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profesor no encontrado");
         }
         Estudiante estudiante = (Estudiante) optUsuario.get();
-
         estudiante.setNombre(dto.getNombre());
-        estudiante.setApellidos(dto.getApellidos());
+        estudiante.setApellidoMaterno(dto.getApellidoMaterno());
+        estudiante.setApellidoPaterno(dto.getApellidoPaterno());
         estudiante.setEmail(dto.getEmail());
         estudiante.setFechaNacimiento(dto.getFechaNacimiento());
         estudiante.setSexo(dto.getSexo());

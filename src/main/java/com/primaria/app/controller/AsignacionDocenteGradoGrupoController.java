@@ -52,30 +52,12 @@ public class AsignacionDocenteGradoGrupoController {
         }
     }
 
-
-    @GetMapping("/filtrar")
-    @Operation(summary = "Filtrar asignaciones (resumen)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Consulta exitosa"),
-            @ApiResponse(responseCode = "404", description = "No se encontraron asignaciones"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
-    public ResponseEntity<?> filtrarResumen(
-            @RequestParam(required = false) String docenteId,
-            @RequestParam(required = false) String gradoId,
-            @RequestParam(required = false) String grupoId,
-            @RequestParam(required = false) String cicloId
-    ) {
-        try {
-            List<AsignacionDocenteGradoGrupoResumenDTO> resultado = service.filtrarAsignacionesResumen(docenteId, gradoId, grupoId, cicloId);
-            return ResponseEntity.ok(resultado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(Map.of("mensaje", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(Map.of("mensaje", "Error interno del servidor", "detalle", e.getMessage()));
-        }
+    @Operation(summary = "Obtener asignaciones por ciclo escolar, devuelve grado, grupo y profesor")
+    @GetMapping("/por-ciclo/{idCiclo}")
+    public ResponseEntity<List<AsignacionDocenteGradoGrupoResumenDTO>> obtenerPorCiclo(@PathVariable String idCiclo) {
+        return ResponseEntity.ok(service.obtenerPorCiclo(idCiclo));
     }
-    
+  
     
     @GetMapping("/resumen-profesor/reciente")
     @Operation(summary = "Grado, Grupo y Ciclo de la asignación más reciente de un profesor")

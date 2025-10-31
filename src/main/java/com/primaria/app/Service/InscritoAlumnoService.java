@@ -1,19 +1,20 @@
 package com.primaria.app.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 import com.primaria.app.DTO.AlumnoInfoDTO;
 import com.primaria.app.DTO.InfoAlumnoTutorDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoDetalleDTO;
+import com.primaria.app.DTO.InscritoAlumnoInfoBasicaDTO;
 import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
 import com.primaria.app.DTO.MateriaCalificacionDTO;
 import com.primaria.app.Model.*;
@@ -22,10 +23,9 @@ import com.primaria.app.repository.*;
 @Service
 public class InscritoAlumnoService {
 
-	 @Autowired
-	  
+    @Autowired
     private AsignacionMateriaGradoRepository asignacionMateriaGradoRepository;
-    
+
     @Autowired
     private InscritoAlumnoRepository inscritoAlumnoRepository;
 
@@ -37,6 +37,7 @@ public class InscritoAlumnoService {
 
     @Autowired
     private AlumnoTutorRepository alumnoTutorRepository;
+
     @Autowired
     private GradosRepository gradoRepository;
 
@@ -46,106 +47,72 @@ public class InscritoAlumnoService {
     @Autowired
     private CicloEscolaresRepository cicloRepository;
 
-   public InscritoAlumno guardarInscripcion(InscritoAlumnoDTO dto) {
-    // Buscar entidades relacionadas por ID
-    Estudiante alumno = estudianteRepository.findById(dto.getAlumnoId())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alumno no encontrado"));
+    public InscritoAlumno guardarInscripcion(InscritoAlumnoDTO dto) {
+        Estudiante alumno = estudianteRepository.findById(dto.getAlumnoId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alumno no encontrado"));
 
-    Profesor docente = profesorRepository.findById(dto.getDocenteId())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Docente no encontrado"));
+        Profesor docente = profesorRepository.findById(dto.getDocenteId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Docente no encontrado"));
 
-    Grado grado = gradoRepository.findById(dto.getGradoId())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grado no encontrado"));
+        Grado grado = gradoRepository.findById(dto.getGradoId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grado no encontrado"));
 
-    Grupo grupo = grupoRepository.findById(dto.getGrupoId())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grupo no encontrado"));
+        Grupo grupo = grupoRepository.findById(dto.getGrupoId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grupo no encontrado"));
 
-    CicloEscolar ciclo = cicloRepository.findById(dto.getCicloId())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ciclo escolar no encontrado"));
+        CicloEscolar ciclo = cicloRepository.findById(dto.getCicloId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ciclo escolar no encontrado"));
 
-    // Crear la inscripción
-    InscritoAlumno inscripcion = new InscritoAlumno();
-    inscripcion.setAlumno(alumno);
-    inscripcion.setDocente(docente);
-    inscripcion.setGrado(grado);
-    inscripcion.setGrupo(grupo);
-    inscripcion.setCiclo(ciclo);
-    
-    inscripcion.setFechaInscripcion(dto.getFechaInscripcion() != null ? dto.getFechaInscripcion() : LocalDateTime.now());
+        InscritoAlumno inscripcion = new InscritoAlumno();
+        inscripcion.setAlumno(alumno);
+        inscripcion.setDocente(docente);
+        inscripcion.setGrado(grado);
+        inscripcion.setGrupo(grupo);
+        inscripcion.setCiclo(ciclo);
+        inscripcion.setFechaInscripcion(dto.getFechaInscripcion() != null ? dto.getFechaInscripcion() : LocalDateTime.now());
+        inscripcion.setEstatus(dto.getEstatus());
 
-
-    inscripcion.setEstatus(dto.getEstatus());
-
-    // Guardar y devolver
-    return inscritoAlumnoRepository.save(inscripcion);
-}
-
-    
-    public List<InscritoAlumnoDetalleDTO> filtrarInscripciones(String gradoId, String grupoId, String cicloId) {
-
-        if ((gradoId == null || gradoId.isEmpty()) &&
-            (grupoId == null || grupoId.isEmpty()) &&
-            (cicloId == null || cicloId.isEmpty())) {
-            throw new IllegalArgumentException("Debe proporcionar al menos un parámetro de búsqueda");
-        }
-
-        List<InscritoAlumno> inscripciones = inscritoAlumnoRepository.filtrar(gradoId, grupoId, cicloId);
-
-        return inscripciones.stream().map(i -> {
-        	String nombreAlumno = i.getAlumno().getNombre() + " " + i.getAlumno().getApellidos();
-
-         
-            String nombreProfesor = i.getDocente().getNombre() + " " + i.getDocente().getApellidos();
-
-            
-            
-            String nombreGrado = i.getGrado() != null ? i.getGrado().getNombre() : "";
-            String nombreGrupo = i.getGrupo() != null ? i.getGrupo().getNombre() : "";
-
-            return new InscritoAlumnoDetalleDTO(
-                    i.getId(),
-                    i.getAlumno().getId(),
-                    i.getAlumno().getMatricula(),
-                    i.getAlumno().getCurp(),
-                    nombreAlumno,
-                    nombreGrado,
-                    nombreGrupo,
-                    nombreProfesor
-            );
-        }).collect(Collectors.toList());
+        return inscritoAlumnoRepository.save(inscripcion);
     }
+
     
-    
+     
+
     public AlumnoInfoDTO obtenerInfoAlumno(String idAlumno) {
-        // 1️⃣ Buscar la última inscripción
         InscritoAlumno inscripcion = inscritoAlumnoRepository.encontrarUltimaInscripcionPorAlumno(idAlumno);
         if (inscripcion == null) {
             throw new RuntimeException("El alumno no tiene inscripciones registradas");
         }
 
-        // 2️⃣ Obtener las materias del grado del alumno
-        List<AsignacionMateriaGrado> asignaciones = asignacionMateriaGradoRepository.findByGradoId(inscripcion.getGrado().getId());
+        String idGrado = inscripcion.getGrado() != null ? inscripcion.getGrado().getId() : null;
+        if (idGrado == null) {
+            throw new RuntimeException("La inscripción no tiene grado asociado.");
+        }
 
-        // 3️⃣ Mapear materias a DTOs (sin calificación aún)
+        List<AsignacionMateriaGrado> asignaciones = asignacionMateriaGradoRepository.findByGradoId(idGrado);
+
         List<MateriaCalificacionDTO> materias = asignaciones.stream()
-                .map(a -> new MateriaCalificacionDTO(a.getMateria().getNombre(), null)) // calificación null por ahora
+                .map(a -> new MateriaCalificacionDTO(
+                        a.getMateria() != null ? safe(a.getMateria().getNombre()) : "",
+                        null))
                 .collect(Collectors.toList());
 
-        // 4️⃣ Retornar el DTO completo
+        String nombreGrado = inscripcion.getGrado() != null ? safe(inscripcion.getGrado().getNombre()) : "";
+        String nombreGrupo = inscripcion.getGrupo() != null ? safe(inscripcion.getGrupo().getNombre()) : "";
+
         return new AlumnoInfoDTO(
-                inscripcion.getCiclo().getId(),
-                inscripcion.getGrado().getNombre(),
-                inscripcion.getGrupo().getNombre(),
+                inscripcion.getCiclo() != null ? inscripcion.getCiclo().getId() : null,
+                nombreGrado,
+                nombreGrupo,
                 materias
         );
     }
-    
+
     public InscritoAlumnoRecienteDTO obtenerUltimoPorAlumno(String alumnoId) {
         InscritoAlumno inscrito = inscritoAlumnoRepository.findTopByAlumno_IdOrderByFechaInscripcionDesc(alumnoId);
 
         if (inscrito == null) return null;
 
-        // Formato del ciclo escolar
         String cicloFormateado = null;
         if (inscrito.getCiclo() != null &&
             inscrito.getCiclo().getFechaInicio() != null &&
@@ -155,17 +122,17 @@ public class InscritoAlumnoService {
                     + "/" + inscrito.getCiclo().getFechaFin().format(fmt);
         }
 
-        // Datos del profesor
         String nombreProfesorCompleto = null;
         String telefonoProfesor = null;
         if (inscrito.getDocente() != null) {
             var docente = inscrito.getDocente();
-            nombreProfesorCompleto = docente.getNombre() +
-                    (docente.getApellidos() != null ? " " + docente.getApellidos() : "");
-            telefonoProfesor = docente.getTelefono();
+            nombreProfesorCompleto = String.join(" ",
+                    safe(docente.getNombre()),
+                    safe(docente.getApellidoPaterno()),
+                    safe(docente.getApellidoMaterno())).trim();
+            telefonoProfesor = safe(docente.getTelefono());
         }
 
-        // Construimos el DTO
         return new InscritoAlumnoRecienteDTO(
                 inscrito.getId(),
                 inscrito.getGrado() != null ? inscrito.getGrado().getId() : null,
@@ -178,16 +145,15 @@ public class InscritoAlumnoService {
                 telefonoProfesor
         );
     }
+
     public InfoAlumnoTutorDTO obtenerInfoPorAlumno(String idAlumno) {
-        // Obtener inscripción más reciente
         InscritoAlumno inscripcion = inscritoAlumnoRepository.findTopByAlumno_IdOrderByFechaInscripcionDesc(idAlumno);
         if (inscripcion == null) {
             throw new RuntimeException("No se encontró inscripción para el alumno con ID: " + idAlumno);
         }
 
-        // Obtener relación alumno-tutor en el ciclo correspondiente
         AlumnoTutor relacion = alumnoTutorRepository.findByAlumno_IdAndCiclo_Id(
-                idAlumno, inscripcion.getCiclo().getId()
+                idAlumno, inscripcion.getCiclo() != null ? inscripcion.getCiclo().getId() : null
         ).orElseThrow(() -> new RuntimeException(
                 "No se encontró tutor asignado para el alumno en el ciclo actual."
         ));
@@ -198,19 +164,68 @@ public class InscritoAlumnoService {
         Grupo grupo = inscripcion.getGrupo();
         CicloEscolar ciclo = inscripcion.getCiclo();
 
-        String nombreAlumno = alumno.getNombre() + " " + alumno.getApellidos();
-        String nombreTutor = tutor.getNombre() + " " + tutor.getApellidos();
+        String nombreAlumno = String.join(" ",
+                safe(alumno != null ? alumno.getNombre() : null),
+                safe(alumno != null ? alumno.getApellidoPaterno() : null),
+                safe(alumno != null ? alumno.getApellidoMaterno() : null)).trim();
+
+        String nombreTutor = "";
+        if (tutor != null) {
+            nombreTutor = String.join(" ",
+                    safe(tutor.getNombre()),
+                    safe(tutor.getApellidoPaterno()),
+                    safe(tutor.getApellidoMaterno())).trim();
+        }
+
+        String fechaCiclo = "";
+        if (ciclo != null) {
+            String inicio = ciclo.getFechaInicio() != null ? ciclo.getFechaInicio().toString() : "";
+            String fin = ciclo.getFechaFin() != null ? ciclo.getFechaFin().toString() : "";
+            fechaCiclo = (inicio + " - " + fin).trim();
+        }
 
         return new InfoAlumnoTutorDTO(
-                alumno.getCurp(),
+                alumno != null ? safe(alumno.getCurp()) : null,
                 nombreAlumno,
                 nombreTutor,
-                alumno.getMatricula(),
-                grado.getNombre(),
-                grupo.getNombre(),
-                ciclo.getFechaInicio() + " - " + ciclo.getFechaFin()
+                alumno != null ? safe(alumno.getMatricula()) : null,
+                grado != null ? safe(grado.getNombre()) : "",
+                grupo != null ? safe(grupo.getNombre()) : "",
+                fechaCiclo
         );
     }
- 
-   
+
+    // ===== Helper =====
+    private String safe(String s) {
+        return s == null ? "" : s;
+    }
+    
+    
+    public List<InscritoAlumnoInfoBasicaDTO> obtenerPorGradoGrupoCiclo(String gradoId, String grupoId, String cicloId) {
+        List<InscritoAlumno> inscripciones = inscritoAlumnoRepository
+            .findByGrado_IdAndGrupo_IdAndCiclo_Id(gradoId, grupoId, cicloId);
+
+        return inscripciones.stream()
+                .map(i -> {
+                    var alumno = i.getAlumno();
+                    var grado = i.getGrado();
+                    var grupo = i.getGrupo();
+
+                    return new InscritoAlumnoInfoBasicaDTO(
+                            alumno != null ? alumno.getId() : null,
+                            alumno != null ? alumno.getNombre() : "",
+                            alumno != null ? alumno.getApellidoPaterno() : "",
+                            alumno != null ? alumno.getApellidoMaterno() : "",
+                            alumno != null ? alumno.getMatricula() : "",
+                            alumno != null ? alumno.getCurp() : "",
+                            grado != null ? grado.getId() : null,
+                            grado != null ? grado.getNombre() : "",
+                            grupo != null ? grupo.getId() : null,
+                            grupo != null ? grupo.getNombre() : "",
+                            i.getEstatus()
+                    );
+                })
+                .toList();
+    }
+
 }

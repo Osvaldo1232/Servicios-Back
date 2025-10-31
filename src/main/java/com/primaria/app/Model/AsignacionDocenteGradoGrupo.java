@@ -3,7 +3,6 @@ package com.primaria.app.Model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,6 +27,7 @@ public class AsignacionDocenteGradoGrupo {
     @JoinColumn(name = "id_grupo")
     private Grupo grupo;
 
+    // ✅ Relación con CicloEscolar (ya incluye id_ciclo como FK)
     @ManyToOne
     @JoinColumn(name = "id_ciclo")
     private CicloEscolar ciclo;
@@ -35,30 +35,65 @@ public class AsignacionDocenteGradoGrupo {
     @Enumerated(EnumType.STRING)
     private Estatus estatus;
 
-    // Fecha de creación (se llena automáticamente con Hibernate)
+    // Fecha de creación automática
     @CreationTimestamp
     @Column(name = "fecha_creado", updatable = false, columnDefinition = "datetime")
     private LocalDateTime fechaCreado;
 
-    // Getters y Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    // --- Getters y Setters ---
+    public String getId() {
+        return id;
+    }
 
-    public Profesor getDocente() { return docente; }
-    public void setDocente(Profesor docente) { this.docente = docente; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public Grado getGrado() { return grado; }
-    public void setGrado(Grado grado) { this.grado = grado; }
+    public Profesor getDocente() {
+        return docente;
+    }
 
-    public Grupo getGrupo() { return grupo; }
-    public void setGrupo(Grupo grupo) { this.grupo = grupo; }
+    public void setDocente(Profesor docente) {
+        this.docente = docente;
+    }
 
-    public CicloEscolar getCiclo() { return ciclo; }
-    public void setCiclo(CicloEscolar ciclo) { this.ciclo = ciclo; }
+    public Grado getGrado() {
+        return grado;
+    }
 
-    public Estatus getEstatus() { return estatus; }
-    public void setEstatus(Estatus estatus) { this.estatus = estatus; }
+    public void setGrado(Grado grado) {
+        this.grado = grado;
+    }
 
-    public LocalDateTime getFechaCreado() { return fechaCreado; }
-    public void setFechaCreado(LocalDateTime fechaCreado) { this.fechaCreado = fechaCreado; }
+    public Grupo getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(Grupo grupo) {
+        this.grupo = grupo;
+    }
+
+    public CicloEscolar getCiclo() {
+        return ciclo;
+    }
+
+    public void setCiclo(CicloEscolar ciclo) {
+        this.ciclo = ciclo;
+    }
+
+    public Estatus getEstatus() {
+        return estatus;
+    }
+
+    public void setEstatus(Estatus estatus) {
+        this.estatus = estatus;
+    }
+
+    public LocalDateTime getFechaCreado() {
+        return fechaCreado;
+    }
+
+    public void setFechaCreado(LocalDateTime fechaCreado) {
+        this.fechaCreado = fechaCreado;
+    }
 }

@@ -3,32 +3,32 @@ package com.primaria.app.Model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.UUID;
-
 @Entity
 public class Tutor {
 
-	   @Id
-	    @GeneratedValue(generator = "UUID")
-	    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	    @Column(name = "id", updatable = false, nullable = false, length = 36)
-	    private String id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, length = 36)
+    private String id;
 
     private String nombre;
 
-    private String apellidos;
+    @Column(name = "apellido_paterno")
+    private String apellidoPaterno;
+
+    @Column(name = "apellido_materno")
+    private String apellidoMaterno;
 
     private String correo;
 
-    private String parentesco;
 
     private String telefono;
 
-    
     @Enumerated(EnumType.STRING)
-    private Estatus estatus; 
-    // Getters y setters
+    private Estatus estatus;
 
+    // ===== Getters y Setters =====
     public String getId() {
         return id;
     }
@@ -36,7 +36,6 @@ public class Tutor {
     public void setId(String id) {
         this.id = id;
     }
-
 
     public String getNombre() {
         return nombre;
@@ -46,12 +45,20 @@ public class Tutor {
         this.nombre = nombre;
     }
 
-    public String getApellidos() {
-        return apellidos;
+    public String getApellidoPaterno() {
+        return apellidoPaterno;
     }
 
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+    public void setApellidoPaterno(String apellidoPaterno) {
+        this.apellidoPaterno = apellidoPaterno;
+    }
+
+    public String getApellidoMaterno() {
+        return apellidoMaterno;
+    }
+
+    public void setApellidoMaterno(String apellidoMaterno) {
+        this.apellidoMaterno = apellidoMaterno;
     }
 
     public String getCorreo() {
@@ -62,14 +69,7 @@ public class Tutor {
         this.correo = correo;
     }
 
-    public String getParentesco() {
-        return parentesco;
-    }
-
-    public void setParentesco(String parentesco) {
-        this.parentesco = parentesco;
-    }
-
+ 
     public String getTelefono() {
         return telefono;
     }
@@ -77,12 +77,21 @@ public class Tutor {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-    
+
     public Estatus getEstatus() {
         return estatus;
     }
 
     public void setEstatus(Estatus estatus) {
         this.estatus = estatus;
+    }
+
+    // ===== Método de utilidad opcional =====
+    @Transient
+    public String getNombreCompleto() {
+        return String.format("%s %s %s",
+                nombre != null ? nombre : "",
+                apellidoPaterno != null ? apellidoPaterno : "",
+                apellidoMaterno != null ? apellidoMaterno : "").trim();
     }
 }

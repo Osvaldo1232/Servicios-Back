@@ -14,28 +14,35 @@ public abstract class Usuario {
     @Column(name = "id", updatable = false, nullable = false, length = 36)
     private String id;
 
-   
     @Column(name = "nombre", length = 50, nullable = false)
     private String nombre;
-    
+
+    @Column(name = "apellido_paterno", length = 50, nullable = false)
+    private String apellidoPaterno;
+
+    @Column(name = "apellido_materno", length = 50, nullable = false)
+    private String apellidoMaterno;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "password", nullable = false)
     private String password;
-   
-    @Column(name = "apellidos", length = 50, nullable = false)
-    private String apellidos;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "rol", nullable = false)
     private Rol rol;
 
-    // 🔹 Nuevos campos
-    @Column(name = "fecha_nacimiento", nullable = true)
+    @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "sexo", nullable = true)
+    @Column(name = "sexo")
     private Sexo sexo;
 
-    // Getters y Setters
+ 
+
+    // 🔹 Getters y Setters
     public String getId() {
         return id;
     }
@@ -50,6 +57,22 @@ public abstract class Usuario {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getApellidoPaterno() {
+        return apellidoPaterno;
+    }
+
+    public void setApellidoPaterno(String apellidoPaterno) {
+        this.apellidoPaterno = apellidoPaterno;
+    }
+
+    public String getApellidoMaterno() {
+        return apellidoMaterno;
+    }
+
+    public void setApellidoMaterno(String apellidoMaterno) {
+        this.apellidoMaterno = apellidoMaterno;
     }
 
     public String getEmail() {
@@ -76,14 +99,6 @@ public abstract class Usuario {
         this.rol = rol;
     }
 
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
     public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
@@ -99,4 +114,6 @@ public abstract class Usuario {
     public void setSexo(Sexo sexo) {
         this.sexo = sexo;
     }
+
+    
 }

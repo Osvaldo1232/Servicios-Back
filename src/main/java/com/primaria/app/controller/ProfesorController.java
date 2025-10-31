@@ -31,7 +31,6 @@ public class ProfesorController {
         this.usuarioService = usuarioService;
     }
     
-    
     @GetMapping
     @Operation(summary = "RF4.4 Obtener todos los Profesores")
     public ResponseEntity<List<Profesor>> obtenerProfesores() {
@@ -42,7 +41,6 @@ public class ProfesorController {
             .collect(Collectors.toList());
         return ResponseEntity.ok(profesores);
     }
-    
     @PutMapping("/profesor/{id}")
     @Operation(summary = "RF4.2 y RF2.2  Actualizar Profesor")
     public ResponseEntity<?> actualizarProfesor(@PathVariable String id, @RequestBody ProfesorDTO dto) {
@@ -52,7 +50,8 @@ public class ProfesorController {
         }
         Profesor profesor = (Profesor) optUsuario.get();
         profesor.setNombre(dto.getNombre());
-        profesor.setApellidos(dto.getApellidos());
+        profesor.setApellidoMaterno(dto.getApellidoMaterno());
+        profesor.setApellidoPaterno(dto.getApellidoPaterno());
         profesor.setEmail(dto.getEmail());
         profesor.setFechaNacimiento(dto.getFechaNacimiento());
         profesor.setSexo(dto.getSexo());

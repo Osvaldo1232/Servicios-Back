@@ -1,24 +1,24 @@
 package com.primaria.app.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.primaria.app.Model.Director;
 import com.primaria.app.Model.Estudiante;
 import com.primaria.app.Model.Profesor;
 import com.primaria.app.Model.Usuario;
+import com.primaria.app.exception.BusinessException;
 import com.primaria.app.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
-    
-    public final UsuarioRepository usuarioRepository;
+
+    private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
@@ -26,12 +26,54 @@ public class UsuarioService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public UsuarioRepository getUsuarioRepository() {
-        return usuarioRepository;
-    }
-    
     public Usuario save(Usuario usuario) {
-        // Hashea la contraseña antes de guardar
+        List<String> errores = new ArrayList<>(); // 🧮 Lista para acumular errores
+
+        // 🔍 Validar correo duplicado
+        if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
+            errores.add("El correo ya está en uso");
+        }
+
+        // 🔍 Validar matrícula si es estudiante
+        if (usuario instanceof Estudiante estudiante) {
+            boolean existe = usuarioRepository.findAll().stream()
+                    .filter(u -> u instanceof Estudiante)
+                    .map(u -> (Estudiante) u)
+                    .anyMatch(u -> u.getMatricula().equalsIgnoreCase(estudiante.getMatricula()));
+            if (existe) {
+                errores.add("La matrícula ya está en uso");
+            }
+        }
+
+        // 🔍 Validar RFC y Clave Presupuestal si es profesor
+        if (usuario instanceof Profesor profesor) {
+            boolean rfcExiste = usuarioRepository.findAll().stream()
+                    .filter(u -> u instanceof Profesor)
+                    .map(u -> (Profesor) u)
+                    .anyMatch(u -> u.getRfc() != null && u.getRfc().equalsIgnoreCase(profesor.getRfc()));
+
+            if (rfcExiste) {
+                errores.add("El RFC ya está en uso");
+            }
+
+            boolean claveExiste = usuarioRepository.findAll().stream()
+                    .filter(u -> u instanceof Profesor)
+                    .map(u -> (Profesor) u)
+                    .anyMatch(u -> u.getClavePresupuestal() != null &&
+                                   u.getClavePresupuestal().equalsIgnoreCase(profesor.getClavePresupuestal()));
+
+            if (claveExiste) {
+                errores.add("La clave presupuestal ya está en uso");
+            }
+        }
+
+        // 🚨 Si hubo errores, los acumulamos en un solo mensaje
+        if (!errores.isEmpty()) {
+            String mensaje = String.join(" | ", errores);
+            throw new BusinessException(1000, "Errores de validación: " + mensaje);
+        }
+
+        // 🔐 Hashear la contraseña antes de guardar
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
@@ -46,39 +88,28 @@ public class UsuarioService {
         }
         return usuarioRepository.save(usuario);
     }
-    
+
     public Optional<Usuario> authenticate(String email, String password) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
-            // Compara contraseña hasheada
             if (passwordEncoder.matches(password, usuario.getPassword())) {
                 return Optional.of(usuario);
             }
         }
         return Optional.empty();
     }
-    
+
     public Optional<Usuario> findByEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
     
-    // ⬇️ AGREGAR ESTE MÉTODO
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
     }
-    
+
     public Object buscarUsuarioPorId(String id) {
-        Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
-        if (usuario instanceof Estudiante) {
-            return (Estudiante) usuario;
-        } else if (usuario instanceof Profesor) {
-            return (Profesor) usuario;
-        } else if (usuario instanceof Director) {
-            return (Director) usuario;
-        } else {
-            return usuario;
-        }
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(1000, "Usuario no encontrado"));
     }
 }

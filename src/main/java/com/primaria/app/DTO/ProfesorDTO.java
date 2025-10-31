@@ -53,5 +53,4 @@ public class ProfesorDTO extends UsuarioDTO {
         this.clavePresupuestal = clavePresupuestal;
     }
 
-   
 }

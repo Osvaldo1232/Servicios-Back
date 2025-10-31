@@ -1,17 +1,17 @@
 package com.primaria.app.Model;
+
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
-
-import java.util.UUID;
 
 @Entity
 public class AlumnoTutor {
 
-	   @Id
-	    @GeneratedValue(generator = "UUID")
-	    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	    @Column(name = "id", updatable = false, nullable = false, length = 36)
-	    private String id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, length = 36)
+    private String id;
+
     @ManyToOne
     @JoinColumn(name = "id_alumno")
     private Estudiante alumno;
@@ -24,8 +24,10 @@ public class AlumnoTutor {
     @JoinColumn(name = "id_ciclo")
     private CicloEscolar ciclo;
 
-    // Getters y setters
+    @Column(name = "parentesco", length = 50)
+    private String parentesco; // nuevo campo
 
+    // Getters y setters
     public String getId() {
         return id;
     }
@@ -56,5 +58,13 @@ public class AlumnoTutor {
 
     public void setCiclo(CicloEscolar ciclo) {
         this.ciclo = ciclo;
+    }
+
+    public String getParentesco() {
+        return parentesco;
+    }
+
+    public void setParentesco(String parentesco) {
+        this.parentesco = parentesco;
     }
 }

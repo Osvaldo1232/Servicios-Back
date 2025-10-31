@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AsignacionDocenteGradoGrupoService {
@@ -66,37 +67,26 @@ public class AsignacionDocenteGradoGrupoService {
     }
 
 
-    public List<AsignacionDocenteGradoGrupoResumenDTO> filtrarAsignacionesResumen(String docenteId, String gradoId, String grupoId, String cicloId) {
-        List<AsignacionDocenteGradoGrupo> resultado = repository.filtrar(docenteId, gradoId, grupoId, cicloId);
+    public List<AsignacionDocenteGradoGrupoResumenDTO> obtenerPorCiclo(String cicloId) {
+        return repository.findByCiclo_Id(cicloId).stream()
+                .map(a -> {
+                    var docente = a.getDocente();
+                    var grado = a.getGrado();
+                    var grupo = a.getGrupo();
+                    var ciclo = a.getCiclo();
 
-        if (resultado.isEmpty()) {
-            throw new RuntimeException("No se encontraron asignaciones con los filtros proporcionados");
-        }
-
-        return resultado.stream().map(a -> {
-            String nombreProfesor = a.getDocente() != null ? a.getDocente().getNombre() + " " + a.getDocente().getApellidos() : "";
-            String rfc = a.getDocente() != null ? a.getDocente().getRfc() : "";
-            String clave = a.getDocente() != null ? a.getDocente().getClavePresupuestal() : "";
-
-            String nombreGrado = a.getGrado() != null ? a.getGrado().getNombre() : "";
-            String nombreGrupo = a.getGrupo() != null ? a.getGrupo().getNombre() : "";
-            String nombreCiclo = a.getCiclo() != null ? a.getCiclo().getFechaInicio() + "-" + a.getCiclo().getFechaFin() : "";
-
-            String fechaCreadoIso = a.getFechaCreado() != null ? a.getFechaCreado().format(ISO_FORMATTER) : "";
-
-            // AsignacionDocenteGradoGrupoResumenDTO debe tener un campo para fecha si quieres retornarlo.
-            // Aquí supongo su constructor actual (ajusta si tu DTO es distinto).
-            return new AsignacionDocenteGradoGrupoResumenDTO(
-                    a.getDocente() != null ? a.getDocente().getId() : "",
-                    nombreProfesor,
-                    rfc,
-                    clave,
-                    nombreGrado,
-                    nombreGrupo,
-                    nombreCiclo,
-                    fechaCreadoIso // si tu DTO no tiene este parámetro, elimina o adapta
-            );
-        }).toList();
+                    return new AsignacionDocenteGradoGrupoResumenDTO(
+                            docente != null ? docente.getId() : null,
+                            docente != null ? docente.getNombre() : "",
+                            docente != null ? docente.getRfc() : "",
+                            docente != null ? docente.getClavePresupuestal() : "",
+                            grado != null ? grado.getNombre() : "",
+                            grupo != null ? grupo.getNombre() : "",
+                            ciclo != null ? ciclo.getId() : "",
+                            a.getFechaCreado() != null ? a.getFechaCreado().toString() : null
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
     
