@@ -11,12 +11,13 @@ public class AlumnoCargaDTO {
     private String tutorNombre;
     private String tutorApellidoPaterno;
     private String tutorApellidoMaterno;
+    private String numeroTelefono;
 
     // Constructor
     public AlumnoCargaDTO(String nombre, String apellidoPaterno, String apellidoMaterno,
                           String matricula, String curp,
                           String grado, String grupo,
-                          String tutorNombre, String tutorApellidoPaterno, String tutorApellidoMaterno) {
+                          String tutorNombre, String tutorApellidoPaterno, String tutorApellidoMaterno, String numeroTelefono ) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -27,6 +28,7 @@ public class AlumnoCargaDTO {
         this.tutorNombre = tutorNombre;
         this.tutorApellidoPaterno = tutorApellidoPaterno;
         this.tutorApellidoMaterno = tutorApellidoMaterno;
+        this.numeroTelefono=numeroTelefono;
     }
 
     // Getters y setters
@@ -59,4 +61,9 @@ public class AlumnoCargaDTO {
 
     public String getTutorApellidoMaterno() { return tutorApellidoMaterno; }
     public void setTutorApellidoMaterno(String tutorApellidoMaterno) { this.tutorApellidoMaterno = tutorApellidoMaterno; }
+    
+    
+
+    public String getNumeroTutor() { return numeroTelefono; }
+    public void setNumeroTutor(String numeroTelefono) { this.numeroTelefono = numeroTelefono; }
 }

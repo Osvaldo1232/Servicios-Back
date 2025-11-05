@@ -42,11 +42,7 @@ public class InscritoAlumnoController {
         summary = "RF4.34  Guardar inscripción de un alumno",
         description = "Crea la inscripción de un alumno en un grado, grupo y ciclo escolar"
     )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Inscripción creada exitosamente"),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos o entidades relacionadas no encontradas"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
+
     public Map<String, String> guardar(@RequestBody InscritoAlumnoDTO dto) {
         // Guardar la inscripción usando el servicio
         InscritoAlumno inscripcion = inscritoAlumnoService.guardarInscripcion(dto);
@@ -66,11 +62,7 @@ public class InscritoAlumnoController {
         summary = "RF4.27 Guardar inscripciones de varios alumnos",
         description = "Permite inscribir varios alumnos en grado, grupo y ciclo escolar en un solo request"
     )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Inscripciones creadas exitosamente"),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos o entidades relacionadas no encontradas"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
+   
     public Map<String, Object> guardarMasivo(@RequestBody List<InscritoAlumnoDTO> dtos) {
         Map<String, Object> respuesta = new HashMap<>();
         
@@ -102,11 +94,7 @@ public class InscritoAlumnoController {
             summary = "Obtener información del alumno",
             description = "Devuelve el ciclo más reciente, grado, grupo y materias asignadas a un alumno específico"
         )
-        @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Información del alumno obtenida correctamente"),
-            @ApiResponse(responseCode = "404", description = "No se encontró información para el alumno"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-        })
+        
         @GetMapping("/{idAlumno}/info")
         public AlumnoInfoDTO obtenerInfoAlumno(@PathVariable String idAlumno) {
             try {
@@ -175,11 +163,8 @@ public class InscritoAlumnoController {
     
     @Operation(
             summary = "Obtener docente por grado, grupo y ciclo",
-            description = "Devuelve el ID y nombre del docente correspondiente al grado, grupo y ciclo especificados.",
-            responses = {
-                @ApiResponse(responseCode = "200", description = "Docentes encontrados"),
-                @ApiResponse(responseCode = "404", description = "No se encontraron docentes")
-            }
+            description = "Devuelve el ID y nombre del docente correspondiente al grado, grupo y ciclo especificados."
+           
         )
         @GetMapping("/docentes")
         public ResponseEntity<List<ProfesorRDTO>> obtenerDocentePorGradoGrupoYCiclo(

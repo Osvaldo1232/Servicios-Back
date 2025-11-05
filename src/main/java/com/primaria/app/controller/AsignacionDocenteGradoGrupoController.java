@@ -53,7 +53,7 @@ public class AsignacionDocenteGradoGrupoController {
         }
     }
 
-    @Operation(summary = "Obtener asignaciones por ciclo escolar, devuelve grado, grupo y profesor")
+    @Operation(summary = " RF4.33 Obtener asignaciones por ciclo escolar, devuelve grado, grupo y profesor")
     @GetMapping("/por-ciclo/{idCiclo}")
     public ResponseEntity<List<AsignacionDocenteGradoGrupoResumenDTO>> obtenerPorCiclo(@PathVariable String idCiclo) {
         return ResponseEntity.ok(service.obtenerPorCiclo(idCiclo));

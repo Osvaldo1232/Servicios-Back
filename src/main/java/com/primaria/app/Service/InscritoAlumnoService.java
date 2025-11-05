@@ -234,7 +234,8 @@ public class InscritoAlumnoService {
                             safe(grupo != null ? grupo.getNombre() : ""),
                             safe(tutor != null ? tutor.getNombre() : ""),
                             safe(tutor != null ? tutor.getApellidoPaterno() : ""),
-                            safe(tutor != null ? tutor.getApellidoMaterno() : "")
+                            safe(tutor != null ? tutor.getApellidoMaterno() : ""),
+                            safe(tutor !=null ? tutor.getTelefono():"")
                     );
                 })
                 .collect(Collectors.toList());

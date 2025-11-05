@@ -16,7 +16,17 @@ import org.springframework.web.bind.annotation.*;
 
 import com.primaria.app.DTO.AlumnoCalificacionesDTO;
 import com.primaria.app.DTO.FiltroCalificacionesDTO;
+import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.DTO.MateriaTrimestresDTO;
+
+
+
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.*;
+import jakarta.servlet.http.HttpServletResponse;
+import java.awt.Color;
+import java.io.IOException;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/calificaciones")
@@ -86,5 +96,87 @@ public class CalificacionController {
             @Parameter(description = "ID del alumno") @PathVariable String alumnoId,
             @Parameter(description = "ID del ciclo") @PathVariable String cicloId) {
         return calificacionService.obtenerCalificacionesPorAlumnoYCiclo(alumnoId, cicloId);
+    }
+    
+    @Operation(
+            summary = "Generar reporte PDF de calificaciones",
+            description = "Genera y descarga un archivo PDF con las calificaciones de un alumno en un ciclo escolar determinado."
+    )
+  
+    
+    @GetMapping("/pdf/alumno/{alumnoId}/ciclo/{cicloId}")
+    public void exportarCalificacionesPDF(
+            @PathVariable String alumnoId,
+            @PathVariable String cicloId,
+            HttpServletResponse response) throws IOException {
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=calificaciones.pdf");
+
+        List<MateriaCalificacionResDTO> calificaciones =
+        		calificacionService.obtenerCalificacionesPorAlumnoYciclo(alumnoId, cicloId);
+
+        Document document = new Document(PageSize.A4);
+        PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+
+        // Logo (ajusta la ruta según tu proyecto)
+        String imagePath = "src/main/resources/logo.png";
+        Image img = Image.getInstance(imagePath);
+        img.scaleToFit(50, 50);
+
+        // Encabezado con logo + título
+        Paragraph titulo = new Paragraph("Reporte de Calificaciones",
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+
+        PdfPTable encabezado = new PdfPTable(2);
+        encabezado.setWidthPercentage(100);
+        encabezado.setWidths(new float[]{1f, 5f});
+
+        PdfPCell imgCell = new PdfPCell(img, false);
+        imgCell.setBorder(PdfPCell.NO_BORDER);
+        PdfPCell titleCell = new PdfPCell(titulo);
+        titleCell.setBorder(PdfPCell.NO_BORDER);
+        titleCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        encabezado.addCell(imgCell);
+        encabezado.addCell(titleCell);
+        document.add(encabezado);
+
+        document.add(new Paragraph(" ")); // Espacio
+
+        // Datos del alumno y ciclo
+        if (!calificaciones.isEmpty()) {
+            String nombreGrado = calificaciones.get(0).getNombreGrado();
+            Paragraph info = new Paragraph(
+                    "Alumno ID: " + alumnoId +
+                            " | Ciclo ID: " + cicloId +
+                            " | Grado: " + nombreGrado,
+                    FontFactory.getFont(FontFactory.HELVETICA, 11)
+            );
+            document.add(info);
+            document.add(new Paragraph(" "));
+        }
+
+        // Tabla
+        PdfPTable tabla = new PdfPTable(3);
+        tabla.setWidthPercentage(100);
+        tabla.setWidths(new float[]{3f, 5f, 2f});
+
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+        Stream.of("ID Materia", "Materia", "Calificación").forEach(col -> {
+            PdfPCell cell = new PdfPCell(new Phrase(col, headerFont));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setBackgroundColor(new Color(220, 220, 220));
+            tabla.addCell(cell);
+        });
+
+        for (MateriaCalificacionResDTO m : calificaciones) {
+            tabla.addCell(m.getIdMateria());
+            tabla.addCell(m.getNombreMateria());
+            tabla.addCell(String.valueOf(m.getCalificacionActual()));
+        }
+
+        document.add(tabla);
+        document.close();
     }
 }

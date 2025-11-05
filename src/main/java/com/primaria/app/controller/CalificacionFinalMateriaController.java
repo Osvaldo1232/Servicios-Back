@@ -32,10 +32,7 @@ public class CalificacionFinalMateriaController {
             summary = "Registrar una nueva calificación final",
             description = "Crea un registro de calificación final para un alumno en una materia específica dentro de un ciclo escolar."
     )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Calificación creada correctamente"),
-            @ApiResponse(responseCode = "400", description = "Error en los datos proporcionados")
-    })
+ 
     @PostMapping
     public ResponseEntity<CalificacionFinalMateriaDTO> crearCalificacion(
             @Parameter(description = "DTO con la información de la calificación final a registrar") 
@@ -65,10 +62,7 @@ public class CalificacionFinalMateriaController {
             summary = "RF3.2: Obtener calificaciones por alumno y ciclo",
             description = "Devuelve las calificaciones de un alumno agrupadas por materia dentro de un ciclo escolar específico"
     )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Calificaciones obtenidas correctamente"),
-            @ApiResponse(responseCode = "404", description = "No se encontraron calificaciones para el alumno y ciclo proporcionados")
-    })
+   
     @GetMapping("/alumno/{alumnoId}/ciclo/{cicloId}")
     public List<MateriaCalificacionResDTO> obtenerCalificaciones(
             @Parameter(description = "ID del alumno cuyas calificaciones se desean consultar") 

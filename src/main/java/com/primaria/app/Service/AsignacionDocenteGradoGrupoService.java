@@ -78,7 +78,7 @@ public class AsignacionDocenteGradoGrupoService {
 
                     return new AsignacionDocenteGradoGrupoResumenDTO(
                             docente != null ? docente.getId() : null,
-                            docente != null ? docente.getNombre() : "",
+                            docente != null ? docente.getNombre()  + " " + docente.getApellidoPaterno() + " " + docente.getApellidoMaterno() : "",
                             docente != null ? docente.getRfc() : "",
                             docente != null ? docente.getClavePresupuestal() : "",
                             grado != null ? grado.getNombre() : "",
