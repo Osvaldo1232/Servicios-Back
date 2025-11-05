@@ -3,13 +3,14 @@ package com.primaria.app.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import com.primaria.app.DTO.MateriaCampoDTO;
 import com.primaria.app.DTO.MateriaDTO;
 import com.primaria.app.Model.Materia;
 import com.primaria.app.repository.MateriasRepository;
@@ -76,5 +77,24 @@ public class MateriasService {
 	            return true;
 	        }
 	        return false;
+	    }
+	    
+	    public List<MateriaCampoDTO> listarMateriasConCampoFormativo() {
+	        return materiasRepository.findAll()
+	                .stream()
+	                .map(materia -> {
+	                    MateriaCampoDTO dto = new MateriaCampoDTO();
+	                    dto.setId(materia.getId());
+	                 
+	                    dto.setNombre(materia.getNombre());
+	                    dto.setEstatus(materia.getEstatus());
+
+	                    if (materia.getCampoFormativo() != null) {
+	                        dto.setCampoFormativoId(materia.getCampoFormativo().getId().toString());
+	                        dto.setCampoFormativoNombre(materia.getCampoFormativo().getNombre());
+	                    }
+	                    return dto;
+	                })
+	                .collect(Collectors.toList());
 	    }
 }

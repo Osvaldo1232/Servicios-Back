@@ -106,7 +106,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
     
-    @Operation(summary = "Actualizar estatus de un usuario")
+    @Operation(summary = "RF4.3  RF4.7 Actualizar estatus de un usuario")
    
     @PatchMapping("/{id}/estatus")
     public ResponseEntity<String> actualizarEstatus(

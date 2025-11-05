@@ -35,7 +35,7 @@ public class AsignacionMateriaGradoController {
     private AsignacionMateriaGradoService asignacionMateriaGradoService;
 
     @Operation(
-        summary = "Guardar una nueva asignación de materia a grado",
+        summary = "RF4.36 Guardar una nueva asignación de materia a grado",
         description = "Crea una relación entre una materia y un grado existente en la base de datos"
     )
     @ApiResponses(value = {
@@ -57,7 +57,7 @@ public class AsignacionMateriaGradoController {
     
     @GetMapping("/grado/{idGrado}")
     @Operation(
-        summary = "Obtener materias asignadas a un grado",
+        summary = "RF2.3 Obtener materias asignadas a un grado",
         description = "Devuelve el ID y nombre de las materias que están asignadas a un grado específico"
     )
     @ApiResponses(value = {

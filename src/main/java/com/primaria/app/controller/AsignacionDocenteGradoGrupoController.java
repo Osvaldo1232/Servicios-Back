@@ -3,6 +3,7 @@ package com.primaria.app.controller;
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoDTO;
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoResumenDTO;
 import com.primaria.app.DTO.AsignacionGradoGrupoCicloDTO;
+import com.primaria.app.DTO.CicloSimpleDTO;
 import com.primaria.app.Service.AsignacionDocenteGradoGrupoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class AsignacionDocenteGradoGrupoController {
     @Autowired
     private AsignacionDocenteGradoGrupoService service;
 
-    @Operation(summary = "RF4.25 Guardar una asignación de docente")
+    @Operation(summary = "RF4.32:  Guardar una asignación de docente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Asignación creada exitosamente"),
             @ApiResponse(responseCode = "400", description = "Datos inválidos o referencias no encontradas"),
@@ -60,7 +61,7 @@ public class AsignacionDocenteGradoGrupoController {
   
     
     @GetMapping("/resumen-profesor/reciente")
-    @Operation(summary = "Grado, Grupo y Ciclo de la asignación más reciente de un profesor")
+    @Operation(summary = "RF2.1 Grado, Grupo y Ciclo de la asignación más reciente de un profesor")
     public ResponseEntity<?> obtenerMasRecientePorProfesor(@RequestParam String idProfesor) {
         try {
             AsignacionGradoGrupoCicloDTO resultado = service.obtenerMasRecientePorProfesor(idProfesor);
@@ -76,5 +77,14 @@ public class AsignacionDocenteGradoGrupoController {
         }
     }
 
-
+    @Operation(
+            summary = "Obtener ciclos por docente",
+            description = "Devuelve una lista de ciclos escolares (id y nombre) donde el docente ha estado asignado."
+        )
+        @GetMapping("/{idDocente}/ciclos")
+        public List<CicloSimpleDTO> obtenerCiclosPorDocente(
+                @PathVariable String idDocente
+        ) {
+            return service.obtenerCiclosPorDocente(idDocente);
+        }
 }

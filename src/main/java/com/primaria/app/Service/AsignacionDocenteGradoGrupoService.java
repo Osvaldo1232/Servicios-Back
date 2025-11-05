@@ -3,6 +3,7 @@ package com.primaria.app.Service;
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoDTO;
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoResumenDTO;
 import com.primaria.app.DTO.AsignacionGradoGrupoCicloDTO;
+import com.primaria.app.DTO.CicloSimpleDTO;
 import com.primaria.app.Model.AsignacionDocenteGradoGrupo;
 
 import com.primaria.app.Model.Grado;
@@ -108,10 +109,8 @@ public class AsignacionDocenteGradoGrupoService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         String cicloFormateado = "";
         if (masReciente.getCiclo() != null) {
-            cicloFormateado = masReciente.getCiclo().getFechaInicio().format(formatter)
-                             + "-" + masReciente.getCiclo().getFechaFin().format(formatter);
+        	cicloFormateado = masReciente.getCiclo().getAnioInicio() + "-" + masReciente.getCiclo().getAnioFin();
         }
-
         return new AsignacionGradoGrupoCicloDTO(
                 masReciente.getGrado() != null ? masReciente.getGrado().getId() : "",
                 masReciente.getGrado() != null ? masReciente.getGrado().getNombre() : "",
@@ -122,4 +121,15 @@ public class AsignacionDocenteGradoGrupoService {
         );
     }
 
+    public List<CicloSimpleDTO> obtenerCiclosPorDocente(String idDocente) {
+        return repository.findByDocenteId(idDocente).stream()
+                .map(AsignacionDocenteGradoGrupo::getCiclo)
+                .filter(c -> c != null)
+                .distinct()
+                .map(c -> new CicloSimpleDTO(
+                        c.getId(),
+                        c.getAnioInicio() + " - " + c.getAnioFin()
+                ))
+                .collect(Collectors.toList());
+    }
 }

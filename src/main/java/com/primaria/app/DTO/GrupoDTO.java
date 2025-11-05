@@ -1,6 +1,5 @@
 package com.primaria.app.DTO;
 
-import java.util.UUID;
 
 import com.primaria.app.Model.Estatus;
 

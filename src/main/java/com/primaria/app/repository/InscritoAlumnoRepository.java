@@ -1,6 +1,7 @@
 package com.primaria.app.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,41 +11,37 @@ import com.primaria.app.Model.Estudiante;
 import com.primaria.app.Model.InscritoAlumno;
 
 public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, String> {
-	InscritoAlumno findTopByAlumno_IdOrderByFechaInscripcionDesc(String alumnoId);
-	List<InscritoAlumno> findByGradoId(String idGrado);
-	List<InscritoAlumno> findByGrupoId(String idGrupo);
-	List<InscritoAlumno> findByCicloId(String idCiclo);
 
-    List<InscritoAlumno> findByGrado_IdAndGrupo_IdAndCiclo_Id(String gradoId, String grupoId, String cicloId);
+    // 🔹 Última inscripción por FECHA
+    InscritoAlumno findTopByAlumno_IdOrderByFechaInscripcionDesc(String alumnoId);
+
+    // 🔹 Última inscripción por CICLO (desde asignación)
+    InscritoAlumno findTopByAlumno_IdOrderByAsignacion_Ciclo_AnioInicioDesc(String alumnoId);
+
+    // 🔹 Buscar por ciclo dentro de la asignación
+    List<InscritoAlumno> findByAsignacion_Ciclo_Id(String cicloId);
+
+    // 🔹 Buscar por grado, grupo y ciclo (a través de la asignación)
+    List<InscritoAlumno> findByAsignacion_Grado_IdAndAsignacion_Grupo_IdAndAsignacion_Ciclo_Id(
+            String gradoId,
+            String grupoId,
+            String cicloId
+    );
+
+    // 🔹 Consulta personalizada: alumnos activos por ciclo, grado y grupo
+    @Query("""
+        SELECT i.alumno
+        FROM InscritoAlumno i
+        WHERE i.asignacion.ciclo.id = :idCiclo
+          AND i.asignacion.grado.id = :idGrado
+          AND i.asignacion.grupo.id = :idGrupo
+          AND i.estatus = 'ACTIVO'
+    """)
+    List<Estudiante> findAlumnosPorCicloGradoGrupo(
+        @Param("idCiclo") String idCiclo,
+        @Param("idGrado") String idGrado,
+        @Param("idGrupo") String idGrupo
+    );
     
-   
-	  
-	  
-	  @Query("""
-		        SELECT ia
-		        FROM InscritoAlumno ia
-		        WHERE ia.alumno.id = :idAlumno
-		        ORDER BY ia.ciclo.fechaInicio DESC
-		        LIMIT 1
-		    """)
-		    InscritoAlumno encontrarUltimaInscripcionPorAlumno(@Param("idAlumno") String idAlumno);
-	  
-	  
-	  
-	  @Query("""
-		        SELECT i.alumno
-		        FROM InscritoAlumno i
-		        WHERE i.ciclo.id = :idCiclo
-		          AND i.grado.id = :idGrado
-		          AND i.grupo.id = :idGrupo
-		          AND i.estatus = 'ACTIVO'
-		    """)
-		    List<Estudiante> findAlumnosPorCicloGradoGrupo(
-		        @Param("idCiclo") String idCiclo,
-		        @Param("idGrado") String idGrado,
-		        @Param("idGrupo") String idGrupo
-		    );
-	  
-	  
+    Optional<InscritoAlumno> findByAlumnoId(String alumnoId);
 }
-

@@ -28,7 +28,7 @@ public class GruposController {
 	 @Autowired
 	    private GrupoService grupoService;
 
-	    @Operation(summary = "Listar todos los grupos")
+	    @Operation(summary = "RF4.28Listar todos los grupos")
 	    @GetMapping
 	    public ResponseEntity<List<GrupoDTO>> listarTodos() {
 	        return ResponseEntity.ok(grupoService.listarTodos());
@@ -43,20 +43,30 @@ public class GruposController {
 	    }
 
 	    @PostMapping("/NuevoGrupo")
-	    @Operation(summary = "RF4.21 Registrar Grupo")
+	    @Operation(summary = "RF4.26 Registrar Grupo")
 	    public ResponseEntity<?> registrarGrupo(@RequestBody GrupoDTO dto) {
-	        Grupo grupo = new Grupo();
-	        grupo.setNombre(dto.getNombre());
-	       grupo.setEstatus(dto.getEstatus());
-	        grupoService.save(grupo);
 	        Map<String, Object> response = new HashMap<>();
-	        response.put("message", "Grupo registrado exitosamente");
-	        response.put("id", grupo.getId());
-	        return ResponseEntity.ok(response);
-	        
+	        try {
+	            Grupo grupo = new Grupo();
+	            grupo.setNombre(dto.getNombre());
+	            grupo.setEstatus(dto.getEstatus());
+	            grupoService.save(grupo);
+
+	            response.put("message", "Grupo registrado exitosamente");
+	            response.put("id", grupo.getId());
+	            return ResponseEntity.ok(response);
+
+	        } catch (IllegalArgumentException e) {
+	            response.put("error", e.getMessage());
+	            return ResponseEntity.badRequest().body(response);
+	        } catch (Exception e) {
+	            response.put("error", "Error al registrar el grupo: " + e.getMessage());
+	            return ResponseEntity.status(500).body(response);
+	        }
 	    }
 
-	    @Operation(summary = "RF4.22 Actualizar un grupo existente")
+
+	    @Operation(summary = "RF4.27  Actualizar un grupo existente")
 	    @PutMapping("Actualizar/{uuid}")
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody GrupoDTO grupoDTO) {
 	        boolean actualizado = grupoService.actualizar(uuid, grupoDTO);

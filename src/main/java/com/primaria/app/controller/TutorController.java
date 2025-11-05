@@ -95,7 +95,7 @@ public class TutorController {
         }
     }
 
-    @Operation(summary = "Obtener lista de tutores activos (para combos)")
+    @Operation(summary = "RF4.13 Obtener lista de tutores activos (para combos)")
     @GetMapping("/combo")
     public List<TutorResumenDTO> obtenerCamposActivos() {
         return tutorService.obtenerActivos();

@@ -15,9 +15,12 @@ public class CicloEscolar {
     @Column(name = "id", updatable = false, nullable = false, length = 36)
     private String id;
 
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
+    @Column(name = "anio_inicio")
+    private int anioInicio;
 
+    @Column(name = "anio_fin")
+    private int anioFin;
+    
     @Enumerated(EnumType.STRING)
     private Estatus estatus;
 
@@ -29,11 +32,11 @@ public class CicloEscolar {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public LocalDate getFechaInicio() { return fechaInicio; }
-    public void setFechaInicio(LocalDate fechaInicio) { this.fechaInicio = fechaInicio; }
+    public int getAnioInicio() { return anioInicio; }
+    public void setAnioInicio(int anioInicio) { this.anioInicio = anioInicio; }
 
-    public LocalDate getFechaFin() { return fechaFin; }
-    public void setFechaFin(LocalDate fechaFin) { this.fechaFin = fechaFin; }
+    public int getAnioFin() { return anioFin; }
+    public void setAnioFin(int anioFin) { this.anioFin = anioFin; }
 
     public Estatus getEstatus() { return estatus; }
     public void setEstatus(Estatus estatus) { this.estatus = estatus; }

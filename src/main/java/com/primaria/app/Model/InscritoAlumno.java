@@ -3,10 +3,10 @@ package com.primaria.app.Model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "inscrito_alumno")
 public class InscritoAlumno {
 
     @Id
@@ -15,57 +15,64 @@ public class InscritoAlumno {
     @Column(name = "id", updatable = false, nullable = false, length = 36)
     private String id;
 
+    // 🔹 Relación con el alumno (Estudiante)
     @ManyToOne
-    @JoinColumn(name = "id_alumno")
+    @JoinColumn(name = "id_alumno", nullable = false)
     private Estudiante alumno;
 
+    // 🔹 Nueva relación con la tabla asignacion_docente_grado_grupo
+    // Esto reemplaza id_docente, id_grado, id_grupo, id_ciclo
     @ManyToOne
-    @JoinColumn(name = "id_docente")
-    private Profesor docente;
-
-    @ManyToOne
-    @JoinColumn(name = "id_grado")
-    private Grado grado;
-
-    @ManyToOne
-    @JoinColumn(name = "id_grupo")
-    private Grupo grupo;
-
-    @ManyToOne
-    @JoinColumn(name = "id_ciclo")
-    private CicloEscolar ciclo;
+    @JoinColumn(name = "id_asignacion", nullable = false)
+    private AsignacionDocenteGradoGrupo asignacion;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Estatus estatus;
 
     @CreationTimestamp
     @Column(name = "fecha_inscripcion", updatable = false, columnDefinition = "datetime")
     private LocalDateTime fechaInscripcion;
 
+    // --- Getters y Setters ---
 
-    // Getters y Setters
+    public String getId() {
+        return id;
+    }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public Estudiante getAlumno() { return alumno; }
-    public void setAlumno(Estudiante alumno) { this.alumno = alumno; }
+    public Estudiante getAlumno() {
+        return alumno;
+    }
 
-    public Profesor getDocente() { return docente; }
-    public void setDocente(Profesor docente) { this.docente = docente; }
+    public void setAlumno(Estudiante alumno) {
+        this.alumno = alumno;
+    }
 
-    public Grado getGrado() { return grado; }
-    public void setGrado(Grado grado) { this.grado = grado; }
+    public AsignacionDocenteGradoGrupo getAsignacion() {
+        return asignacion;
+    }
 
-    public Grupo getGrupo() { return grupo; }
-    public void setGrupo(Grupo grupo) { this.grupo = grupo; }
+    public void setAsignacion(AsignacionDocenteGradoGrupo asignacion) {
+        this.asignacion = asignacion;
+    }
 
-    public CicloEscolar getCiclo() { return ciclo; }
-    public void setCiclo(CicloEscolar ciclo) { this.ciclo = ciclo; }
+    public Estatus getEstatus() {
+        return estatus;
+    }
 
-    public Estatus getEstatus() { return estatus; }
-    public void setEstatus(Estatus estatus) { this.estatus = estatus; }
+    public void setEstatus(Estatus estatus) {
+        this.estatus = estatus;
+    }
 
-    public LocalDateTime getFechaInscripcion() { return fechaInscripcion; }
-    public void setFechaInscripcion(LocalDateTime fechaInscripcion) { this.fechaInscripcion = fechaInscripcion; }
+    public LocalDateTime getFechaInscripcion() {
+        return fechaInscripcion;
+    }
+
+    public void setFechaInscripcion(LocalDateTime fechaInscripcion) {
+        this.fechaInscripcion = fechaInscripcion;
+    }
 }

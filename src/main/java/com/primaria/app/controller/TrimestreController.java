@@ -3,7 +3,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 
-import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -31,7 +30,7 @@ public class TrimestreController {
 	 @Autowired
 	    private TrimestresService trimestresService;
 
-	 @Operation(summary = "Listar todos los trimestres")
+	 @Operation(summary = "RF4.31 Listar todos los trimestres")
 	 @GetMapping
 	 public ResponseEntity<List<TrimestresDTO>> listarTrimestres() {
 	     List<TrimestresDTO> trimestres = trimestresService.listarTodos();
@@ -48,7 +47,7 @@ public class TrimestreController {
 	    }
 
 	    @PostMapping("/NuevoCampo")
-	    @Operation(summary = "RF4.23 Registrar Campo Formativo")
+	    @Operation(summary = "RF4.29 Registrar Campo Formativo")
 	    public ResponseEntity<?> registrarGrupo(@RequestBody TrimestresDTO dto) {
 	    	Trimestres grupo = new Trimestres();
 	        grupo.setNombre(dto.getNombre());

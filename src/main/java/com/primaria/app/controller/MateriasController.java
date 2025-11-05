@@ -1,6 +1,8 @@
 package com.primaria.app.controller;
 
 import java.util.List;
+
+import com.primaria.app.DTO.MateriaCampoDTO;
 import com.primaria.app.DTO.MateriaDTO;
 import com.primaria.app.Model.CampoFormativo;
 import com.primaria.app.Model.Materia;
@@ -26,7 +28,16 @@ public class MateriasController {
 	 @Autowired
 	    private MateriasService materiasService;
 
-	 @Operation(summary = "Listar todas las materias")
+	 
+	 
+	 @Operation(summary = "RF4.19 Listar todas las materias con su campo formativo")
+	    @GetMapping("/listar")
+	    public ResponseEntity<List<MateriaCampoDTO>> listarMateriasCa() {
+	        List<MateriaCampoDTO> materias = materiasService.listarMateriasConCampoFormativo();
+	        return ResponseEntity.ok(materias);
+	    }
+	 
+	 @Operation(summary = "RF4.19 Listar todas las materias")
 	 @GetMapping("mostrarmaterias")
 	 public ResponseEntity<List<MateriaDTO>> listarMaterias() {
 	     List<MateriaDTO> materias = materiasService.listarTodos();
@@ -35,7 +46,7 @@ public class MateriasController {
 	    @Autowired
 	    private CampoFormativoRepository campoFormativoRepository;
 	    @PostMapping("/nueva")
-	    @Operation(summary = "RF4.15  Registrar nueva materia")
+	    @Operation(summary = "RF4.17  Registrar nueva materia")
 	    public ResponseEntity<?> registrarMateria(@RequestBody MateriaDTO dto) {
 	        CampoFormativo campo = campoFormativoRepository.findById(dto.getCampoFormativoId())
 	            .orElseThrow(() -> new RuntimeException("Campo formativo no encontrado"));
@@ -51,7 +62,7 @@ public class MateriasController {
 
 	        return ResponseEntity.ok(response);
 	    }
-	    @Operation(summary = "RF4.16  Actualizar un materia existente")
+	    @Operation(summary = "RF4.18  Actualizar un materia existente")
 	    @PutMapping("Actualizar/{uuid}")
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody MateriaDTO grupoDTO) {
 	        boolean actualizado = materiasService.actualizar(uuid, grupoDTO);

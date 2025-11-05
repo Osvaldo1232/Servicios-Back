@@ -47,10 +47,15 @@ public class GrupoService {
 	    }
 
 	    
-	    public Grupo save(Grupo estudiante) {
-	        return grupoRepository.save(estudiante);
-	    }
+	    public Grupo save(Grupo grupo) {
+	        List<Grupo> existentes = grupoRepository.findByNombre(grupo.getNombre().trim());
 
+	        if (!existentes.isEmpty()) {
+	            throw new IllegalArgumentException("Ya existe un grupo con el nombre: " + grupo.getNombre());
+	        }
+
+	        return grupoRepository.save(grupo);
+	    }
 	    
 	    public boolean actualizar(String uuid, GrupoDTO dto) {
 	        Optional<Grupo> existente = grupoRepository.findById(uuid);

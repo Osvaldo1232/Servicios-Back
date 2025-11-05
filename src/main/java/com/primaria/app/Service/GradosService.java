@@ -42,8 +42,16 @@ public class GradosService {
 
 	    
 	    public Grado save(Grado grado) {
+	        // Buscar grados con el mismo nombre
+	        List<Grado> existentes = gradoRepository.findByNombre(grado.getNombre().trim());
+
+	        if (!existentes.isEmpty()) {
+	            throw new IllegalArgumentException("Ya existe un grado con el nombre: " + grado.getNombre());
+	        }
+
 	        return gradoRepository.save(grado);
 	    }
+
 
 	    
 	    public boolean actualizar(String uuid, GradoDTO dto) {

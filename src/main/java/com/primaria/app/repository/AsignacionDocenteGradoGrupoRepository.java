@@ -9,5 +9,5 @@ import java.util.List;
 public interface AsignacionDocenteGradoGrupoRepository extends JpaRepository<AsignacionDocenteGradoGrupo, String> {
 	List<AsignacionDocenteGradoGrupo> findByCiclo_Id(String cicloId);
 
-   
+	 List<AsignacionDocenteGradoGrupo> findByDocenteId(String docenteId);
 }

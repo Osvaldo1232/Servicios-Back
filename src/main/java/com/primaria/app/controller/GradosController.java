@@ -20,7 +20,7 @@ public class GradosController {
 	 @Autowired
 	    private GradosService gradoService;
 
-	    @Operation(summary = "Listar todos los grapos")
+	    @Operation(summary = "RF4.25 Listar todos los grapos")
 	    @GetMapping
 	    public ResponseEntity<List<GradoDTO>> listarTodos() {
 	        return ResponseEntity.ok(gradoService.listarTodos());
@@ -35,20 +35,30 @@ public class GradosController {
 	    }
 
 	    @PostMapping("/NuevoGrado")
-	    @Operation(summary = "RF4.19  Registrar Grado")
-	    public ResponseEntity<?> registrarGrupo(@RequestBody GradoDTO dto) {
-	        Grado grupo = new Grado();
-	        grupo.setNombre(dto.getNombre());
-	        grupo.setEstatus(dto.getEstatus());
-	        gradoService.save(grupo);
+	    @Operation(summary = "RF4.23 Registrar Grado")
+	    public ResponseEntity<?> registrarGrado(@RequestBody GradoDTO dto) {
 	        Map<String, Object> response = new HashMap<>();
-	        response.put("message", "Grado registrado exitosamente");
-	        response.put("id", grupo.getId());
+	        try {
+	            Grado grupo = new Grado();
+	            grupo.setNombre(dto.getNombre());
+	            grupo.setEstatus(dto.getEstatus());
+	            
+	            Grado guardado = gradoService.save(grupo);
 
-	        return ResponseEntity.ok(response);
-	        
-	        
+	            response.put("message", "Grado registrado exitosamente");
+	            response.put("id", guardado.getId());
+	            return ResponseEntity.ok(response);
+
+	        } catch (IllegalArgumentException e) {
+	            response.put("error", e.getMessage());
+	            return ResponseEntity.badRequest().body(response);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            response.put("error", "Ocurrió un error al registrar el grado.");
+	            return ResponseEntity.internalServerError().body(response);
+	        }
 	    }
+
 
 	    @Operation(summary = "RF4.20 Actualizar un grado existente")
 	    @PutMapping("Actualizar/{uuid}")

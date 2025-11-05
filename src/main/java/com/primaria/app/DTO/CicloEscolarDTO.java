@@ -1,54 +1,52 @@
 package com.primaria.app.DTO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 import com.primaria.app.Model.Estatus;
 
 public class CicloEscolarDTO {
 
-    private UUID id;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
+    private String id;
+    private int anioInicio;
+    private int anioFin;
     private Estatus estatus;
-    private LocalDateTime fechaCreado; // Nuevo campo
+    private LocalDateTime fechaCreado;
 
     // Constructor vacío
     public CicloEscolarDTO() {}
 
     // Constructor con argumentos
-    public CicloEscolarDTO(UUID id, LocalDate fechaInicio, LocalDate fechaFin, Estatus estatus, LocalDateTime fechaCreado) {
+    public CicloEscolarDTO(String id, int anioInicio, int anioFin, Estatus estatus, LocalDateTime fechaCreado) {
         this.id = id;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
+        this.anioInicio = anioInicio;
+        this.anioFin = anioFin;
         this.estatus = estatus;
         this.fechaCreado = fechaCreado;
     }
 
     // Getters y Setters
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
+    public int getAnioInicio() {
+        return anioInicio;
     }
 
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
+    public void setAnioInicio(int anioInicio) {
+        this.anioInicio = anioInicio;
     }
 
-    public LocalDate getFechaFin() {
-        return fechaFin;
+    public int getAnioFin() {
+        return anioFin;
     }
 
-    public void setFechaFin(LocalDate fechaFin) {
-        this.fechaFin = fechaFin;
+    public void setAnioFin(int anioFin) {
+        this.anioFin = anioFin;
     }
 
     public Estatus getEstatus() {

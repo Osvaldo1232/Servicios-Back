@@ -13,12 +13,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.primaria.app.DTO.AlumnoCargaDTO;
 import com.primaria.app.DTO.AlumnoInfoDTO;
-
+import com.primaria.app.DTO.AsignacionSelectDTO;
 import com.primaria.app.DTO.InfoAlumnoTutorDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
 import com.primaria.app.DTO.InscritoAlumnoInfoBasicaDTO;
 import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
-import com.primaria.app.DTO.ProfesorDTO;
+
 import com.primaria.app.DTO.ProfesorRDTO;
 import com.primaria.app.Model.InscritoAlumno;
 import com.primaria.app.Service.InscritoAlumnoService;
@@ -39,7 +39,7 @@ public class InscritoAlumnoController {
 
     @PostMapping("/guardar")
     @Operation(
-        summary = "RF4.26 Guardar inscripción de un alumno",
+        summary = "RF4.34  Guardar inscripción de un alumno",
         description = "Crea la inscripción de un alumno en un grado, grupo y ciclo escolar"
     )
     @ApiResponses(value = {
@@ -143,7 +143,7 @@ public class InscritoAlumnoController {
     }
     
     @Operation(
-            summary = "RF2.7 Filtrar inscripciones por grado, grupo y ciclo escolar",
+            summary = "RF4.8  Filtrar inscripciones por grado, grupo y ciclo escolar",
             description = "Devuelve una lista con información básica del alumno, filtrada por grado, grupo y ciclo escolar."
         )
         @GetMapping("/filtrarAlumnos")
@@ -195,4 +195,19 @@ public class InscritoAlumnoController {
 
             return ResponseEntity.ok(docentes);
         }
+    
+    
+    @GetMapping("/select")
+    @Operation(summary = "RF4.34:  Obtener lista de asignaciones con grado, grupo y ciclo")
+    public ResponseEntity<List<AsignacionSelectDTO>> obtenerSelect() {
+        return ResponseEntity.ok(inscritoAlumnoService.obtenerAsignacionesSelect());
+    }
+    
+    @Operation(summary = "RF4.37 Obtener el perfil completo del alumno")
+    @GetMapping("perfil/{idAlumno}")
+    public ResponseEntity<?> obtenerPerfil(@PathVariable String idAlumno) {
+        return inscritoAlumnoService.obtenerPerfilAlumnoPorId(idAlumno)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

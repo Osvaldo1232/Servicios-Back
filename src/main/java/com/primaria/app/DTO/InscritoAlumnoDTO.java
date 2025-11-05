@@ -7,47 +7,59 @@ public class InscritoAlumnoDTO {
 
     private String id;
     private String alumnoId;
-    private String docenteId;
-    private String gradoId;
-    private String grupoId;
-    private String cicloId;
+    private String asignacionId;
     private Estatus estatus;
     private LocalDateTime fechaInscripcion;
 
-    // Constructors
+    // --- Constructores ---
     public InscritoAlumnoDTO() {}
 
-    public InscritoAlumnoDTO(String id, String alumnoId, String docenteId, String gradoId, String grupoId, String cicloId) {
+    public InscritoAlumnoDTO(String id, String alumnoId, String asignacionId, Estatus estatus, LocalDateTime fechaInscripcion) {
         this.id = id;
         this.alumnoId = alumnoId;
-        this.docenteId = docenteId;
-        this.gradoId = gradoId;
-        this.grupoId = grupoId;
-        this.cicloId = cicloId;
+        this.asignacionId = asignacionId;
+        this.estatus = estatus;
+        this.fechaInscripcion = fechaInscripcion;
     }
 
-    // Getters y Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    // --- Getters y Setters ---
+    public String getId() {
+        return id;
+    }
 
-    public String getAlumnoId() { return alumnoId; }
-    public void setAlumnoId(String alumnoId) { this.alumnoId = alumnoId; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getDocenteId() { return docenteId; }
-    public void setDocenteId(String docenteId) { this.docenteId = docenteId; }
+    public String getAlumnoId() {
+        return alumnoId;
+    }
 
-    public String getGradoId() { return gradoId; }
-    public void setGradoId(String gradoId) { this.gradoId = gradoId; }
+    public void setAlumnoId(String alumnoId) {
+        this.alumnoId = alumnoId;
+    }
 
-    public String getGrupoId() { return grupoId; }
-    public void setGrupoId(String grupoId) { this.grupoId = grupoId; }
+    public String getAsignacionId() {
+        return asignacionId;
+    }
 
-    public String getCicloId() { return cicloId; }
-    public void setCicloId(String cicloId) { this.cicloId = cicloId; }
+    public void setAsignacionId(String asignacionId) {
+        this.asignacionId = asignacionId;
+    }
 
-    public Estatus getEstatus() { return estatus; }
-    public void setEstatus(Estatus estatus) { this.estatus = estatus; }
+    public Estatus getEstatus() {
+        return estatus;
+    }
 
-    public LocalDateTime getFechaInscripcion() { return fechaInscripcion; }
-    public void setFechaInscripcion(LocalDateTime fechaInscripcion) { this.fechaInscripcion = fechaInscripcion; }
+    public void setEstatus(Estatus estatus) {
+        this.estatus = estatus;
+    }
+
+    public LocalDateTime getFechaInscripcion() {
+        return fechaInscripcion;
+    }
+
+    public void setFechaInscripcion(LocalDateTime fechaInscripcion) {
+        this.fechaInscripcion = fechaInscripcion;
+    }
 }

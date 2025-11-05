@@ -1,7 +1,7 @@
 package com.primaria.app.controller;
 
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.primaria.app.DTO.EstatusDTO;
 import com.primaria.app.DTO.ProfesorDTO;
 
 import com.primaria.app.Model.Profesor;
@@ -18,7 +17,7 @@ import com.primaria.app.Service.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/Profesores")
@@ -32,7 +31,7 @@ public class ProfesorController {
     }
     
     @GetMapping
-    @Operation(summary = "RF4.4 Obtener todos los Profesores")
+    @Operation(summary = "RF4.4  Obtener todos los Profesores")
     public ResponseEntity<List<Profesor>> obtenerProfesores() {
         List<Usuario> usuarios = usuarioService.findAll();
         List<Profesor> profesores = usuarios.stream()

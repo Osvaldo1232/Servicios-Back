@@ -1,11 +1,6 @@
 package com.primaria.app.controller;
 
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-
 import com.primaria.app.DTO.CampoFormativoDTO;
 import com.primaria.app.DTO.CampoFormativoResumenDTO;
 
@@ -35,7 +30,7 @@ public class CampoFormativoController {
 	 @Autowired
 	    private CampoFormativoService campoFormativoService;
 
-	 @Operation(summary = "Listar todos los campos formativos")
+	 @Operation(summary = "RF4.16 Listar todos los campos formativos")
 	 @GetMapping
 	 public ResponseEntity<List<CampoFormativoDTO>> listarCamposFormativos() {
 	     List<CampoFormativoDTO> campos = campoFormativoService.listarTodos();
@@ -52,7 +47,7 @@ public class CampoFormativoController {
 	    }
 
 	    @PostMapping("/NuevoCampo")
-	    @Operation(summary = " RF4.13 Registrar Campo Formativo")
+	    @Operation(summary = " RF4.14  Registrar Campo Formativo")
 	    public ResponseEntity<?> registrarGrupo(@RequestBody CampoFormativoDTO dto) {
 	    	CampoFormativo grupo = new CampoFormativo();
 	        grupo.setNombre(dto.getNombre());
@@ -64,7 +59,7 @@ public class CampoFormativoController {
 	        return ResponseEntity.ok(response);
 	    }
 
-	    @Operation(summary = " RF4.14 Actualizar un Campo Formativo existente")
+	    @Operation(summary = " RF4.15 Actualizar un Campo Formativo existente")
 	    @PutMapping("Actualizar/{uuid}")
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody CampoFormativoDTO campoFormativoDTO) {
 	        boolean actualizado = campoFormativoService.actualizar(uuid, campoFormativoDTO);

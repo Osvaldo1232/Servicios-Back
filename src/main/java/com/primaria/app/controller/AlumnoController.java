@@ -1,7 +1,7 @@
 package com.primaria.app.controller;
 
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 
 
@@ -11,14 +11,12 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.primaria.app.DTO.EstatusDTO;
 import com.primaria.app.DTO.EstudianteDTO;
 
 import com.primaria.app.Model.Estudiante;
@@ -29,7 +27,7 @@ import com.primaria.app.Service.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/alumnos")
