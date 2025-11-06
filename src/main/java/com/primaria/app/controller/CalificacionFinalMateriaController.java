@@ -46,10 +46,7 @@ public class CalificacionFinalMateriaController {
             summary = "Obtener una calificación final por ID",
             description = "Recupera la información de una calificación final específica usando su ID"
     )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Calificación encontrada"),
-            @ApiResponse(responseCode = "404", description = "Calificación no encontrada")
-    })
+   
     @GetMapping("/{id}")
     public ResponseEntity<CalificacionFinalMateriaDTO> obtenerCalificacion(
             @Parameter(description = "ID de la calificación final a buscar") 

@@ -53,7 +53,7 @@ public class CalificacionController {
     // -------------------------------
     @PostMapping("/asignar")
     @Operation(
-        summary = "RFC2.4 y RF2.6 Asignar calificación",
+        summary = "RF2.4 y RF2.6 Asignar calificación",
         description = "Asigna una calificación a un alumno en una materia y trimestre específico"
     )
     public ResponseEntity<MensajeDTO> asignarCalificacion(@Valid @RequestBody CalificacionFinalDTO dto) {
