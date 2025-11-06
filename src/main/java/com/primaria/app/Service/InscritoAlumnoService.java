@@ -325,4 +325,19 @@ public class InscritoAlumnoService {
                 nombreCiclo
         ));
     }
+    
+    
+    public List<CicloAlumnosDTO> obtenerAlumnosSPorCiclo(String cicloId) {
+        List<InscritoAlumno> inscritos = inscritoAlumnoRepository
+                .findDistinctByAsignacion_Ciclo_IdAndEstatus(cicloId,  Estatus.ACTIVO);
+
+        return inscritos.stream()
+                .map(ia -> {
+                    String nombreCompleto = ia.getAlumno().getNombre() + " " +
+                                            ia.getAlumno().getApellidoPaterno() + " " +
+                                            ia.getAlumno().getApellidoMaterno();
+                    return new CicloAlumnosDTO(ia.getAlumno().getId(), nombreCompleto);
+                })
+                .collect(Collectors.toList());
+    }
 }

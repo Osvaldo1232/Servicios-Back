@@ -1,6 +1,7 @@
 package com.primaria.app.Service;
 
 import com.primaria.app.DTO.CalificacionFinalMateriaDTO;
+import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.Model.*;
 import com.primaria.app.repository.*;
@@ -8,6 +9,7 @@ import com.primaria.app.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -86,5 +88,17 @@ public class CalificacionFinalMateriaService {
                         c.getGrado().getNombre()
                 ))
                 .collect(Collectors.toList());
+    }
+    
+    public List<CalificacionTotalAlumnoDTO> getPromedioPorCiclo(String cicloId) {
+        List<Object[]> resultados = calificacionRepo.obtenerPromedioPorCiclo(cicloId);
+        return resultados.stream().map(r -> new CalificacionTotalAlumnoDTO(
+            (String) r[0],  // idAlumno
+            (String) r[1],  // nombreAlumno
+            (String) r[2],  // grado
+            (String) r[3],  // grupo
+            (String) r[4],  // ciclo
+            new BigDecimal(r[5].toString())  // calificacionTotal
+        )).collect(Collectors.toList());
     }
 }

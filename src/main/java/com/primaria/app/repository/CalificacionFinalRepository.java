@@ -23,4 +23,7 @@ public interface CalificacionFinalRepository extends JpaRepository<Calificacion_
     
     
     List<Calificacion_final> findByAlumno_IdAndCiclo_Id(String alumnoId, String cicloId);
+    
+    List<Calificacion_final> findByGradoId(String gradoId);
+    
 }

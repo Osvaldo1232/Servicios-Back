@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.primaria.app.DTO.CicloAlumnosDTO;
 import com.primaria.app.DTO.EstudianteDTO;
 
 import com.primaria.app.Model.Estudiante;
 
 import com.primaria.app.Model.Usuario;
 import com.primaria.app.Service.EstudianteService;
+import com.primaria.app.Service.InscritoAlumnoService;
 import com.primaria.app.Service.UsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,12 +36,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "alumnos", description = "Operaciones para registrar usuarios de distintos roles")
 public class AlumnoController {
 
+	
     private final EstudianteService alumnoService;
 
     public AlumnoController(EstudianteService alumnoService) {
         this.alumnoService = alumnoService;
     }
 
+    @Autowired
+    private  InscritoAlumnoService inscritoAlumnoService;
     @Autowired
     private  UsuarioService usuarioService;
 	
@@ -105,6 +110,11 @@ public class AlumnoController {
         return ResponseEntity.ok("Estudiante actualizado exitosamente");
     }
     
-    
+    @GetMapping("/por-ciclo/{cicloId}")
+    @Operation(summary = "RF2.10 - Obtener lista de alumnos por ciclo escolar para el requ  RF2.10: ")
+    public ResponseEntity<List<CicloAlumnosDTO>> obtenerAlumnosPorCiclo(@PathVariable String cicloId) {
+        List<CicloAlumnosDTO> alumnos = inscritoAlumnoService.obtenerAlumnosSPorCiclo(cicloId);
+        return ResponseEntity.ok(alumnos);
+    }
    
 }

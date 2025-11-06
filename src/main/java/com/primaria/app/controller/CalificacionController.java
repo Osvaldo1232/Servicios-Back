@@ -4,6 +4,8 @@ import com.primaria.app.DTO.CalificacionFinalDTO;
 import com.primaria.app.DTO.MensajeDTO;
 import com.primaria.app.Model.Calificacion_final;
 import com.primaria.app.Service.CalificacionService;
+import com.primaria.app.Service.ConsultaCalificacionService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.primaria.app.DTO.AlumnoCalificacionesDTO;
+import com.primaria.app.DTO.CalificacionAlumnoCicloDTO;
+import com.primaria.app.DTO.CalificacionAlumnoProjection;
 import com.primaria.app.DTO.FiltroCalificacionesDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.DTO.MateriaTrimestresDTO;
@@ -33,10 +37,15 @@ import java.util.stream.Stream;
 @Tag(name = "Calificaciones", description = "API para asignar y consultar calificaciones")
 public class CalificacionController {
 
+	
+	private final ConsultaCalificacionService calificacionServiceC;
+
+  
     private final CalificacionService calificacionService;
 
-    public CalificacionController(CalificacionService calificacionService) {
+    public CalificacionController(CalificacionService calificacionService, ConsultaCalificacionService calificacionServiceC) {
         this.calificacionService = calificacionService;
+        this.calificacionServiceC = calificacionServiceC;
     }
 
     // -------------------------------
@@ -44,7 +53,7 @@ public class CalificacionController {
     // -------------------------------
     @PostMapping("/asignar")
     @Operation(
-        summary = "RFC2.4 Asignar calificación",
+        summary = "RFC2.4 y RF2.6 Asignar calificación",
         description = "Asigna una calificación a un alumno en una materia y trimestre específico"
     )
     public ResponseEntity<MensajeDTO> asignarCalificacion(@Valid @RequestBody CalificacionFinalDTO dto) {
@@ -178,5 +187,29 @@ public class CalificacionController {
 
         document.add(tabla);
         document.close();
+    }
+    
+    @Operation(
+            summary = "RF2.5 Listar calificaciones por grado",
+            description = "Devuelve las calificaciones de todos los alumnos del grado especificado, incluyendo las calificaciones por trimestre y el promedio final."
+        )
+        @GetMapping("/grado/{gradoId}")
+        public List<CalificacionAlumnoProjection> listarPorGrado(
+            @Parameter(description = "UUID del grado a consultar", required = true)
+            @PathVariable String gradoId
+        ) {
+            return calificacionServiceC.obtenerPorGrado(gradoId);
+        }
+    
+    @GetMapping("/grados/{gradoId}")
+    @Operation(
+        summary = "RF2.5 Obtener calificaciones por grado",
+        description = "Devuelve las calificaciones de todos los alumnos del grado, incluyendo las calificaciones por trimestre y el promedio final"
+    )
+    public List<CalificacionAlumnoCicloDTO> obtenerCalificacionesPorGrado(
+            @Parameter(description = "UUID del grado a consultar", required = true)
+            @PathVariable String gradoId
+    ) {
+        return calificacionService.obtenerPorGrado(gradoId);
     }
 }

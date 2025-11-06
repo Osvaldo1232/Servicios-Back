@@ -1,6 +1,7 @@
 package com.primaria.app.controller;
 
 import com.primaria.app.DTO.CalificacionFinalMateriaDTO;
+import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.Service.CalificacionFinalMateriaService;
 import com.primaria.app.Service.CalificacionService;
@@ -71,5 +72,14 @@ public class CalificacionFinalMateriaController {
             @PathVariable String cicloId) {
 
         return calificacionServic.obtenerCalificacionesPorAlumnoYciclo(alumnoId, cicloId);
+    }
+    
+    @GetMapping("/promedio/ciclo/{cicloId}")
+    @Operation(summary = "RF2.9 Obtener promedio por ciclo escolar", 
+               description = "Devuelve la lista de alumnos con su promedio final por ciclo escolar")
+    public ResponseEntity<List<CalificacionTotalAlumnoDTO>> obtenerPromedioPorCiclo(
+            @PathVariable String cicloId) {
+        List<CalificacionTotalAlumnoDTO> resultado = calificacionService.getPromedioPorCiclo(cicloId);
+        return ResponseEntity.ok(resultado);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.primaria.app.Model.Estatus;
 import com.primaria.app.Model.Estudiante;
 import com.primaria.app.Model.InscritoAlumno;
 
@@ -44,4 +45,7 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
     );
     
     Optional<InscritoAlumno> findByAlumnoId(String alumnoId);
+    
+    
+    List<InscritoAlumno> findDistinctByAsignacion_Ciclo_IdAndEstatus(String cicloId,  Estatus estatus);
 }

@@ -21,6 +21,8 @@ import com.primaria.app.repository.InscritoAlumnoRepository;
 import com.primaria.app.repository.MateriasRepository;
 import com.primaria.app.repository.TrimestreRepository;
 import com.primaria.app.DTO.AlumnoCalificacionesDTO;
+import com.primaria.app.DTO.CalificacionAlumnoCicloDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +52,7 @@ public class CalificacionService {
     @Autowired
     private GradosRepository gradoRepo;
 
-    public Calificacion_final asignarCalificacion(CalificacionFinalDTO dto) {
+    public Calificacion_final asignarCalificaciosn(CalificacionFinalDTO dto) {
         Estudiante alumno = estudianteRepo.findById(dto.getIdAlumno())
                 .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
         Materia materia = materiaRepo.findById(dto.getIdMateria())
@@ -81,6 +83,49 @@ public class CalificacionService {
 
         return calificacionRepo.save(calificacion);
     }
+    
+    public Calificacion_final asignarCalificacion(CalificacionFinalDTO dto) {
+        Calificacion_final calificacion;
+
+        if (dto.getId() != null && !dto.getId().isEmpty()) {
+            // Actualización
+            calificacion = calificacionRepo.findById(dto.getId())
+                    .orElseThrow(() -> new RuntimeException("Calificación no encontrada"));
+        } else {
+            // Creación: validar duplicado
+            Estudiante alumno = estudianteRepo.findById(dto.getIdAlumno())
+                    .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
+            Materia materia = materiaRepo.findById(dto.getIdMateria())
+                    .orElseThrow(() -> new RuntimeException("Materia no encontrada"));
+            Trimestres trimestre = trimestreRepo.findById(dto.getIdTrimestre())
+                    .orElseThrow(() -> new RuntimeException("Trimestre no encontrado"));
+            CicloEscolar ciclo = cicloRepo.findById(dto.getIdCicloEscolar())
+                    .orElseThrow(() -> new RuntimeException("Ciclo escolar no encontrado"));
+            Grado grado = gradoRepo.findById(dto.getIdGrado())
+                    .orElseThrow(() -> new RuntimeException("Grado no encontrado"));
+
+            Optional<Calificacion_final> existente = calificacionRepo
+                    .findByAlumnoIdAndMateriaIdAndTrimestreIdAndCicloId(
+                            alumno.getId(), materia.getId(), trimestre.getId(), ciclo.getId()
+                    );
+            if (existente.isPresent()) {
+                throw new RuntimeException("Ya existe una calificación para este alumno, materia, trimestre y ciclo");
+            }
+
+            calificacion = new Calificacion_final();
+            calificacion.setAlumno(alumno);
+            calificacion.setMateria(materia);
+            calificacion.setTrimestre(trimestre);
+            calificacion.setCiclo(ciclo);
+            calificacion.setGrado(grado);
+        }
+
+        // Siempre asignar el promedio (ya sea nueva o actualización)
+        calificacion.setPromedio(dto.getPromedio());
+
+        return calificacionRepo.save(calificacion);
+    }
+
 
     public Optional<Calificacion_final> buscarPorId(String id) {
         return calificacionRepo.findById(id);
@@ -163,6 +208,59 @@ public class CalificacionService {
         }
 
         return resultado;
+    }
+    
+    
+    public List<CalificacionAlumnoCicloDTO> obtenerPorGrado(String gradoId) {
+        // Traer todas las calificaciones del grado
+        List<Calificacion_final> calificaciones = calificacionRepo.findByGradoId(gradoId);
+
+        Map<String, Map<String, CalificacionAlumnoCicloDTO>> map = new HashMap<>();
+
+        for (Calificacion_final c : calificaciones) {
+            String alumnoId = c.getAlumno().getId();
+            String materiaId = c.getMateria().getId();
+
+            map.putIfAbsent(alumnoId, new HashMap<>());
+            Map<String, CalificacionAlumnoCicloDTO> materias = map.get(alumnoId);
+
+            materias.putIfAbsent(materiaId, new CalificacionAlumnoCicloDTO());
+            CalificacionAlumnoCicloDTO dto = materias.get(materiaId);
+
+            dto.setIdAlumno(alumnoId);
+            dto.setNombreAlumno(c.getAlumno().getNombre()+ " " + c.getAlumno().getApellidoPaterno()+" "+ c.getAlumno().getApellidoMaterno()) ; // crear getNombreCompleto en Usuario o Estudiante
+            dto.setNombreMateria(c.getMateria().getNombre());
+
+            // Asignar calificación según el trimestre
+            String trimestreNombre = c.getTrimestre().getNombre();
+            switch(trimestreNombre.toLowerCase()) {
+                case "tri", "trimestre 1":
+                    dto.setTrimestre1(c.getPromedio());
+                    dto.setIdTrimestre1(c.getTrimestre().getId());
+                    break;
+                case "trime 2", "trimestre 2":
+                    dto.setTrimestre2(c.getPromedio());
+                    dto.setIdTrimestre2(c.getTrimestre().getId());
+                    break;
+                case "trime 3", "trimestre 3":
+                    dto.setTrimestre3(c.getPromedio());
+                    dto.setIdTrimestre3(c.getTrimestre().getId());
+                    break;
+            }
+
+            // Calcular promedio final (podría ser un simple promedio de los no nulos)
+            double sum = 0;
+            int count = 0;
+            if(dto.getTrimestre1() != null) { sum += dto.getTrimestre1(); count++; }
+            if(dto.getTrimestre2() != null) { sum += dto.getTrimestre2(); count++; }
+            if(dto.getTrimestre3() != null) { sum += dto.getTrimestre3(); count++; }
+            dto.setPromedioFinal(count > 0 ? Math.round((sum / count) * 100.0)/100.0 : 0.0);
+        }
+
+        // Convertir Map a lista
+        return map.values().stream()
+                .flatMap(m -> m.values().stream())
+                .collect(Collectors.toList());
     }
 
 }
