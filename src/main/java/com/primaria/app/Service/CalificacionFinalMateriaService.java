@@ -3,6 +3,7 @@ package com.primaria.app.Service;
 import com.primaria.app.DTO.CalificacionFinalMateriaDTO;
 import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
+import com.primaria.app.DTO.PromedioGradoCicloDTO;
 import com.primaria.app.Model.*;
 import com.primaria.app.repository.*;
 
@@ -10,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -101,4 +105,43 @@ public class CalificacionFinalMateriaService {
             new BigDecimal(r[5].toString())  // calificacionTotal
         )).collect(Collectors.toList());
     }
+    
+public List<PromedioGradoCicloDTO> obtenerPromedios(String alumnoId) {
+    List<CalificacionFinalMateria> lista = calificacionRepo.findByAlumnoId(alumnoId);
+
+    if (lista.isEmpty()) {
+        return Collections.emptyList();
+    }
+
+    return lista.stream()
+        .collect(Collectors.groupingBy(
+            cf -> cf.getGrado().getId() + "-" + cf.getCicloEscolar().getId(),
+            Collectors.collectingAndThen(
+                Collectors.toList(),
+                group -> {
+                    CalificacionFinalMateria muestra = group.get(0);
+
+                    // Calcular promedio con BigDecimal y redondear a 2 decimales
+                    BigDecimal promedio = group.stream()
+                        .map(CalificacionFinalMateria::getPromedio)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add)
+                        .divide(new BigDecimal(group.size()), 2, RoundingMode.HALF_UP);
+
+                    return new PromedioGradoCicloDTO(
+                        muestra.getGrado().getId(),
+                        muestra.getGrado().getNombre(),
+                        muestra.getCicloEscolar().getId(),
+                        muestra.getCicloEscolar().getAnioInicio() + "-" + muestra.getCicloEscolar().getAnioFin(),
+                        promedio
+                    );
+                }
+            )
+        ))
+        .values()
+        .stream()
+        // 🔹 Ordenar por año de inicio del ciclo (más antiguo primero)
+        .sorted(Comparator.comparing(dto -> Integer.parseInt(dto.getCicloEscolar().split("-")[0])))
+        .toList();
+}
+
 }

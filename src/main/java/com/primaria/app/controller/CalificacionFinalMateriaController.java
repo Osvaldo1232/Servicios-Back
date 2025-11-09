@@ -3,6 +3,7 @@ package com.primaria.app.controller;
 import com.primaria.app.DTO.CalificacionFinalMateriaDTO;
 import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
+import com.primaria.app.DTO.PromedioGradoCicloDTO;
 import com.primaria.app.Service.CalificacionFinalMateriaService;
 import com.primaria.app.Service.CalificacionService;
 
@@ -79,4 +80,35 @@ public class CalificacionFinalMateriaController {
         List<CalificacionTotalAlumnoDTO> resultado = calificacionService.getPromedioPorCiclo(cicloId);
         return ResponseEntity.ok(resultado);
     }
+    
+    
+    @Operation(
+            summary = "RF3.8 Obtener promedio general por alumno",
+            description = """
+                Retorna el promedio general de las materias cursadas por un alumno,
+                agrupadas por grado y ciclo escolar.  
+                Se calcula automáticamente el promedio de todas las materias registradas
+                para ese alumno dentro de cada grado y ciclo.
+                """,
+            parameters = {
+                @Parameter(
+                    name = "alumnoId",
+                    description = "ID del alumno (UUID del estudiante)",
+                    example = "f9ec27d8-7a95-4964-a887-65bf763b4d5b",
+                    required = true
+                )
+            }
+        )
+        @GetMapping("/promedios/{alumnoId}")
+        public ResponseEntity<List<PromedioGradoCicloDTO>> obtenerPromediosPorAlumno(
+                @PathVariable String alumnoId) {
+
+            List<PromedioGradoCicloDTO> promedios = calificacionService.obtenerPromedios(alumnoId);
+
+            if (promedios.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(promedios);
+        }
 }

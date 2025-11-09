@@ -34,6 +34,7 @@ public interface CalificacionFinalMateriaRepository extends JpaRepository<Califi
 	        ORDER BY nombreAlumno
 	    """, nativeQuery = true)
 	    List<Object[]> obtenerPromedioPorCiclo(@Param("cicloId") String cicloId);
+	    List<CalificacionFinalMateria> findByAlumnoId(String alumnoId);
 
 
 }
