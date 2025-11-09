@@ -3,6 +3,7 @@ package com.primaria.app.controller;
 import com.primaria.app.DTO.CalificacionFinalMateriaDTO;
 import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
+import com.primaria.app.DTO.PromedioCampoDTO;
 import com.primaria.app.DTO.PromedioGradoCicloDTO;
 import com.primaria.app.Service.CalificacionFinalMateriaService;
 import com.primaria.app.Service.CalificacionService;
@@ -110,5 +111,30 @@ public class CalificacionFinalMateriaController {
             }
 
             return ResponseEntity.ok(promedios);
+        }
+    
+    
+    @Operation(
+            summary = "RF3.4 Obtener promedios por campo formativo",
+            description = "Devuelve el promedio de calificaciones agrupado por campo formativo para un ciclo escolar específico."
+        )
+        @GetMapping("/promedio-campos/{idCiclo}")
+        public List<PromedioCampoDTO> obtenerPromediosPorCampo(
+                @Parameter(description = "ID del ciclo escolar", example = "8f6a92d4-6e3f-4f37-9d19-55ef0e7a6a61")
+                @PathVariable String idCiclo) {
+            return calificacionService.obtenerPromediosPorCampo(idCiclo);
+        }
+
+        // 🔹 Obtener promedio general
+        @Operation(
+            summary = "RF3.4 Obtener promedio general",
+            description = "Devuelve el promedio general de todas las materias cursadas en un ciclo escolar específico."
+        )
+       
+        @GetMapping("/promedio-general/{idCiclo}")
+        public Double obtenerPromedioGeneral(
+                @Parameter(description = "ID del ciclo escolar", example = "8f6a92d4-6e3f-4f37-9d19-55ef0e7a6a61")
+                @PathVariable String idCiclo) {
+            return calificacionService.obtenerPromedioGeneral(idCiclo);
         }
 }

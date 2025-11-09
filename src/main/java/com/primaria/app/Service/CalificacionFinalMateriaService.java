@@ -3,6 +3,7 @@ package com.primaria.app.Service;
 import com.primaria.app.DTO.CalificacionFinalMateriaDTO;
 import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
+import com.primaria.app.DTO.PromedioCampoDTO;
 import com.primaria.app.DTO.PromedioGradoCicloDTO;
 import com.primaria.app.Model.*;
 import com.primaria.app.repository.*;
@@ -142,6 +143,22 @@ public List<PromedioGradoCicloDTO> obtenerPromedios(String alumnoId) {
         // 🔹 Ordenar por año de inicio del ciclo (más antiguo primero)
         .sorted(Comparator.comparing(dto -> Integer.parseInt(dto.getCicloEscolar().split("-")[0])))
         .toList();
+}
+
+
+
+public List<PromedioCampoDTO> obtenerPromediosPorCampo(String idCiclo) {
+    return calificacionRepo.obtenerPromedioPorCampo(idCiclo)
+            .stream()
+            .map(obj -> new PromedioCampoDTO(
+                    (String) obj[0],
+                    obj[1] != null ? ((Number) obj[1]).doubleValue() : null
+            ))
+            .collect(Collectors.toList());
+}
+
+public Double obtenerPromedioGeneral(String idCiclo) {
+    return calificacionRepo.obtenerPromedioGeneral(idCiclo);
 }
 
 }

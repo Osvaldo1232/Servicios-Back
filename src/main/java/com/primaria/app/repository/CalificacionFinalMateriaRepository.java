@@ -36,5 +36,25 @@ public interface CalificacionFinalMateriaRepository extends JpaRepository<Califi
 	    List<Object[]> obtenerPromedioPorCiclo(@Param("cicloId") String cicloId);
 	    List<CalificacionFinalMateria> findByAlumnoId(String alumnoId);
 
+	    
+	    @Query(value = """
+	            SELECT 
+	                cam.nombre AS campoFormativo,
+	                ROUND(AVG(cfm.promedio), 2) AS promedioCampo
+	            FROM calificacion_final_materia cfm
+	            JOIN materia m ON cfm.id_materia = m.id
+	            JOIN campo_formativo cam ON m.campo_formativo = cam.id
+	            WHERE cfm.id_ciclo_escolar = :idCiclo
+	            GROUP BY cam.id, cam.nombre
+	            """, nativeQuery = true)
+	        List<Object[]> obtenerPromedioPorCampo(@Param("idCiclo") String idCiclo);
+
+	        @Query(value = """
+	            SELECT 
+	                ROUND(AVG(cfm.promedio), 2) AS promedioGeneral
+	            FROM calificacion_final_materia cfm
+	            WHERE cfm.id_ciclo_escolar = :idCiclo
+	            """, nativeQuery = true)
+	        Double obtenerPromedioGeneral(@Param("idCiclo") String idCiclo);
 
 }
