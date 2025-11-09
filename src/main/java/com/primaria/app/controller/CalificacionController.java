@@ -256,7 +256,7 @@ public class CalificacionController {
     
     
     @GetMapping(value = "/alumno/{idAlumno}/pdfs", produces = MediaType.APPLICATION_PDF_VALUE)
-    @Operation(summary = "Genera un PDF con las calificaciones del alumno")
+    @Operation(summary = "RF3.5 Genera un PDF con las calificaciones del alumno")
     public ResponseEntity<byte[]> generarPDFs(@PathVariable String idAlumno) {
         try {
             byte[] pdfBytes = pdfService.generarPDFAlumno(idAlumno);
