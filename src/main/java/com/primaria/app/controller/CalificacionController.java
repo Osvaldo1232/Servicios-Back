@@ -1,18 +1,21 @@
 package com.primaria.app.controller;
-
+import org.springframework.http.MediaType;
 import com.primaria.app.DTO.CalificacionFinalDTO;
+import com.primaria.app.DTO.CicloCalificacionDTO;
 import com.primaria.app.DTO.MensajeDTO;
 import com.primaria.app.Model.Calificacion_final;
 import com.primaria.app.Service.CalificacionService;
 import com.primaria.app.Service.ConsultaCalificacionService;
-
+import com.primaria.app.Service.CalificacionesPDFService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,12 +43,14 @@ public class CalificacionController {
 	
 	private final ConsultaCalificacionService calificacionServiceC;
 
-  
+	 private final CalificacionesPDFService pdfService;
+	 
     private final CalificacionService calificacionService;
 
-    public CalificacionController(CalificacionService calificacionService, ConsultaCalificacionService calificacionServiceC) {
+    public CalificacionController(CalificacionesPDFService calificacionesPDFService,CalificacionService calificacionService, ConsultaCalificacionService calificacionServiceC) {
         this.calificacionService = calificacionService;
         this.calificacionServiceC = calificacionServiceC;
+        this.pdfService=calificacionesPDFService;
     }
 
     // -------------------------------
@@ -212,4 +217,60 @@ public class CalificacionController {
     ) {
         return calificacionService.obtenerPorGrado(gradoId);
     }
+    
+    
+    @GetMapping("/alumno/{idAlumno}")
+    @Operation(summary = "Obtiene calificaciones por alumno",
+               description = "Devuelve las calificaciones de todas las materias por trimestre y el promedio final, agrupadas por ciclo y grado")
+    public ResponseEntity<List<CicloCalificacionDTO>> obtenerCalificacionesPorAlumno(
+            @PathVariable String idAlumno) {
+        try {
+            List<CicloCalificacionDTO> calificaciones = calificacionService.obtenerCalificacionesPorAlumno(idAlumno);
+            return ResponseEntity.ok(calificaciones);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+    
+   @GetMapping(value = "/alumno/{idAlumno}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Operation(summary = "Genera un PDF con las calificaciones del alumno")
+    public ResponseEntity<byte[]> generarPDF(@PathVariable String idAlumno) {
+        try {
+            byte[] pdfBytes = pdfService.generarPDFAlumno(idAlumno);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("filename", "calificaciones_alumno.pdf");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(pdfBytes);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body(("Error al generar PDF: " + e.getMessage()).getBytes());
+        }
+    }
+
+    
+    
+    @GetMapping(value = "/alumno/{idAlumno}/pdfs", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Operation(summary = "Genera un PDF con las calificaciones del alumno")
+    public ResponseEntity<byte[]> generarPDFs(@PathVariable String idAlumno) {
+        try {
+            byte[] pdfBytes = pdfService.generarPDFAlumno(idAlumno);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=calificaciones_alumno.pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(("Error al generar PDF: " + e.getMessage()).getBytes());
+        }
+    }
+
 }

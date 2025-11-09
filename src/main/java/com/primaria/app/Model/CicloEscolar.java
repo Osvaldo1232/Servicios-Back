@@ -1,6 +1,5 @@
 package com.primaria.app.Model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
