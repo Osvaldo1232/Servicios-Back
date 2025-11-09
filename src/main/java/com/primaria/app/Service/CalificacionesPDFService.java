@@ -19,7 +19,7 @@ public class CalificacionesPDFService {
     }
 
     public byte[] generarPDFAlumno(String idAlumno) throws Exception {
-        List<CicloCalificacionDTO> ciclos = calificacionesService.obtenerCalificacionesPorAlumno(idAlumno);
+        List<CicloCalificacionDTO> ciclos = calificacionesService.obtenerCalificacionesPorAlumnos(idAlumno);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Document document = new Document(PageSize.A4.rotate()); // mejor en horizontal si hay muchas materias
@@ -31,7 +31,7 @@ public class CalificacionesPDFService {
         Font textoNormal = new Font(Font.HELVETICA, 11);
         
         // ======== Encabezado con logo y nombre de la escuela ========
-        InputStream logoStream = getClass().getClassLoader().getResourceAsStream("logo.png");
+        InputStream logoStream = getClass().getClassLoader().getResourceAsStream("logoprimaria.png");
         Image logo = null;
         if (logoStream != null) {
             logo = Image.getInstance(javax.imageio.ImageIO.read(logoStream), null);
@@ -58,6 +58,16 @@ public class CalificacionesPDFService {
         document.add(encabezado);
         document.add(Chunk.NEWLINE);
 
+        if (ciclos.isEmpty()) {
+            // Si no hay ciclos válidos, mostrar mensaje
+            Paragraph mensaje = new Paragraph(
+                    "Para obtener el historial, debes haber presentado las materias de un grado.",
+                    tituloCiclo
+            );
+            mensaje.setAlignment(Element.ALIGN_CENTER);
+            mensaje.setSpacingBefore(100f); // espacio desde arriba
+            document.add(mensaje);
+        } else {
         for (CicloCalificacionDTO ciclo : ciclos) {
             // Título ciclo escolar
             Paragraph pCiclo = new Paragraph("CICLO ESCOLAR: " + ciclo.getCicloEscolar(), tituloCiclo);
@@ -104,6 +114,7 @@ public class CalificacionesPDFService {
             }
 
             document.add(new Paragraph("\n")); // salto de línea entre ciclos
+        }
         }
 
         document.close();
