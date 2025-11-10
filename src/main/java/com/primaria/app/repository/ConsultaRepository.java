@@ -17,9 +17,9 @@ public interface ConsultaRepository extends JpaRepository<Calificacion_final, St
         a.id AS id_alumno,
         CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_alumno,
         m.nombre AS nombre_materia,
-        ROUND(MAX(CASE WHEN t.nombre = 'tri' THEN cf.promedio END), 2) AS trimestre_1,
-        ROUND(MAX(CASE WHEN t.nombre = 'trime 2' THEN cf.promedio END), 2) AS trimestre_2,
-        ROUND(MAX(CASE WHEN t.nombre = 'trime 3' THEN cf.promedio END), 2) AS trimestre_3,
+        ROUND(MAX(CASE WHEN t.nombre = 'Trimestre 1' THEN cf.promedio END), 2) AS trimestre_1,
+        ROUND(MAX(CASE WHEN t.nombre = 'Trimestre 2' THEN cf.promedio END), 2) AS trimestre_2,
+        ROUND(MAX(CASE WHEN t.nombre = 'Trimestre 3' THEN cf.promedio END), 2) AS trimestre_3,
         ROUND(AVG(cf.promedio), 2) AS promedio_final
     FROM inscrito_alumno ia
     INNER JOIN asignacion_docente_grado_grupo adgg ON ia.id_asignacion = adgg.id
