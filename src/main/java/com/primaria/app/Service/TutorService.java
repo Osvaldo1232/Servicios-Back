@@ -124,30 +124,41 @@ public class TutorService {
         return false;
     }
     
-    
-    public Map<String, Object> guardarRelacion(AlumnoTutorDTO dto) {
+   public Map<String, Object> guardarRelacion(AlumnoTutorDTO dto) {
 
-        var alumno = estudianteRepository.findById(dto.getAlumnoId().toString())
-                .orElseThrow(() -> new RuntimeException("Alumno no encontrado con ID: " + dto.getAlumnoId()));
+    var alumno = estudianteRepository.findById(dto.getAlumnoId().toString())
+            .orElseThrow(() -> new RuntimeException("Alumno no encontrado con ID: " + dto.getAlumnoId()));
 
-        var tutor = tutorRepository.findById(dto.getTutorId().toString())
-                .orElseThrow(() -> new RuntimeException("Tutor no encontrado con ID: " + dto.getTutorId()));
+    var tutor = tutorRepository.findById(dto.getTutorId().toString())
+            .orElseThrow(() -> new RuntimeException("Tutor no encontrado con ID: " + dto.getTutorId()));
 
-        var ciclo = cicloEscolarRepository.findById(dto.getCicloId().toString())
-                .orElseThrow(() -> new RuntimeException("Ciclo escolar no encontrado con ID: " + dto.getCicloId()));
+    var ciclo = cicloEscolarRepository.findById(dto.getCicloId().toString())
+            .orElseThrow(() -> new RuntimeException("Ciclo escolar no encontrado con ID: " + dto.getCicloId()));
 
-        AlumnoTutor relacion = new AlumnoTutor();
-        relacion.setAlumno(alumno);
-        relacion.setTutor(tutor);
-        relacion.setCiclo(ciclo);
-        relacion.setParentesco(dto.getParentesco());
+    // 🔍 Verificar si ya existe la relación
+    boolean existeRelacion = alumnoTutorRepository.existsByAlumno_IdAndTutor_IdAndCiclo_Id(
+            dto.getAlumnoId().toString(),
+            dto.getTutorId().toString(),
+            dto.getCicloId().toString()
+    );
 
-        AlumnoTutor guardado = alumnoTutorRepository.save(relacion);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Relación Alumno-Tutor registrada exitosamente");
-        response.put("idAsignacion", guardado.getId());
-
-        return response;
+    if (existeRelacion) {
+        throw new RuntimeException("Ya existe una relación entre este alumno, tutor y ciclo escolar.");
     }
+
+    AlumnoTutor relacion = new AlumnoTutor();
+    relacion.setAlumno(alumno);
+    relacion.setTutor(tutor);
+    relacion.setCiclo(ciclo);
+    relacion.setParentesco(dto.getParentesco());
+
+    AlumnoTutor guardado = alumnoTutorRepository.save(relacion);
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("message", "Relación Alumno-Tutor registrada exitosamente");
+    response.put("idAsignacion", guardado.getId());
+
+    return response;
+}
+
 }

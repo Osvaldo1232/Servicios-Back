@@ -14,4 +14,7 @@ import com.primaria.app.Model.AlumnoTutor;
 public interface AlumnoTutorRepository extends JpaRepository<AlumnoTutor, String> {
 	Optional<AlumnoTutor> findByAlumnoIdAndCicloId(String alumnoId, String cicloId);
     Optional<AlumnoTutor> findByAlumno_IdAndCiclo_Id(String idAlumno, String idCiclo);
+    
+    
+    boolean existsByAlumno_IdAndTutor_IdAndCiclo_Id(String alumnoId, String tutorId, String cicloId);
 }

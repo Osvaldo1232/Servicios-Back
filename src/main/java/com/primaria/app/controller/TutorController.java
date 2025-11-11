@@ -107,7 +107,14 @@ public class TutorController {
         description = "Crea una relación entre un alumno, un tutor y un ciclo escolar, incluyendo el parentesco."
     )
     public ResponseEntity<Map<String, Object>> registrarRelacion(@RequestBody AlumnoTutorDTO dto) {
-        Map<String, Object> response = tutorService.guardarRelacion(dto);
-        return ResponseEntity.ok(response);
+        try {
+            Map<String, Object> response = tutorService.guardarRelacion(dto);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
+        }
     }
+
 }
