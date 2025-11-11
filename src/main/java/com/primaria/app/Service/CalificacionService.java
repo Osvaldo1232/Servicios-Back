@@ -27,6 +27,9 @@ import com.primaria.app.repository.GradosRepository;
 import com.primaria.app.repository.InscritoAlumnoRepository;
 import com.primaria.app.repository.MateriasRepository;
 import com.primaria.app.repository.TrimestreRepository;
+
+import jakarta.transaction.Transactional;
+
 import com.primaria.app.DTO.AlumnoCalificacionesDTO;
 import com.primaria.app.DTO.CalificacionAlumnoCicloDTO;
 
@@ -133,6 +136,12 @@ public class CalificacionService {
         return calificacionRepo.save(calificacion);
     }
 
+    @Transactional
+    public void asignarCalificaciones(List<CalificacionFinalDTO> calificaciones) {
+        for (CalificacionFinalDTO dto : calificaciones) {
+            asignarCalificacion(dto);
+        }
+    }
 
     public Optional<Calificacion_final> buscarPorId(String id) {
         return calificacionRepo.findById(id);
@@ -217,58 +226,8 @@ public class CalificacionService {
         return resultado;
     }
     
-    
-    public List<CalificacionAlumnoCicloDTO> obtenerPorGrado(String gradoId) {
-        // Traer todas las calificaciones del grado
-        List<Calificacion_final> calificaciones = calificacionRepo.findByGradoId(gradoId);
 
-        Map<String, Map<String, CalificacionAlumnoCicloDTO>> map = new HashMap<>();
 
-        for (Calificacion_final c : calificaciones) {
-            String alumnoId = c.getAlumno().getId();
-            String materiaId = c.getMateria().getId();
-
-            map.putIfAbsent(alumnoId, new HashMap<>());
-            Map<String, CalificacionAlumnoCicloDTO> materias = map.get(alumnoId);
-
-            materias.putIfAbsent(materiaId, new CalificacionAlumnoCicloDTO());
-            CalificacionAlumnoCicloDTO dto = materias.get(materiaId);
-
-            dto.setIdAlumno(alumnoId);
-            dto.setNombreAlumno(c.getAlumno().getNombre()+ " " + c.getAlumno().getApellidoPaterno()+" "+ c.getAlumno().getApellidoMaterno()) ; // crear getNombreCompleto en Usuario o Estudiante
-            dto.setNombreMateria(c.getMateria().getNombre());
-
-            // Asignar calificación según el trimestre
-            String trimestreNombre = c.getTrimestre().getNombre();
-            switch(trimestreNombre.toLowerCase()) {
-                case "tri", "trimestre 1":
-                    dto.setTrimestre1(c.getPromedio());
-                    dto.setIdTrimestre1(c.getTrimestre().getId());
-                    break;
-                case "trime 2", "trimestre 2":
-                    dto.setTrimestre2(c.getPromedio());
-                    dto.setIdTrimestre2(c.getTrimestre().getId());
-                    break;
-                case "trime 3", "trimestre 3":
-                    dto.setTrimestre3(c.getPromedio());
-                    dto.setIdTrimestre3(c.getTrimestre().getId());
-                    break;
-            }
-
-            // Calcular promedio final (podría ser un simple promedio de los no nulos)
-            double sum = 0;
-            int count = 0;
-            if(dto.getTrimestre1() != null) { sum += dto.getTrimestre1(); count++; }
-            if(dto.getTrimestre2() != null) { sum += dto.getTrimestre2(); count++; }
-            if(dto.getTrimestre3() != null) { sum += dto.getTrimestre3(); count++; }
-            dto.setPromedioFinal(count > 0 ? Math.round((sum / count) * 100.0)/100.0 : 0.0);
-        }
-
-        // Convertir Map a lista
-        return map.values().stream()
-                .flatMap(m -> m.values().stream())
-                .collect(Collectors.toList());
-    }
 
    public List<CicloCalificacionDTO> obtenerCalificacionesPorAlumno(String idAlumno) {
     List<Calificacion_final> calificaciones = calificacionRepo.findAllByAlumnoOrdenado(idAlumno);

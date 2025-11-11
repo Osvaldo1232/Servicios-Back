@@ -1,13 +1,13 @@
 package com.primaria.app.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.Model.CalificacionFinalMateria;
 
 @Repository
@@ -56,5 +56,7 @@ public interface CalificacionFinalMateriaRepository extends JpaRepository<Califi
 	            WHERE cfm.id_ciclo_escolar = :idCiclo
 	            """, nativeQuery = true)
 	        Double obtenerPromedioGeneral(@Param("idCiclo") String idCiclo);
+	        Optional<CalificacionFinalMateria> findByAlumnoIdAndMateriaIdAndCicloEscolarId(
+	                String idAlumno, String idMateria, String idCiclo);
 
 }

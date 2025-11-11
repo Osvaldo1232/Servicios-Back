@@ -11,8 +11,6 @@ import com.primaria.app.Service.CalificacionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
 
@@ -29,40 +27,12 @@ public class CalificacionFinalMateriaController {
     private CalificacionService calificacionServic;
 
     @Autowired
-    private CalificacionFinalMateriaService calificacionService;
-
-    @Operation(
-            summary = "Registrar una nueva calificación final",
-            description = "Crea un registro de calificación final para un alumno en una materia específica dentro de un ciclo escolar."
-    )
- 
-    @PostMapping
-    public ResponseEntity<CalificacionFinalMateriaDTO> crearCalificacion(
-            @Parameter(description = "DTO con la información de la calificación final a registrar") 
-            @RequestBody CalificacionFinalMateriaDTO dto) {
-        CalificacionFinalMateriaDTO creada = calificacionService.crearCalificacion(dto);
-        return ResponseEntity.ok(creada);
-    }
-
-    @Operation(
-            summary = "Obtener una calificación final por ID",
-            description = "Recupera la información de una calificación final específica usando su ID"
-    )
-   
-    @GetMapping("/{id}")
-    public ResponseEntity<CalificacionFinalMateriaDTO> obtenerCalificacion(
-            @Parameter(description = "ID de la calificación final a buscar") 
-            @PathVariable String id) {
-        return calificacionService.obtenerPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    private CalificacionFinalMateriaService calificacionService;    
     @Operation(
             summary = "RF3.2: Obtener calificaciones por alumno y ciclo",
             description = "Devuelve las calificaciones de un alumno agrupadas por materia dentro de un ciclo escolar específico"
     )
-   
+  
     @GetMapping("/alumno/{alumnoId}/ciclo/{cicloId}")
     public List<MateriaCalificacionResDTO> obtenerCalificaciones(
             @Parameter(description = "ID del alumno cuyas calificaciones se desean consultar") 
@@ -81,8 +51,6 @@ public class CalificacionFinalMateriaController {
         List<CalificacionTotalAlumnoDTO> resultado = calificacionService.getPromedioPorCiclo(cicloId);
         return ResponseEntity.ok(resultado);
     }
-    
-    
     @Operation(
             summary = "RF3.8 Obtener promedio general por alumno",
             description = """
@@ -111,9 +79,7 @@ public class CalificacionFinalMateriaController {
             }
 
             return ResponseEntity.ok(promedios);
-        }
-    
-    
+        }  
     @Operation(
             summary = "RF3.4 Obtener promedios por campo formativo",
             description = "Devuelve el promedio de calificaciones agrupado por campo formativo para un ciclo escolar específico."
@@ -124,13 +90,11 @@ public class CalificacionFinalMateriaController {
                 @PathVariable String idCiclo) {
             return calificacionService.obtenerPromediosPorCampo(idCiclo);
         }
-
         // 🔹 Obtener promedio general
         @Operation(
             summary = "RF3.4 Obtener promedio general",
             description = "Devuelve el promedio general de todas las materias cursadas en un ciclo escolar específico."
         )
-       
         @GetMapping("/promedio-general/{idCiclo}")
         public Double obtenerPromedioGeneral(
                 @Parameter(description = "ID del ciclo escolar", example = "8f6a92d4-6e3f-4f37-9d19-55ef0e7a6a61")

@@ -27,7 +27,7 @@ public interface CalificacionFinalRepository extends JpaRepository<Calificacion_
     
     List<Calificacion_final> findByGradoId(String gradoId);
     
-    
+   
     
     @Query(value = """
             SELECT cf
@@ -42,4 +42,13 @@ public interface CalificacionFinalRepository extends JpaRepository<Calificacion_
             ORDER BY c.id ASC, g.id ASC, m.nombre ASC, t.nombre ASC
         """)
         List<Calificacion_final> findAllByAlumnoOrdenado(@Param("idAlumno") String idAlumno);
+        
+        
+        
+        @Query("SELECT c FROM Calificacion_final c " +
+        	       "WHERE c.alumno.id = :idAlumno AND c.materia.id = :idMateria AND c.ciclo.id = :idCiclo")
+        	List<Calificacion_final> findAllByAlumnoAndMateriaAndCiclo(
+        	        @Param("idAlumno") String idAlumno,
+        	        @Param("idMateria") String idMateria,
+        	        @Param("idCiclo") String idCiclo);
 }

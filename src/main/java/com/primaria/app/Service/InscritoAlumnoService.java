@@ -340,4 +340,9 @@ public class InscritoAlumnoService {
                 })
                 .collect(Collectors.toList());
     }
+    
+    
+    public List<AlumnoInscritoDTO> obtenerAlumnosPorAsignacion(String idAsignacion) {
+        return inscritoAlumnoRepository.listarAlumnosPorAsignacion(idAsignacion , Estatus.ACTIVO);
+    }
 }

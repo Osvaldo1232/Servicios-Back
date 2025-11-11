@@ -53,22 +53,7 @@ public class CalificacionController {
         this.pdfService=calificacionesPDFService;
     }
 
-    // -------------------------------
-    // Asignar calificación
-    // -------------------------------
-    @PostMapping("/asignar")
-    @Operation(
-        summary = "RF2.4 y RF2.6 Asignar calificación",
-        description = "Asigna una calificación a un alumno en una materia y trimestre específico"
-    )
-    public ResponseEntity<MensajeDTO> asignarCalificacion(@Valid @RequestBody CalificacionFinalDTO dto) {
-        try {
-            calificacionService.asignarCalificacion(dto);
-            return ResponseEntity.ok(new MensajeDTO("Registro exitoso"));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(new MensajeDTO(e.getMessage()));
-        }
-    }
+    
 
     // -------------------------------
     // Obtener calificación por ID
@@ -192,30 +177,6 @@ public class CalificacionController {
 
         document.add(tabla);
         document.close();
-    }
-    
-    @Operation(
-            summary = "RF2.5 Listar calificaciones por grado",
-            description = "Devuelve las calificaciones de todos los alumnos del grado especificado, incluyendo las calificaciones por trimestre y el promedio final."
-        )
-        @GetMapping("/grado/{gradoId}")
-        public List<CalificacionAlumnoProjection> listarPorGrado(
-            @Parameter(description = "UUID del grado a consultar", required = true)
-            @PathVariable String gradoId
-        ) {
-            return calificacionServiceC.obtenerPorGrado(gradoId);
-        }
-    
-    @GetMapping("/grados/{gradoId}")
-    @Operation(
-        summary = "RF2.5 Obtener calificaciones por grado",
-        description = "Devuelve las calificaciones de todos los alumnos del grado, incluyendo las calificaciones por trimestre y el promedio final"
-    )
-    public List<CalificacionAlumnoCicloDTO> obtenerCalificacionesPorGrado(
-            @Parameter(description = "UUID del grado a consultar", required = true)
-            @PathVariable String gradoId
-    ) {
-        return calificacionService.obtenerPorGrado(gradoId);
     }
     
     

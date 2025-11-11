@@ -2,8 +2,6 @@ package com.primaria.app.Model;
 
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 
 @Entity
 public class Estudiante extends Usuario {

@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.primaria.app.DTO.AlumnoCargaDTO;
 import com.primaria.app.DTO.AlumnoInfoDTO;
+import com.primaria.app.DTO.AlumnoInscritoDTO;
 import com.primaria.app.DTO.AsignacionSelectDTO;
 import com.primaria.app.DTO.InfoAlumnoTutorDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
@@ -194,5 +195,14 @@ public class InscritoAlumnoController {
         return inscritoAlumnoService.obtenerPerfilAlumnoPorId(idAlumno)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+    
+    
+    
+    
+    @Operation(summary = "RF2.5 Listar alumnos inscritos por asignación")
+    @GetMapping("/asignacioness/{idAsignacion}")
+    public List<AlumnoInscritoDTO> obtenerPorAsignacion(@PathVariable String idAsignacion) {
+        return inscritoAlumnoService.obtenerAlumnosPorAsignacion(idAsignacion);
     }
 }

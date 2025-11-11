@@ -6,11 +6,14 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+import com.primaria.app.DTO.AlumnoInscritoDTO;
 import com.primaria.app.Model.Estatus;
 import com.primaria.app.Model.Estudiante;
 import com.primaria.app.Model.InscritoAlumno;
 
+@Repository
 public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, String> {
 
     // 🔹 Última inscripción por FECHA
@@ -48,4 +51,21 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
     
     
     List<InscritoAlumno> findDistinctByAsignacion_Ciclo_IdAndEstatus(String cicloId,  Estatus estatus);
+    
+    
+    
+    @Query("""
+    	    SELECT new com.primaria.app.DTO.AlumnoInscritoDTO(
+    	        e.id,
+    	        CONCAT(e.nombre, ' ', e.apellidoPaterno, ' ', e.apellidoMaterno)
+    	    )
+    	    FROM InscritoAlumno i
+    	    JOIN i.alumno e
+    	    WHERE i.asignacion.id = :idAsignacion
+    	    AND i.estatus = :estatus
+    	    ORDER BY e.apellidoPaterno, e.apellidoMaterno
+    	""")
+    	List<AlumnoInscritoDTO> listarAlumnosPorAsignacion(@Param("idAsignacion") String idAsignacion,
+    	                                                   @Param("estatus") Estatus estatus);
+
 }
