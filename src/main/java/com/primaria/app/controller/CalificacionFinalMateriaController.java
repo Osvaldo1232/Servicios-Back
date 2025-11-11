@@ -1,12 +1,13 @@
 package com.primaria.app.controller;
 
-import com.primaria.app.DTO.CalificacionFinalMateriaDTO;
 import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.DTO.PromedioCampoDTO;
 import com.primaria.app.DTO.PromedioGradoCicloDTO;
+import com.primaria.app.DTO.ReporteAlumnoDTO;
 import com.primaria.app.Service.CalificacionFinalMateriaService;
 import com.primaria.app.Service.CalificacionService;
+import com.primaria.app.Service.ReporteAlumnoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Calificaciones Finales", description = "Operaciones para gestionar calificaciones finales de materias")
 public class CalificacionFinalMateriaController {
 
+	
+	@Autowired
+	private ReporteAlumnoService reporteAlumnoService;
     @Autowired
     private CalificacionService calificacionServic;
 
@@ -100,5 +104,19 @@ public class CalificacionFinalMateriaController {
                 @Parameter(description = "ID del ciclo escolar", example = "8f6a92d4-6e3f-4f37-9d19-55ef0e7a6a61")
                 @PathVariable String idCiclo) {
             return calificacionService.obtenerPromedioGeneral(idCiclo);
+        }
+        
+
+        @Operation(
+            summary = "RF2.10 Obtener reporte del alumno por ciclo",
+            description = "Devuelve los promedios por campo formativo, por trimestre y el promedio general del alumno en un ciclo escolar específico."
+        )
+        @GetMapping("/por-ciclo")
+        public ResponseEntity<ReporteAlumnoDTO> obtenerReportePorAlumno(
+                @Parameter(description = "ID del alumno", example = "f9ec27d8-7a95-4964-a887-65bf763b4d5b") @RequestParam String idAlumno,
+                @Parameter(description = "ID del ciclo escolar", example = "8f6a92d4-6e3f-4f37-9d19-55ef0e7a6a61") @RequestParam String idCiclo
+        ) {
+            ReporteAlumnoDTO reporte = reporteAlumnoService.obtenerReportePorAlumno(idAlumno, idCiclo);
+            return ResponseEntity.ok(reporte);
         }
 }

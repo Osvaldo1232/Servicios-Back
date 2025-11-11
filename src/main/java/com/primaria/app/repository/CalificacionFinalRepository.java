@@ -1,5 +1,6 @@
 package com.primaria.app.repository;
 
+import com.primaria.app.DTO.PromedioCampoFormativoDTO;
 import com.primaria.app.Model.Calificacion_final;
 import com.primaria.app.Model.Estudiante;
 
@@ -51,4 +52,29 @@ public interface CalificacionFinalRepository extends JpaRepository<Calificacion_
         	        @Param("idAlumno") String idAlumno,
         	        @Param("idMateria") String idMateria,
         	        @Param("idCiclo") String idCiclo);
+        	
+        	
+        	 @Query("""
+        		        SELECT new com.primaria.app.DTO.PromedioCampoFormativoDTO(
+        		            cf.nombre,
+        		            COALESCE(AVG(CASE WHEN t.nombre = 'Trimestre 1' THEN c.promedio END), 0),
+        		            COALESCE(AVG(CASE WHEN t.nombre = 'Trimestre 2' THEN c.promedio END), 0),
+        		            COALESCE(AVG(CASE WHEN t.nombre = 'Trimestre 3' THEN c.promedio END), 0),
+        		            COALESCE(AVG(c.promedio), 0)
+        		        )
+        		        FROM Calificacion_final c
+        		        JOIN c.materia m
+        		        JOIN m.campoFormativo cf
+        		        JOIN c.trimestre t
+        		        JOIN c.alumno a
+        		        JOIN c.ciclo ci
+        		        WHERE a.id = :idAlumno AND ci.id = :idCiclo
+        		        GROUP BY cf.nombre
+        		        ORDER BY cf.nombre
+        		    """)
+        		    List<PromedioCampoFormativoDTO> obtenerPromediosPorCampoFormativo(
+        		            @Param("idAlumno") String idAlumno,
+        		            @Param("idCiclo") String idCiclo
+        		    );
+
 }

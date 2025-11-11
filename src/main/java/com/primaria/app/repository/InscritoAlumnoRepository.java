@@ -67,5 +67,26 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
     	""")
     	List<AlumnoInscritoDTO> listarAlumnosPorAsignacion(@Param("idAsignacion") String idAsignacion,
     	                                                   @Param("estatus") Estatus estatus);
-
+    @Query("SELECT i FROM InscritoAlumno i WHERE i.alumno.id = :idAlumno AND i.estatus = :estatus")
+    
+    
+    
+    Optional<InscritoAlumno> findByAlumnoIdAndEstatus(@Param("idAlumno") String idAlumno, @Param("estatus") Estatus estatus);
+    
+    
+    
+    
+    
+    @Query("""
+            SELECT i
+            FROM InscritoAlumno i
+            WHERE i.alumno.id = :idAlumno
+              AND i.asignacion.ciclo.id = :idCiclo
+              AND i.estatus = :estatus
+        """)
+        Optional<InscritoAlumno> findByAlumnoIdAndCicloAndEstatus(
+                @Param("idAlumno") String idAlumno,
+                @Param("idCiclo") String idCiclo,
+                @Param("estatus") Estatus estatus
+        );
 }
