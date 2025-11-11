@@ -1,6 +1,8 @@
 package com.primaria.app.repository;
 
 import com.primaria.app.Model.AsignacionDocenteGradoGrupo;
+import com.primaria.app.Model.Estatus;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
@@ -10,4 +12,9 @@ public interface AsignacionDocenteGradoGrupoRepository extends JpaRepository<Asi
 	List<AsignacionDocenteGradoGrupo> findByCiclo_Id(String cicloId);
 
 	 List<AsignacionDocenteGradoGrupo> findByDocenteId(String docenteId);
+	 
+	  List<AsignacionDocenteGradoGrupo> findByDocente_IdAndEstatus(String idDocente, Estatus estatus);
+	  
+	  
+	  AsignacionDocenteGradoGrupo findTopByDocente_IdOrderByFechaCreadoDesc(String idDocente);
 }

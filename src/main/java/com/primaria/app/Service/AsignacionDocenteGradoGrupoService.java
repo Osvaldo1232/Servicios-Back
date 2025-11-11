@@ -4,6 +4,7 @@ import com.primaria.app.DTO.AsignacionDocenteGradoGrupoDTO;
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoResumenDTO;
 import com.primaria.app.DTO.AsignacionGradoGrupoCicloDTO;
 import com.primaria.app.DTO.CicloSimpleDTO;
+import com.primaria.app.DTO.ProfesorRDTO;
 import com.primaria.app.Model.AsignacionDocenteGradoGrupo;
 
 import com.primaria.app.Model.Grado;
@@ -131,5 +132,49 @@ public class AsignacionDocenteGradoGrupoService {
                         c.getAnioInicio() + " - " + c.getAnioFin()
                 ))
                 .collect(Collectors.toList());
+    }
+    
+    
+    
+    public List<ProfesorRDTO> obtenerAsignacionesPorDocente(String idDocente) {
+        List<AsignacionDocenteGradoGrupo> asignaciones =
+        		repository.findByDocente_IdAndEstatus(idDocente, Estatus.ACTIVO);
+
+        return asignaciones.stream()
+                .map(a -> new ProfesorRDTO(
+                        a.getId(),
+                        String.format("%s %s (%d-%d)",
+                                a.getGrado().getNombre(),
+                                a.getGrupo().getNombre(),
+                                a.getCiclo().getAnioInicio(),
+                                a.getCiclo().getAnioFin()
+                        )
+                ))
+                .collect(Collectors.toList());
+    }
+    
+    
+    
+    public AsignacionDocenteGradoGrupo obtenerAsignacionMasReciente(String idDocente) {
+        return repository.findTopByDocente_IdOrderByFechaCreadoDesc(idDocente);
+    }
+    
+    
+    
+    public ProfesorRDTO obtenerAsignacionMasReReciente(String idDocente) {
+        AsignacionDocenteGradoGrupo asignacion = repository.findTopByDocente_IdOrderByFechaCreadoDesc(idDocente);
+
+        if (asignacion == null) return null;
+
+        String grado = asignacion.getGrado().getNombre();
+        String grupo = asignacion.getGrupo().getNombre();
+        String ciclo = String.format("(%d-%d)",
+                asignacion.getCiclo().getAnioInicio(),
+                asignacion.getCiclo().getAnioFin()
+        );
+
+        String value = String.format("%s %s %s", grado, grupo, ciclo);
+
+        return new ProfesorRDTO(asignacion.getId(), value);
     }
 }

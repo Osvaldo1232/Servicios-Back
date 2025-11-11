@@ -4,6 +4,7 @@ import com.primaria.app.DTO.AsignacionDocenteGradoGrupoDTO;
 import com.primaria.app.DTO.AsignacionDocenteGradoGrupoResumenDTO;
 import com.primaria.app.DTO.AsignacionGradoGrupoCicloDTO;
 import com.primaria.app.DTO.CicloSimpleDTO;
+import com.primaria.app.DTO.ProfesorRDTO;
 import com.primaria.app.Service.AsignacionDocenteGradoGrupoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -87,4 +88,18 @@ public class AsignacionDocenteGradoGrupoController {
         ) {
             return service.obtenerCiclosPorDocente(idDocente);
         }
+    
+    
+    @Operation(summary = "RF2.5 Listar asignaciones activas de un docente por ID")
+    @GetMapping("/docente-asignaciones/{idDocente}")
+    public List<ProfesorRDTO> obtenerAsignacionesPorDocente(@PathVariable String idDocente) {
+        return service.obtenerAsignacionesPorDocente(idDocente);
+    }
+    
+    
+    @Operation(summary = " RF2.5 Obtiene la asignación más reciente de un docente por su ID (id y value)")
+    @GetMapping("/docente/{idDocente}/reciente")
+    public ProfesorRDTO obtenerAsignacionMasReciente(@PathVariable String idDocente) {
+        return service.obtenerAsignacionMasReReciente(idDocente);
+    }
 }
