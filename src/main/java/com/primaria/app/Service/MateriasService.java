@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.primaria.app.DTO.MateriaCampoDTO;
 import com.primaria.app.DTO.MateriaDTO;
 import com.primaria.app.Model.Materia;
+import com.primaria.app.repository.CampoFormativoRepository;
 import com.primaria.app.repository.MateriasRepository;
 
 
@@ -28,6 +29,9 @@ public class MateriasService {
 	 @Autowired
 	    private MateriasRepository materiasRepository;
 
+	 
+	 @Autowired
+	 private CampoFormativoRepository campoFormativoRepository;
 	    @Autowired
 	    private ModelMapper modelMapper;
 	    
@@ -61,10 +65,18 @@ public class MateriasService {
 	    public boolean actualizar(String uuid, MateriaDTO dto) {
 	        Optional<Materia> existente = materiasRepository.findById(uuid);
 	        if (existente.isPresent()) {
-	        	Materia materia = existente.get();
-	        	materia.setNombre(dto.getNombre());
-	        	materia.setEstatus(dto.getEstatus());
-	           materiasRepository.save(materia);
+	            Materia materia = existente.get();
+	            
+	            materia.setNombre(dto.getNombre());
+	            materia.setEstatus(dto.getEstatus());
+	            
+	            if (dto.getCampoFormativoId() != null) {
+	                campoFormativoRepository.findById(dto.getCampoFormativoId())
+	                    .ifPresent(materia::setCampoFormativo);
+	            }
+
+	            
+	            materiasRepository.save(materia);
 	            return true;
 	        }
 	        return false;

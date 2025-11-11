@@ -67,7 +67,7 @@ public class MateriasController {
 	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody MateriaDTO grupoDTO) {
 	        boolean actualizado = materiasService.actualizar(uuid, grupoDTO);
 	        if (actualizado) {
-	            return ResponseEntity.ok("Grupo actualizado exitosamente.");
+	            return ResponseEntity.ok("Materia actualizada exitosamente.");
 	        } else {
 	            return ResponseEntity.notFound().build();
 	        }
