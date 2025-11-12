@@ -1,6 +1,7 @@
 package com.primaria.app.Service;
 
 import com.primaria.app.DTO.CalificacionFinalMateriaDTO;
+import com.primaria.app.DTO.CalificacionMateriaDTO;
 import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.DTO.PromedioCampoDTO;
@@ -13,9 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -160,5 +165,41 @@ public List<PromedioCampoDTO> obtenerPromediosPorCampo(String idCiclo) {
 public Double obtenerPromedioGeneral(String idCiclo) {
     return calificacionRepo.obtenerPromedioGeneral(idCiclo);
 }
+public Map<String, Object> obtenerPromediosPorAlumno(String idAlumno) {
+    List<CalificacionMateriaDTO> materias = calificacionRepo.obtenerPromediosPorAlumno(idAlumno);
 
+    // Agrupar por grado
+    Map<String, List<CalificacionMateriaDTO>> agrupadoPorGrado = new LinkedHashMap<>();
+    for (CalificacionMateriaDTO dto : materias) {
+        agrupadoPorGrado
+            .computeIfAbsent(dto.getNombreGrado(), k -> new ArrayList<>())
+            .add(dto);
+    }
+
+    // Calcular promedio total por grado
+    List<Map<String, Object>> resultado = new ArrayList<>();
+    for (Map.Entry<String, List<CalificacionMateriaDTO>> entry : agrupadoPorGrado.entrySet()) {
+        String nombreGrado = entry.getKey();
+        List<CalificacionMateriaDTO> lista = entry.getValue();
+
+        BigDecimal total = lista.stream()
+                .map(CalificacionMateriaDTO::getPromedio)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal promedioGrado = total.divide(
+                BigDecimal.valueOf(lista.size()), 2, RoundingMode.HALF_UP);
+
+        Map<String, Object> gradoData = new LinkedHashMap<>();
+        gradoData.put("grado", nombreGrado);
+        gradoData.put("materias", lista);
+        gradoData.put("promedioFinalGrado", promedioGrado);
+
+        resultado.add(gradoData);
+    }
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("idAlumno", idAlumno);
+    response.put("calificacionesPorGrado", resultado);
+    return response;
+}
 }

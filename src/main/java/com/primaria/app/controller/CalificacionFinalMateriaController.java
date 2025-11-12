@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +57,7 @@ public class CalificacionFinalMateriaController {
         return ResponseEntity.ok(resultado);
     }
     @Operation(
-            summary = "RF3.8 Obtener promedio general por alumno",
+            summary = " Obtener promedio general por alumno",
             description = """
                 Retorna el promedio general de las materias cursadas por un alumno,
                 agrupadas por grado y ciclo escolar.  
@@ -119,4 +120,16 @@ public class CalificacionFinalMateriaController {
             ReporteAlumnoDTO reporte = reporteAlumnoService.obtenerReportePorAlumno(idAlumno, idCiclo);
             return ResponseEntity.ok(reporte);
         }
+        
+        
+        @Operation(
+                summary = " RF3.8: Obtener calificaciones finales por alumno",
+                description = "Devuelve las materias, campo formativo, grado y promedios agrupados por grado del alumno."
+            )
+            @GetMapping("/por-alumno/{idAlumno}")
+            public ResponseEntity<Map<String, Object>> obtenerPromediosPorAlumnos(
+                    @PathVariable String idAlumno) {
+                Map<String, Object> response = calificacionService.obtenerPromediosPorAlumno(idAlumno);
+                return ResponseEntity.ok(response);
+            }
 }

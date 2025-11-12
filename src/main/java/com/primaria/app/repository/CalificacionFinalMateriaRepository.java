@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.primaria.app.DTO.CalificacionMateriaDTO;
 import com.primaria.app.Model.CalificacionFinalMateria;
 
 @Repository
@@ -59,4 +60,19 @@ public interface CalificacionFinalMateriaRepository extends JpaRepository<Califi
 	        Optional<CalificacionFinalMateria> findByAlumnoIdAndMateriaIdAndCicloEscolarId(
 	                String idAlumno, String idMateria, String idCiclo);
 
+	        @Query("""
+	                SELECT new com.primaria.app.DTO.CalificacionMateriaDTO(
+	                    g.id, g.nombre,
+	                    m.id, m.nombre,
+	                    cf.id, cf.nombre,
+	                    cfm.promedio
+	                )
+	                FROM CalificacionFinalMateria cfm
+	                JOIN cfm.grado g
+	                JOIN cfm.materia m
+	                JOIN m.campoFormativo cf
+	                WHERE cfm.alumno.id = :idAlumno
+	                ORDER BY g.nombre, m.nombre
+	            """)
+	            List<CalificacionMateriaDTO> obtenerPromediosPorAlumno(@Param("idAlumno") String idAlumno);
 }
