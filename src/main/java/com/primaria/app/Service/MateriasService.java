@@ -43,6 +43,13 @@ public class MateriasService {
 	                .toList();
 	    }
 
+	    public List<MateriaDTO> listarPorCampoFormativo(String idCampoFormativo) {
+	        return materiasRepository.findByCampoFormativo_Id(idCampoFormativo)
+	                .stream()
+	                .map(m -> modelMapper.map(m, MateriaDTO.class))
+	                .collect(Collectors.toList());
+	    }
+	    
 	    public Optional<MateriaDTO> obtenerPorUuid(String uuid) {
 	        return materiasRepository.findById(uuid)
 	                .map(celular -> modelMapper.map(celular, MateriaDTO.class));

@@ -43,6 +43,18 @@ public class MateriasController {
 	     List<MateriaDTO> materias = materiasService.listarTodos();
 	     return ResponseEntity.ok(materias);
 	 }
+	 
+	 @Operation(
+	            summary = "Listar materias por campo formativo",
+	            description = "Devuelve una lista de materias pertenecientes a un campo formativo específico."
+	    )
+	    @GetMapping("/por-campo/{idCampoFormativo}")
+	    public ResponseEntity<List<MateriaDTO>> listarPorCampoFormativo(
+	            @PathVariable String idCampoFormativo) {
+	        List<MateriaDTO> materias = materiasService.listarPorCampoFormativo(idCampoFormativo);
+	        return ResponseEntity.ok(materias);
+	    }
+	 
 	    @Autowired
 	    private CampoFormativoRepository campoFormativoRepository;
 	    @PostMapping("/nueva")

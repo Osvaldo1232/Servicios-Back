@@ -1,6 +1,5 @@
 package com.primaria.app.Model;
 
-import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
 
