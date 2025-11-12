@@ -3,21 +3,22 @@ package com.primaria.app.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.primaria.app.DTO.AsignacionMateriaGradoDTO;
 import com.primaria.app.DTO.AsignacionMateriaGradoResumeDTO;
 import com.primaria.app.DTO.DocenteMateriaDTO;
+import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.Model.AsignacionMateriaGrado;
 import com.primaria.app.Service.AsignacionMateriaGradoService;
 import com.primaria.app.repository.DocenteGradoGrupoRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,11 +39,6 @@ public class AsignacionMateriaGradoController {
         summary = "RF4.36 Guardar una nueva asignación de materia a grado",
         description = "Crea una relación entre una materia y un grado existente en la base de datos"
     )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Asignación creada exitosamente"),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos o materia/grado no encontrados"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
     @PostMapping("/guardar")
     public Map<String, String> guardar(@RequestBody AsignacionMateriaGradoDTO dto) {
         AsignacionMateriaGrado asignacion = asignacionMateriaGradoService.guardarAsignacion(dto);
@@ -60,11 +56,7 @@ public class AsignacionMateriaGradoController {
         summary = "RF2.3 Obtener materias asignadas a un grado",
         description = "Devuelve el ID y nombre de las materias que están asignadas a un grado específico"
     )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Listado de materias obtenido correctamente"),
-        @ApiResponse(responseCode = "404", description = "Grado no encontrado o sin asignaciones"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
+    
     public List<Map<String, String>> obtenerMateriasPorGrado(@PathVariable String idGrado) {
         List<Map<String, String>> materias = asignacionMateriaGradoService.obtenerMateriasPorGrado(idGrado);
 
@@ -80,11 +72,6 @@ public class AsignacionMateriaGradoController {
         summary = "Obtener materias asignadas a un docente en un ciclo escolar",
         description = "Devuelve grado, grupo y nombre de materias del docente filtradas por ciclo escolar"
     )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Listado de materias obtenido correctamente"),
-        @ApiResponse(responseCode = "404", description = "No se encontraron asignaciones para este docente y ciclo"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
     public List<DocenteMateriaDTO> obtenerMateriasPorDocenteYCiclo(
             @PathVariable String idDocente,
             @PathVariable String idCiclo) {
@@ -99,11 +86,7 @@ public class AsignacionMateriaGradoController {
     }
     @GetMapping("/listar-por-grado")
     @Operation(summary = "RFC2.3 Lista de materias y campos formativos por grado")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Consulta exitosa"),
-        @ApiResponse(responseCode = "404", description = "No se encontraron asignaciones"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
+  
     public ResponseEntity<?> listarPorGrado(@RequestParam String idGrado) {
         try {
             List<AsignacionMateriaGradoResumeDTO> resultado = asignacionMateriaGradoService.listarAsignacionesPorGrado(idGrado);
@@ -118,5 +101,21 @@ public class AsignacionMateriaGradoController {
             ));
         }
     }
+    
+    
+    @Operation(
+            summary = "RF3.2 Obtener materias con calificación final por grado",
+            description = "Devuelve una lista de materias asignadas a un grado, mostrando la calificación actual si existe, y null si aún no ha sido registrada."
+        )
+        @GetMapping("/materias-por-grado")
+        public ResponseEntity<List<MateriaCalificacionResDTO>> obtenerMateriasPorGrado(
+                @Parameter(description = "ID del grado") @RequestParam String idGrado,
+                @Parameter(description = "ID del alumno") @RequestParam String idAlumno,
+                @Parameter(description = "ID del ciclo escolar") @RequestParam String idCicloEscolar
+        ) {
+            List<MateriaCalificacionResDTO> lista =
+            		asignacionMateriaGradoService.obtenerMateriasConPromedio(idGrado, idAlumno, idCicloEscolar);
+            return ResponseEntity.ok(lista);
+        }
 }
     

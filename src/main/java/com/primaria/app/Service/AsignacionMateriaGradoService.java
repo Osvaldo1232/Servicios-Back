@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.primaria.app.DTO.AsignacionMateriaGradoDTO;
 import com.primaria.app.DTO.AsignacionMateriaGradoResumeDTO;
+import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.Model.AsignacionMateriaGrado;
 import com.primaria.app.Model.Grado;
 import com.primaria.app.Model.Materia;
@@ -74,5 +75,11 @@ public class AsignacionMateriaGradoService {
                             idCampoFormativo, nombreCampoFormativo
                     );
                 }).toList();
+    }
+    
+    public List<MateriaCalificacionResDTO> obtenerMateriasConPromedio(
+            String idGrado, String idAlumno, String idCicloEscolar) {
+
+        return asignacionMateriaGradoRepository.obtenerMateriasYPromedioPorGrado(idGrado, idAlumno, idCicloEscolar);
     }
 }
