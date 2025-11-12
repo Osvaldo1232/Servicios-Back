@@ -204,7 +204,9 @@ public class CalificacionService {
             String nombreMateria = ejemplo.getMateria().getNombre();
             String idGrado = ejemplo.getGrado() != null ? ejemplo.getGrado().getId() : "";
             String nombreGrado = ejemplo.getGrado() != null ? ejemplo.getGrado().getNombre() : "";
-
+            String nombreCampoFormativo = ejemplo.getMateria().getCampoFormativo() != null
+                    ? ejemplo.getMateria().getCampoFormativo().getNombre()
+                    : ""; 
             // Sumar los promedios de los trimestres usando BigDecimal
             BigDecimal suma = calList.stream()
                     .map(c -> BigDecimal.valueOf(c.getPromedio()))
@@ -218,7 +220,8 @@ public class CalificacionService {
                     nombreMateria,
                     promedio,
                     idGrado,
-                    nombreGrado
+                    nombreGrado,
+                    nombreCampoFormativo
             ));
         }
 

@@ -95,7 +95,8 @@ public class CalificacionFinalMateriaService {
                         c.getMateria().getNombre(),
                         c.getPromedio(),
                         c.getGrado().getId(),
-                        c.getGrado().getNombre()
+                        c.getGrado().getNombre(),
+                        c.getMateria().getCampoFormativo().getNombre()
                 ))
                 .collect(Collectors.toList());
     }

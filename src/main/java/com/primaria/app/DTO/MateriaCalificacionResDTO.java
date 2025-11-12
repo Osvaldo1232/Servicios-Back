@@ -8,13 +8,16 @@ public class MateriaCalificacionResDTO {
     private BigDecimal calificacionActual;
     private String idGrado;
     private String nombreGrado;
+    private String nombreCampoFormativo; // ✅ nuevo campo
 
-    public MateriaCalificacionResDTO(String idMateria, String nombreMateria, BigDecimal calificacionActual, String idGrado, String nombreGrado) {
+    public MateriaCalificacionResDTO(String idMateria, String nombreMateria, BigDecimal calificacionActual,
+                                     String idGrado, String nombreGrado, String nombreCampoFormativo) {
         this.idMateria = idMateria;
         this.nombreMateria = nombreMateria;
         this.calificacionActual = calificacionActual;
         this.idGrado = idGrado;
         this.nombreGrado = nombreGrado;
+        this.nombreCampoFormativo = nombreCampoFormativo;
     }
 
     // Getters
@@ -23,4 +26,5 @@ public class MateriaCalificacionResDTO {
     public BigDecimal getCalificacionActual() { return calificacionActual; }
     public String getIdGrado() { return idGrado; }
     public String getNombreGrado() { return nombreGrado; }
+    public String getNombreCampoFormativo() { return nombreCampoFormativo; }
 }
