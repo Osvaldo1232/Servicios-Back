@@ -4,7 +4,6 @@ import com.primaria.app.DTO.*;
 import com.primaria.app.Model.Calificacion_final;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
 import java.util.stream.Collectors;
 
 import java.math.BigDecimal;
@@ -21,6 +20,7 @@ import com.primaria.app.Model.Grado;
 import com.primaria.app.Model.Materia;
 import com.primaria.app.Model.Trimestres;
 import com.primaria.app.repository.CalificacionFinalRepository;
+import com.primaria.app.repository.CalificacionMFinalRepository;
 import com.primaria.app.repository.CicloEscolaresRepository;
 import com.primaria.app.repository.EstudianteRepository;
 import com.primaria.app.repository.GradosRepository;
@@ -31,10 +31,8 @@ import com.primaria.app.repository.TrimestreRepository;
 import jakarta.transaction.Transactional;
 
 import com.primaria.app.DTO.AlumnoCalificacionesDTO;
-import com.primaria.app.DTO.CalificacionAlumnoCicloDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,12 +41,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 @Service
 public class CalificacionService {
 
     @Autowired
     private CalificacionFinalRepository calificacionRepo;
+    @Autowired
+    private CalificacionMFinalRepository calificacionMFinalRepository ;
     @Autowired
     private EstudianteRepository estudianteRepo;
     @Autowired
@@ -368,6 +367,8 @@ public class CalificacionService {
 	    return resultado;
 	}
 
-
+   public List<TrimestreMateriaAlumnoDTO> obtenerCalificaciones(String idAlumno, String idGrado, String idMateria, String idCiclo) {
+       return calificacionMFinalRepository.obtenerCalificacionesPorFiltros(idAlumno, idGrado, idMateria, idCiclo);
+   }
 
 }

@@ -1,8 +1,7 @@
 package com.primaria.app.controller;
 import org.springframework.http.MediaType;
-import com.primaria.app.DTO.CalificacionFinalDTO;
 import com.primaria.app.DTO.CicloCalificacionDTO;
-import com.primaria.app.DTO.MensajeDTO;
+
 import com.primaria.app.Model.Calificacion_final;
 import com.primaria.app.Service.CalificacionService;
 import com.primaria.app.Service.ConsultaCalificacionService;
@@ -10,7 +9,7 @@ import com.primaria.app.Service.CalificacionesPDFService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+
 import org.springframework.http.HttpHeaders;
 
 import java.util.List;
@@ -20,14 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.primaria.app.DTO.AlumnoCalificacionesDTO;
-import com.primaria.app.DTO.CalificacionAlumnoCicloDTO;
-import com.primaria.app.DTO.CalificacionAlumnoProjection;
 import com.primaria.app.DTO.FiltroCalificacionesDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.DTO.MateriaTrimestresDTO;
-
-
-
+import com.primaria.app.DTO.TrimestreMateriaAlumnoDTO;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import jakarta.servlet.http.HttpServletResponse;
@@ -233,5 +228,31 @@ public class CalificacionController {
                     .body(("Error al generar PDF: " + e.getMessage()).getBytes());
         }
     }
+    
 
+    @Operation(
+        summary = "RF3.1:  Obtener calificaciones por alumno y filtros opcionales",
+        description = """
+            Devuelve las calificaciones de un alumno agrupadas por materia, mostrando:
+            - Nombre del alumno  
+            - Nombre del grado  
+            - Nombre de la materia  
+            - Calificación por trimestre (1, 2 y 3)  
+            - Calificación final promedio  
+
+            El único parámetro obligatorio es **idAlumno**.  
+            Los parámetros `idGrado`, `idMateria` y `idCiclo` son opcionales.
+        """
+    )
+    
+    @GetMapping("/calificaciones-por-alumno")
+    public ResponseEntity<List<TrimestreMateriaAlumnoDTO>> obtenerCalificaciones(
+            @RequestParam String idAlumno,
+            @RequestParam(required = false) String idGrado,
+            @RequestParam(required = false) String idMateria,
+            @RequestParam(required = false) String idCiclo
+    ) {
+        List<TrimestreMateriaAlumnoDTO> lista = calificacionService.obtenerCalificaciones(idAlumno, idGrado, idMateria, idCiclo);
+        return ResponseEntity.ok(lista);
+    }
 }
