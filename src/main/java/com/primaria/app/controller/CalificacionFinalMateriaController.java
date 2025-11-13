@@ -5,9 +5,11 @@ import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.DTO.PromedioCampoDTO;
 import com.primaria.app.DTO.PromedioGradoCicloDTO;
 import com.primaria.app.DTO.ReporteAlumnoDTO;
+import com.primaria.app.DTO.ReprobadosDTO;
 import com.primaria.app.Service.CalificacionFinalMateriaService;
 import com.primaria.app.Service.CalificacionService;
 import com.primaria.app.Service.ReporteAlumnoService;
+import com.primaria.app.Service.ReprobadosService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,8 +26,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/calificaciones-finales")
 @Tag(name = "Calificaciones Finales", description = "Operaciones para gestionar calificaciones finales de materias")
 public class CalificacionFinalMateriaController {
-
-	
+	@Autowired
+	 private  ReprobadosService reprobadosService;
 	@Autowired
 	private ReporteAlumnoService reporteAlumnoService;
     @Autowired
@@ -132,4 +134,23 @@ public class CalificacionFinalMateriaController {
                 Map<String, Object> response = calificacionService.obtenerPromediosPorAlumno(idAlumno);
                 return ResponseEntity.ok(response);
             }
+        
+        
+        @Operation(
+                summary = "RF4.35 Obtener alumnos con materias reprobadas (<6) por asignación",
+                description = "Devuelve un listado de alumnos agrupados con sus materias donde obtuvieron promedio menor a 6. "
+                        + "Filtra usando el ID de asignación docente-grado-grupo (id_asignacion)."
+        )
+        @GetMapping("reprobados/{idAsignacion}")
+        public List<ReprobadosDTO> obtenerReprobados(
+                @Parameter(
+                        description = "ID de la asignación docente-grado-grupo",
+                        example = "b7a21b63-f94d-401b-8330-b9d32e12e83e",
+                        required = true
+                )
+                @PathVariable String idAsignacion) {
+
+            return reprobadosService.obtenerReprobadosPorAsignacion(idAsignacion);
+        }
 }
+
