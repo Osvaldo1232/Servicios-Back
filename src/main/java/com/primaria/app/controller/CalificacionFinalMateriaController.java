@@ -6,6 +6,7 @@ import com.primaria.app.DTO.PromedioCampoDTO;
 import com.primaria.app.DTO.PromedioGradoCicloDTO;
 import com.primaria.app.DTO.ReporteAlumnoDTO;
 import com.primaria.app.DTO.ReprobadosDTO;
+import com.primaria.app.DTO.ResumenCalificacionesAsignacionDTO;
 import com.primaria.app.Service.CalificacionFinalMateriaService;
 import com.primaria.app.Service.CalificacionService;
 import com.primaria.app.Service.ReporteAlumnoService;
@@ -137,7 +138,7 @@ public class CalificacionFinalMateriaController {
         
         
         @Operation(
-                summary = "RF4.35 Obtener alumnos con materias reprobadas (<6) por asignación",
+                summary = "RF4.36 Obtener alumnos con materias reprobadas (<6) por asignación",
                 description = "Devuelve un listado de alumnos agrupados con sus materias donde obtuvieron promedio menor a 6. "
                         + "Filtra usando el ID de asignación docente-grado-grupo (id_asignacion)."
         )
@@ -151,6 +152,30 @@ public class CalificacionFinalMateriaController {
                 @PathVariable String idAsignacion) {
 
             return reprobadosService.obtenerReprobadosPorAsignacion(idAsignacion);
+        }
+        
+        
+        
+        
+        @GetMapping("/asignacion/{idAsignacion}")
+        @Operation(
+            summary = "Generar estadísticas por asignación",
+            description = """
+                          Calcula:
+                          - Alumnos inscritos  
+                          - Promedio final por alumno (promedio de sus materias)  
+                          - Total aprobados (>= 6)  
+                          - Total reprobados (< 6)  
+                          - Lista de alumnos con su promedio  
+                          """
+        )
+        public ResponseEntity<ResumenCalificacionesAsignacionDTO> generarEstadisticas(
+                @PathVariable String idAsignacion) {
+
+            ResumenCalificacionesAsignacionDTO dto =
+            		reprobadosService.generarEstadisticas(idAsignacion);
+
+            return ResponseEntity.ok(dto);
         }
 }
 
