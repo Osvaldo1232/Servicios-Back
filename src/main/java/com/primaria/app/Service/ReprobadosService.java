@@ -1,6 +1,9 @@
 package com.primaria.app.Service;
 
+import com.primaria.app.DTO.AlumnoMateriasDTO;
+import com.primaria.app.DTO.MateriaCalificacionDTO;
 import com.primaria.app.DTO.MateriaReprobadaDTO;
+import com.primaria.app.DTO.MateriasCalificacionDTO;
 import com.primaria.app.DTO.PromedioAlumnoDTO;
 import com.primaria.app.DTO.ReprobadosDTO;
 import com.primaria.app.DTO.ResumenCalificacionesAsignacionDTO;
@@ -108,4 +111,40 @@ public class ReprobadosService {
                 alumnosDTO
         );
     }
+    
+    public List<AlumnoMateriasDTO> obtenerMateriasPorAlumno(String idAsignacion) {
+
+        List<Object[]> rows = esta.obtenerMateriasYCalificaciones(idAsignacion);
+
+        Map<String, List<MateriasCalificacionDTO>> mapa = new LinkedHashMap<>();
+        Map<String, String> nombres = new HashMap<>();
+
+        for (Object[] r : rows) {
+
+            String idAlumno = (String) r[0];
+            String nombre = (String) r[1];
+            String nombreMateria = (String) r[2];
+            BigDecimal calificacion = (BigDecimal) r[3];
+
+            mapa.computeIfAbsent(idAlumno, x -> new ArrayList<>())
+                .add(new MateriasCalificacionDTO(nombreMateria, calificacion));
+
+            nombres.put(idAlumno, nombre);
+        }
+
+        List<AlumnoMateriasDTO> resultado = new ArrayList<>();
+
+        for (String idAlumno : mapa.keySet()) {
+            resultado.add(
+                    new AlumnoMateriasDTO(
+                            idAlumno,
+                            nombres.get(idAlumno),
+                            mapa.get(idAlumno)
+                    )
+            );
+        }
+
+        return resultado;
+    }
+
 }

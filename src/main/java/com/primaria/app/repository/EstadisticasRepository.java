@@ -23,4 +23,23 @@ public interface EstadisticasRepository extends JpaRepository<CalificacionFinalM
         WHERE cfm.alumno.id IN :idsAlumnos
     """)
     List<Object[]> obtenerPromediosPorAlumno(@Param("idsAlumnos") List<String> idsAlumnos);
+    
+    
+    
+    
+    
+    @Query("""
+    	    SELECT c.alumno.id, 
+    	           CONCAT(u.nombre, ' ', u.apellidoPaterno, ' ', u.apellidoMaterno),
+    	           c.materia.nombre,
+    	           c.promedio
+    	    FROM InscritoAlumno i
+    	    JOIN i.alumno a
+    	    JOIN Usuario u ON u.id = a.id
+    	    JOIN CalificacionFinalMateria c ON c.alumno.id = a.id
+    	    WHERE i.asignacion.id = :idAsignacion
+    	    ORDER BY a.id
+    	""")
+    	List<Object[]> obtenerMateriasYCalificaciones(String idAsignacion);
+
 }

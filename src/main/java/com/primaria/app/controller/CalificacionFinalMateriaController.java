@@ -1,5 +1,6 @@
 package com.primaria.app.controller;
 
+import com.primaria.app.DTO.AlumnoMateriasDTO;
 import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
 import com.primaria.app.DTO.MateriaCalificacionResDTO;
 import com.primaria.app.DTO.PromedioCampoDTO;
@@ -138,7 +139,7 @@ public class CalificacionFinalMateriaController {
         
         
         @Operation(
-                summary = "RF4.36 Obtener alumnos con materias reprobadas (<6) por asignación",
+                summary = "RF4.35 Obtener alumnos con materias reprobadas (<6) por asignación",
                 description = "Devuelve un listado de alumnos agrupados con sus materias donde obtuvieron promedio menor a 6. "
                         + "Filtra usando el ID de asignación docente-grado-grupo (id_asignacion)."
         )
@@ -159,7 +160,7 @@ public class CalificacionFinalMateriaController {
         
         @GetMapping("/asignacion/{idAsignacion}")
         @Operation(
-            summary = "Generar estadísticas por asignación",
+            summary = "  RF4.36 Generar estadísticas por asignación",
             description = """
                           Calcula:
                           - Alumnos inscritos  
@@ -176,6 +177,23 @@ public class CalificacionFinalMateriaController {
             		reprobadosService.generarEstadisticas(idAsignacion);
 
             return ResponseEntity.ok(dto);
+        }
+        
+        
+        @GetMapping("/asignaciones/{idAsignacion}")
+        @Operation(
+                summary = "RF4.37 Obtener materias y calificaciones agrupadas por alumno",
+                description = """
+                    Devuelve todos los alumnos inscritos a una asignación,
+                    junto con todas sus materias y respectivas calificaciones.
+                    """
+        )
+        public ResponseEntity<List<AlumnoMateriasDTO>> obtenerMateriasPorAlumno(
+                @PathVariable String idAsignacion) {
+
+            return ResponseEntity.ok(
+            		reprobadosService.obtenerMateriasPorAlumno(idAsignacion)
+            );
         }
 }
 
