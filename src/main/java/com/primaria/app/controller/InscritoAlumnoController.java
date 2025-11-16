@@ -25,8 +25,6 @@ import com.primaria.app.Model.InscritoAlumno;
 import com.primaria.app.Service.InscritoAlumnoService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -45,17 +43,15 @@ public class InscritoAlumnoController {
     )
 
     public Map<String, String> guardar(@RequestBody InscritoAlumnoDTO dto) {
-        // Guardar la inscripción usando el servicio
+
         InscritoAlumno inscripcion = inscritoAlumnoService.guardarInscripcion(dto);
 
-        // Preparar respuesta simple con mensaje y ID
         Map<String, String> respuesta = new HashMap<>();
         respuesta.put("mensaje", "Inscripción creada exitosamente");
         respuesta.put("idInscripcion", inscripcion.getId());
 
         return respuesta;
     }
-    
     
     
     @PostMapping("/guardar-masivo")

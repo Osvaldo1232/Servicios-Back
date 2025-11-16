@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.primaria.app.DTO.*;
 import com.primaria.app.Model.*;
+import com.primaria.app.exception.BusinessException;
 import com.primaria.app.repository.*;
 
 @Service
@@ -20,36 +21,39 @@ public class InscritoAlumnoService {
     @Autowired private AsignacionMateriaGradoRepository asignacionMateriaGradoRepository;
     @Autowired private InscritoAlumnoRepository inscritoAlumnoRepository;
     @Autowired private EstudianteRepository estudianteRepository;
-    @Autowired private ProfesorRepository profesorRepository;
+  
     @Autowired private AlumnoTutorRepository alumnoTutorRepository;
-    @Autowired private GradosRepository gradoRepository;
-    @Autowired private GrupoRepository grupoRepository;
-    @Autowired private CicloEscolaresRepository cicloRepository;
+
     @Autowired private AsignacionDocenteGradoGrupoRepository asignacionRepository; // <- nuevo
 
-    // ============================
-    // Guardar inscripción (usa asignacionId)
-    // ============================
-    public InscritoAlumno guardarInscripcion(InscritoAlumnoDTO dto) {
-        Estudiante alumno = estudianteRepository.findById(dto.getAlumnoId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alumno no encontrado"));
+  
+  public InscritoAlumno guardarInscripcion(InscritoAlumnoDTO dto) {
 
-        // obtener la asignación (contiene docente, grado, grupo y ciclo)
-        AsignacionDocenteGradoGrupo asignacion = asignacionRepository.findById(dto.getAsignacionId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Asignación no encontrada"));
+    Estudiante alumno = estudianteRepository.findById(dto.getAlumnoId())
+            .orElseThrow(() -> new BusinessException(1000, "Alumno no encontrado"));
 
-        InscritoAlumno inscripcion = new InscritoAlumno();
-        inscripcion.setAlumno(alumno);
-        inscripcion.setAsignacion(asignacion); // relacion con asignacion
-        inscripcion.setFechaInscripcion(dto.getFechaInscripcion() != null ? dto.getFechaInscripcion() : LocalDateTime.now());
-        inscripcion.setEstatus(dto.getEstatus());
+    AsignacionDocenteGradoGrupo asignacion = asignacionRepository.findById(dto.getAsignacionId())
+            .orElseThrow(() -> new BusinessException(1000, "Asignación no encontrada"));
 
-        return inscritoAlumnoRepository.save(inscripcion);
-    }
+    // 🔥 Validación: evitar inscripción duplicada
+    inscritoAlumnoRepository.findByAlumno_IdAndAsignacion_Id(dto.getAlumnoId(), dto.getAsignacionId())
+            .ifPresent(i -> {
+                throw new BusinessException(1001, "El alumno ya está inscrito en esta asignación");
+            });
 
-    // ============================
-    // Obtener info alumno (último ciclo por asignación)
-    // ============================
+    InscritoAlumno inscripcion = new InscritoAlumno();
+    inscripcion.setAlumno(alumno);
+    inscripcion.setAsignacion(asignacion);
+    inscripcion.setFechaInscripcion(
+            dto.getFechaInscripcion() != null ? dto.getFechaInscripcion() : LocalDateTime.now()
+    );
+    inscripcion.setEstatus(dto.getEstatus());
+
+    return inscritoAlumnoRepository.save(inscripcion);
+}
+
+
+
     public AlumnoInfoDTO obtenerInfoAlumno(String idAlumno) {
         InscritoAlumno inscripcion = inscritoAlumnoRepository
                 .findTopByAlumno_IdOrderByAsignacion_Ciclo_AnioInicioDesc(idAlumno);

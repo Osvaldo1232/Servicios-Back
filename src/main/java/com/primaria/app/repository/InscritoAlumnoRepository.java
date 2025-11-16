@@ -89,4 +89,7 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
                 @Param("idCiclo") String idCiclo,
                 @Param("estatus") Estatus estatus
         );
+    
+    Optional<InscritoAlumno> findByAlumno_IdAndAsignacion_Id(String alumnoId, String asignacionId);
+
 }

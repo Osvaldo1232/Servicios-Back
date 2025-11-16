@@ -29,30 +29,20 @@ public class AsignacionDocenteGradoGrupoController {
     private AsignacionDocenteGradoGrupoService service;
 
     @Operation(summary = "RF4.32:  Guardar una asignación de docente")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Asignación creada exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Datos inválidos o referencias no encontradas"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
+   
     @PostMapping("/guardar")
     public ResponseEntity<?> guardar(@RequestBody AsignacionDocenteGradoGrupoDTO dto) {
-        try {
-            String idAsignacion = service.guardarAsignacion(dto);
-            return ResponseEntity.ok(
-                Map.of(
-                    "mensaje", "Asignación creada exitosamente",
-                    "idAsignacion", idAsignacion
-                )
-            );
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body(
-                Map.of(
-                    "mensaje", "Error al crear asignación",
-                    "detalle", e.getMessage()
-                )
-            );
-        }
+
+        String idAsignacion = service.guardarAsignacion(dto);
+
+        return ResponseEntity.ok(
+            Map.of(
+                "mensaje", "Asignación creada exitosamente",
+                "idAsignacion", idAsignacion
+            )
+        );
     }
+
 
     @Operation(summary = " RF4.33 Obtener asignaciones por ciclo escolar, devuelve grado, grupo y profesor")
     @GetMapping("/por-ciclo/{idCiclo}")

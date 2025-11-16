@@ -10,6 +10,7 @@ import com.primaria.app.Model.AsignacionDocenteGradoGrupo;
 import com.primaria.app.Model.Grado;
 import com.primaria.app.Model.Grupo;
 import com.primaria.app.Model.Profesor;
+import com.primaria.app.exception.BusinessException;
 import com.primaria.app.Model.CicloEscolar;
 import com.primaria.app.Model.Estatus;
 import com.primaria.app.repository.AsignacionDocenteGradoGrupoRepository;
@@ -46,27 +47,52 @@ public class AsignacionDocenteGradoGrupoService {
 
     private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    public String guardarAsignacion(AsignacionDocenteGradoGrupoDTO dto) {
-        Profesor docente = docenteRepository.findById(dto.getIdDocente()).orElse(null);
-        Grado grado = gradoRepository.findById(dto.getIdGrado()).orElse(null);
-        Grupo grupo = grupoRepository.findById(dto.getIdGrupo()).orElse(null);
-        CicloEscolar ciclo = cicloRepository.findById(dto.getIdCiclo()).orElse(null);
+public String guardarAsignacion(AsignacionDocenteGradoGrupoDTO dto) {
 
-        if (docente == null || grado == null || grupo == null || ciclo == null) {
-            throw new RuntimeException("Docente, grado, grupo o ciclo no encontrados");
-        }
+    Profesor docente = docenteRepository.findById(dto.getIdDocente())
+            .orElseThrow(() -> new BusinessException(2000, "Docente no encontrado"));
 
-        AsignacionDocenteGradoGrupo asignacion = new AsignacionDocenteGradoGrupo();
-        asignacion.setDocente(docente);
-        asignacion.setGrado(grado);
-        asignacion.setGrupo(grupo);
-        asignacion.setCiclo(ciclo);
-        asignacion.setEstatus(Estatus.ACTIVO);
+    Grado grado = gradoRepository.findById(dto.getIdGrado())
+            .orElseThrow(() -> new BusinessException(2000, "Grado no encontrado"));
 
-        // No seteamos fechaCreado: @CreationTimestamp se encargará de eso
-        AsignacionDocenteGradoGrupo saved = repository.save(asignacion);
-        return saved.getId(); // Solo regresamos el ID
-    }
+    Grupo grupo = grupoRepository.findById(dto.getIdGrupo())
+            .orElseThrow(() -> new BusinessException(2000, "Grupo no encontrado"));
+
+    CicloEscolar ciclo = cicloRepository.findById(dto.getIdCiclo())
+            .orElseThrow(() -> new BusinessException(2000, "Ciclo escolar no encontrado"));
+
+    // 1️⃣ Validar si ese docente ya tiene ese grado-grupo-ciclo
+    repository.findByDocente_IdAndGrado_IdAndGrupo_IdAndCiclo_Id(
+            dto.getIdDocente(),
+            dto.getIdGrado(),
+            dto.getIdGrupo(),
+            dto.getIdCiclo()
+    ).ifPresent(a -> {
+        throw new BusinessException(2001,
+                "El docente ya está asignado a este grado, grupo y ciclo");
+    });
+
+    // 2️⃣ Validar si ese grado-grupo-ciclo ya lo ocupa otro docente
+    repository.findByGrado_IdAndGrupo_IdAndCiclo_Id(
+            dto.getIdGrado(),
+            dto.getIdGrupo(),
+            dto.getIdCiclo()
+    ).ifPresent(a -> {
+        throw new BusinessException(2002,
+                "Este grado, grupo y ciclo ya están asignados a otro docente");
+    });
+
+    // Guardado
+    AsignacionDocenteGradoGrupo asignacion = new AsignacionDocenteGradoGrupo();
+    asignacion.setDocente(docente);
+    asignacion.setGrado(grado);
+    asignacion.setGrupo(grupo);
+    asignacion.setCiclo(ciclo);
+    asignacion.setEstatus(Estatus.ACTIVO);
+
+    AsignacionDocenteGradoGrupo saved = repository.save(asignacion);
+    return saved.getId();
+}
 
 
     public List<AsignacionDocenteGradoGrupoResumenDTO> obtenerPorCiclo(String cicloId) {
