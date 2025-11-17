@@ -144,6 +144,8 @@ public class CalificacionFinalMateriaController {
                         + "Filtra usando el ID de asignación docente-grado-grupo (id_asignacion)."
         )
         @GetMapping("reprobados/{idAsignacion}")
+        
+        
         public List<ReprobadosDTO> obtenerReprobados(
                 @Parameter(
                         description = "ID de la asignación docente-grado-grupo",
