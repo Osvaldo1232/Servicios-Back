@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.primaria.app.DTO.CicloEscolarDTO;
-
+import com.primaria.app.DTO.CicloSimpleDTO;
 import com.primaria.app.Model.CicloEscolar;
 
 import com.primaria.app.repository.CicloEscolaresRepository;
@@ -83,6 +83,16 @@ public class CicloEscolarService {
             return Optional.of(modelMapper.map(ciclo, CicloEscolarDTO.class));
         }
         return Optional.empty();
+    }
+    public List<CicloSimpleDTO> obtenerCiclosFaltantesDeTutor(String idAlumno) {
+        List<CicloEscolar> ciclos = CicloEscolaresRepository.obtenerCiclosSinTutorAsignado(idAlumno);
+
+        return ciclos.stream()
+                .map(c -> new CicloSimpleDTO(
+                        c.getId(),
+                        c.getAnioInicio() + "-"+c.getAnioFin()
+                ))
+                .collect(Collectors.toList());
     }
 
 }

@@ -1,8 +1,10 @@
 package com.primaria.app.controller;
 import com.primaria.app.DTO.CicloEscolarDTO;
+import com.primaria.app.DTO.CicloSimpleDTO;
 import com.primaria.app.Model.CicloEscolar;
 import com.primaria.app.Service.CicloEscolarService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.HashMap;
 import java.util.List;
@@ -63,5 +65,15 @@ public class CicloEscolarController {
 	                .orElse(ResponseEntity.status(404)
 	                        .body(Map.of("mensaje", "No se encontró ningún ciclo escolar registrado")));
 	    }
-
+	    @Operation(
+	            summary = "Listar ciclos donde el alumno está inscrito pero no tiene tutor asignado",
+	            description = "Devuelve únicamente los ciclos escolares en los que el alumno aparece en la tabla InscritoAlumno, pero no tiene asignación en la tabla AlumnoTutor."
+	    )
+	    @GetMapping("/sin-tutor/{idAlumno}")
+	    public ResponseEntity<List<CicloSimpleDTO>> obtenerCiclosSinTutor(
+	            @Parameter(description = "ID del alumno", example = "a12b34c56d")
+	            @PathVariable String idAlumno
+	    ) {
+	        return ResponseEntity.ok(cicloEscolarService.obtenerCiclosFaltantesDeTutor(idAlumno));
+	    }
 }
