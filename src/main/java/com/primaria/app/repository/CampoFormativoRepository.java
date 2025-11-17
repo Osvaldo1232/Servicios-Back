@@ -12,4 +12,5 @@ import com.primaria.app.Model.Estatus;
 
 public interface CampoFormativoRepository extends JpaRepository<CampoFormativo, String> {
 	 List<CampoFormativo> findByEstatus(Estatus estatus);
+	  List<CampoFormativo> findByNombre(String nombre);
 }

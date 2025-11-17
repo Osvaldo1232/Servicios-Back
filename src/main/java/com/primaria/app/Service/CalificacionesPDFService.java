@@ -20,9 +20,15 @@ public class CalificacionesPDFService {
 
     public byte[] generarPDFAlumno(String idAlumno) throws Exception {
         List<CicloCalificacionDTO> ciclos = calificacionesService.obtenerCalificacionesPorAlumnos(idAlumno);
-
+        ciclos.sort((a, b) -> {
+            int anioA = Integer.parseInt(a.getCicloEscolar().split("-")[0]);
+            int anioB = Integer.parseInt(b.getCicloEscolar().split("-")[0]);
+            return Integer.compare(anioB, anioA); 
+        });
+        
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Document document = new Document(PageSize.A4.rotate()); // mejor en horizontal si hay muchas materias
+        Document document = new Document(PageSize.A4);
+
         PdfWriter.getInstance(document, baos);
         document.open();
 
@@ -33,30 +39,43 @@ public class CalificacionesPDFService {
         // ======== Encabezado con logo y nombre de la escuela ========
         InputStream logoStream = getClass().getClassLoader().getResourceAsStream("logoprimaria.png");
         Image logo = null;
+
         if (logoStream != null) {
             logo = Image.getInstance(javax.imageio.ImageIO.read(logoStream), null);
-            logo.scaleToFit(80, 80); // tamaño ajustable
+            logo.scaleToFit(80, 80);
         }
 
-        PdfPTable encabezado = new PdfPTable(2);
+        PdfPTable encabezado = new PdfPTable(1);
         encabezado.setWidthPercentage(100);
-        encabezado.setWidths(new float[]{1, 4}); // 1 parte logo, 4 partes nombre
 
         PdfPCell cellLogo = new PdfPCell();
         cellLogo.setBorder(Rectangle.NO_BORDER);
+        cellLogo.setHorizontalAlignment(Element.ALIGN_CENTER);
         if (logo != null) {
             cellLogo.addElement(logo);
         }
         encabezado.addCell(cellLogo);
 
-        PdfPCell cellNombre = new PdfPCell(new Phrase("Escuela Primaria José María", new Font(Font.HELVETICA, 16, Font.BOLD)));
-        cellNombre.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cellNombre.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        PdfPCell cellNombre = new PdfPCell(
+                new Phrase("Escuela Primaria José María", new Font(Font.HELVETICA, 18, Font.BOLD))
+        );
         cellNombre.setBorder(Rectangle.NO_BORDER);
+        cellNombre.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cellNombre.setPaddingTop(5f);
         encabezado.addCell(cellNombre);
 
         document.add(encabezado);
         document.add(Chunk.NEWLINE);
+
+        // ======= TÍTULO HISTORIAL ACADÉMICO CENTRADO =======
+        Paragraph tituloGeneral = new Paragraph(
+                "HISTORIAL ACADÉMICO",
+                new Font(Font.HELVETICA, 16, Font.BOLD)
+        );
+        tituloGeneral.setAlignment(Element.ALIGN_CENTER);
+        tituloGeneral.setSpacingAfter(15f);
+        document.add(tituloGeneral);
+
 
         if (ciclos.isEmpty()) {
             // Si no hay ciclos válidos, mostrar mensaje
@@ -105,7 +124,7 @@ public class CalificacionesPDFService {
                 document.add(table);
 
                 Paragraph pPromedioGrado = new Paragraph(
-                        "Promedio del grado: " + String.format("%.2f", gradoDTO.getPromedioGrado()), 
+                        "Promedio del " + gradoDTO.getGradoNombre() +": "+ String.format("%.2f", gradoDTO.getPromedioGrado()), 
                         subTitulo
                 );
 

@@ -15,6 +15,7 @@ import com.primaria.app.DTO.CampoFormativoDTO;
 import com.primaria.app.DTO.CampoFormativoResumenDTO;
 import com.primaria.app.Model.CampoFormativo;
 import com.primaria.app.Model.Estatus;
+import com.primaria.app.exception.BusinessException;
 import com.primaria.app.repository.CampoFormativoRepository;
 
 
@@ -56,22 +57,37 @@ public class CampoFormativoService {
 	    }
 
 	    
-	    public CampoFormativo save(CampoFormativo materia) {
-	        return campoFormativoRepository.save(materia);
+	    public CampoFormativo save(CampoFormativo campo) {
+
+	        List<CampoFormativo> existentes = campoFormativoRepository.findByNombre(campo.getNombre());
+
+	        if (!existentes.isEmpty()) {
+	            throw new BusinessException(2000, "Ya existe un campo formativo con ese nombre.");
+	        }
+
+	        return campoFormativoRepository.save(campo);
 	    }
 
 	    
 	    public boolean actualizar(String uuid, CampoFormativoDTO dto) {
+
 	        Optional<CampoFormativo> existente = campoFormativoRepository.findById(uuid);
-	        if (existente.isPresent()) {
-	        	CampoFormativo ciclo = existente.get();
-	          ciclo.setNombre(dto.getNombre());
-	           ciclo.setEstatus(dto.getEstatus());
-	           campoFormativoRepository.save(ciclo);
-	            return true;
+	        if (existente.isEmpty()) {
+	            throw new BusinessException(2002, "El campo formativo no existe.");
 	        }
-	        return false;
+	        CampoFormativo actual = existente.get();
+	        List<CampoFormativo> mismosNombres = campoFormativoRepository.findByNombre(dto.getNombre());
+	        boolean nombreDuplicado = mismosNombres.stream()
+	                .anyMatch(c -> !c.getId().equals(uuid)); 
+	        if (nombreDuplicado) {
+	            throw new BusinessException(2001, "Ya existe un campo formativo con ese nombre.");
+	        }
+	        actual.setNombre(dto.getNombre());
+	        actual.setEstatus(dto.getEstatus());
+	        campoFormativoRepository.save(actual);
+	        return true;
 	    }
+
 
 	    public boolean eliminar(String uuid) {
 	        Optional<CampoFormativo> existente = campoFormativoRepository.findById(uuid);
