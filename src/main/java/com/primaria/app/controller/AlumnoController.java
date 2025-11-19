@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.primaria.app.DTO.CicloAlumnosDTO;
@@ -116,5 +117,15 @@ public class AlumnoController {
         List<CicloAlumnosDTO> alumnos = inscritoAlumnoService.obtenerAlumnosSPorCiclo(cicloId);
         return ResponseEntity.ok(alumnos);
     }
-   
+    @GetMapping("/por-ciclo-docente")
+    @Operation(summary = " RF2.10  Obtener lista de alumnos por ciclo escolar y docente")
+    public ResponseEntity<List<CicloAlumnosDTO>> obtenerAlumnosPorCicloYDocente(
+            @RequestParam String cicloId,
+            @RequestParam String docenteId) {
+
+        List<CicloAlumnosDTO> alumnos =
+                inscritoAlumnoService.obtenerAlumnosPorCicloYDocente(cicloId, docenteId);
+
+        return ResponseEntity.ok(alumnos);
+    }
 }

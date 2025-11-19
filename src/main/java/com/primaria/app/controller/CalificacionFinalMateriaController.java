@@ -55,11 +55,16 @@ public class CalificacionFinalMateriaController {
     @GetMapping("/promedio/ciclo/{cicloId}")
     @Operation(summary = "RF2.9 Obtener promedio por ciclo escolar", 
                description = "Devuelve la lista de alumnos con su promedio final por ciclo escolar")
-    public ResponseEntity<List<CalificacionTotalAlumnoDTO>> obtenerPromedioPorCiclo(
-            @PathVariable String cicloId) {
-        List<CalificacionTotalAlumnoDTO> resultado = calificacionService.getPromedioPorCiclo(cicloId);
-        return ResponseEntity.ok(resultado);
+    public ResponseEntity<List<CalificacionTotalAlumnoDTO>> obtenerPromedioPorCicloYDocente(
+            @RequestParam String cicloId,
+            @RequestParam String docenteId) {
+
+        List<CalificacionTotalAlumnoDTO> lista =
+                calificacionService.getPromedioPorCicloYDocente(cicloId, docenteId);
+
+        return ResponseEntity.ok(lista);
     }
+    
     @Operation(
             summary = " Obtener promedio general por alumno",
             description = """

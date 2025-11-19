@@ -101,18 +101,19 @@ public class CalificacionFinalMateriaService {
                 .collect(Collectors.toList());
     }
     
-    public List<CalificacionTotalAlumnoDTO> getPromedioPorCiclo(String cicloId) {
-        List<Object[]> resultados = calificacionRepo.obtenerPromedioPorCiclo(cicloId);
+    public List<CalificacionTotalAlumnoDTO> getPromedioPorCicloYDocente(String cicloId, String docenteId) {
+
+        List<Object[]> resultados = calificacionRepo.obtenerPromedioPorCicloYDocente(cicloId, docenteId);
+
         return resultados.stream().map(r -> new CalificacionTotalAlumnoDTO(
-            (String) r[0],  // idAlumno
-            (String) r[1],  // nombreAlumno
-            (String) r[2],  // grado
-            (String) r[3],  // grupo
-            (String) r[4],  // ciclo
-            new BigDecimal(r[5].toString())  // calificacionTotal
+                (String) r[0],  // idAlumno
+                (String) r[1],  // nombreAlumno
+                (String) r[2],  // grado
+                (String) r[3],  // grupo
+                (String) r[4],  // ciclo
+                new BigDecimal(r[5].toString())  // calificacionTotal
         )).collect(Collectors.toList());
     }
-    
 public List<PromedioGradoCicloDTO> obtenerPromedios(String alumnoId) {
     List<CalificacionFinalMateria> lista = calificacionRepo.findByAlumnoId(alumnoId);
 

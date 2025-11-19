@@ -49,7 +49,12 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
     
     Optional<InscritoAlumno> findByAlumnoId(String alumnoId);
     
-    
+    List<InscritoAlumno> findDistinctByAsignacion_Ciclo_IdAndAsignacion_Docente_IdAndEstatus(
+            String cicloId,
+            String docenteId,
+            Estatus estatus
+    );
+
     List<InscritoAlumno> findDistinctByAsignacion_Ciclo_IdAndEstatus(String cicloId,  Estatus estatus);
     
     
