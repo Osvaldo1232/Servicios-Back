@@ -9,4 +9,8 @@ import com.primaria.app.Model.Materia;
 
 public interface MateriasRepository extends JpaRepository<Materia, String> {
 	 List<Materia> findByCampoFormativo_Id(String idCampoFormativo);
+	 
+	 boolean existsByNombreIgnoreCase(String nombre);
+	 
+	 boolean existsByNombreIgnoreCaseAndIdNot(String nombre, String id);
 }

@@ -9,8 +9,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.primaria.app.DTO.AsignacionSelectDTO;
 import com.primaria.app.DTO.GrupoDTO;
-import com.primaria.app.Model.Estudiante;
+import com.primaria.app.Model.Estatus;
 import com.primaria.app.Model.Grupo;
 import com.primaria.app.exception.BusinessException;
 import com.primaria.app.repository.GrupoRepository;
@@ -90,5 +91,15 @@ public class GrupoService {
 	            return true;
 	        }
 	        return false;
+	    }
+	    
+	    public List<AsignacionSelectDTO> obtenerGruposActivos() {
+	        return grupoRepository.findByEstatus(Estatus.ACTIVO)
+	                .stream()
+	                .map(g -> new AsignacionSelectDTO(
+	                        g.getId(),
+	                        g.getNombre()
+	                ))
+	                .toList();
 	    }
 }

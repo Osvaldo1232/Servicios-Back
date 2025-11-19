@@ -1,7 +1,6 @@
 package com.primaria.app.controller;
 import com.primaria.app.DTO.CicloEscolarDTO;
 import com.primaria.app.DTO.CicloSimpleDTO;
-import com.primaria.app.Model.CicloEscolar;
 import com.primaria.app.Service.CicloEscolarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -76,4 +75,16 @@ public class CicloEscolarController {
 	    ) {
 	        return ResponseEntity.ok(cicloEscolarService.obtenerCiclosFaltantesDeTutor(idAlumno));
 	    }
+	    
+	    
+	    
+	    
+	    @Operation(
+	            summary = "Obtener Ciclos Activos",
+	            description = "Regresa una lista de ciclos escolares con estatus ACTIVO en formato AsignacionSelectDTO."
+	        )
+	        @GetMapping("/Activos")
+	        public ResponseEntity<?> obtenerCiclosActivos() {
+	            return ResponseEntity.ok(cicloEscolarService.obtenerCiclosActivos());
+	        }
 }

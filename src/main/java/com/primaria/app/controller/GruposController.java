@@ -87,4 +87,13 @@ public class GruposController {
 	            return ResponseEntity.notFound().build();
 	        }
 	    }
+	    
+	    @Operation(
+	            summary = "Obtener Grupos Activos",
+	            description = "Regresa una lista de grupos con estatus ACTIVO usando AsignacionSelectDTO."
+	        )
+	        @GetMapping("/Activos")
+	        public ResponseEntity<?> obtenerGruposActivos() {
+	            return ResponseEntity.ok(grupoService.obtenerGruposActivos());
+	        }
 }

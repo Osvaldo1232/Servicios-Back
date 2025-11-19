@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.primaria.app.Model.CicloEscolar;
+import com.primaria.app.Model.Estatus;
 public interface CicloEscolaresRepository extends JpaRepository<CicloEscolar, String>{
 	CicloEscolar findTopByOrderByFechaCreadoDesc();
-	
+	Optional<CicloEscolar> findByEstatus(Estatus estatus);
+
 	 Optional<CicloEscolar> findByAnioInicioAndAnioFin(int anioInicio, int anioFin);
 	 
 	 

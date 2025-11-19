@@ -57,9 +57,11 @@ public class MateriasController {
 	 
 	    @Autowired
 	    private CampoFormativoRepository campoFormativoRepository;
+	    
 	    @PostMapping("/nueva")
-	    @Operation(summary = "RF4.17  Registrar nueva materia")
+	    @Operation(summary = "RF4.17 Registrar nueva materia")
 	    public ResponseEntity<?> registrarMateria(@RequestBody MateriaDTO dto) {
+
 	        CampoFormativo campo = campoFormativoRepository.findById(dto.getCampoFormativoId())
 	            .orElseThrow(() -> new RuntimeException("Campo formativo no encontrado"));
 
@@ -67,23 +69,30 @@ public class MateriasController {
 	        materia.setNombre(dto.getNombre());
 	        materia.setEstatus(dto.getEstatus());
 	        materia.setCampoFormativo(campo);
+
 	        Materia guardada = materiasService.save(materia);
+
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("message", "Materia registrada exitosamente");
 	        response.put("id", guardada.getId());
 
 	        return ResponseEntity.ok(response);
 	    }
-	    @Operation(summary = "RF4.18  Actualizar un materia existente")
-	    @PutMapping("Actualizar/{uuid}")
-	    public ResponseEntity<String> actualizar(@PathVariable String uuid, @RequestBody MateriaDTO grupoDTO) {
-	        boolean actualizado = materiasService.actualizar(uuid, grupoDTO);
-	        if (actualizado) {
-	            return ResponseEntity.ok("Materia actualizada exitosamente.");
-	        } else {
-	            return ResponseEntity.notFound().build();
-	        }
+
+	    
+	    @Operation(summary = "RF4.18 Actualizar una materia existente")
+	    @PutMapping("/actualizar/{uuid}")
+	    public ResponseEntity<?> actualizar(@PathVariable String uuid, @RequestBody MateriaDTO dto) {
+
+	        materiasService.actualizar(uuid, dto);
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("mensaje", "Materia actualizada exitosamente.");
+	        response.put("id", uuid);
+
+	        return ResponseEntity.ok(response);
 	    }
+
 
 	    @Operation(summary = "Eliminar un materia por UUID")
 	    @DeleteMapping("Eliminar/{uuid}")

@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.primaria.app.DTO.MateriaCampoDTO;
 import com.primaria.app.DTO.MateriaDTO;
+import com.primaria.app.Model.CampoFormativo;
 import com.primaria.app.Model.Materia;
+import com.primaria.app.exception.BusinessException;
 import com.primaria.app.repository.CampoFormativoRepository;
 import com.primaria.app.repository.MateriasRepository;
 
@@ -65,28 +67,36 @@ public class MateriasService {
 
 	    
 	    public Materia save(Materia materia) {
+
+	      
+	        if (materiasRepository.existsByNombreIgnoreCase(materia.getNombre())) {
+	            throw new BusinessException(1000, "Ya existe una materia con ese nombre");
+	        }
+
 	        return materiasRepository.save(materia);
 	    }
-
+	        
 	    
 	    public boolean actualizar(String uuid, MateriaDTO dto) {
-	        Optional<Materia> existente = materiasRepository.findById(uuid);
-	        if (existente.isPresent()) {
-	            Materia materia = existente.get();
-	            
-	            materia.setNombre(dto.getNombre());
-	            materia.setEstatus(dto.getEstatus());
-	            
-	            if (dto.getCampoFormativoId() != null) {
-	                campoFormativoRepository.findById(dto.getCampoFormativoId())
-	                    .ifPresent(materia::setCampoFormativo);
-	            }
 
-	            
-	            materiasRepository.save(materia);
-	            return true;
+	        Materia materia = materiasRepository.findById(uuid)
+	                .orElseThrow(() -> new BusinessException(1001, "Materia no encontrada"));
+
+	        if (materiasRepository.existsByNombreIgnoreCaseAndIdNot(dto.getNombre(), uuid)) {
+	            throw new BusinessException(1000, "Ya existe otra materia con ese nombre");
 	        }
-	        return false;
+
+	        materia.setNombre(dto.getNombre());
+	        materia.setEstatus(dto.getEstatus());
+
+	        if (dto.getCampoFormativoId() != null) {
+	            CampoFormativo campo = campoFormativoRepository.findById(dto.getCampoFormativoId())
+	                    .orElseThrow(() -> new BusinessException(1002, "Campo formativo no encontrado"));
+	            materia.setCampoFormativo(campo);
+	        }
+
+	        materiasRepository.save(materia);
+	        return true;
 	    }
 
 	    public boolean eliminar(String uuid) {
