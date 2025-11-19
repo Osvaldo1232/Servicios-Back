@@ -18,4 +18,8 @@ public interface AlumnoTutorRepository extends JpaRepository<AlumnoTutor, String
 
     
     boolean existsByAlumno_IdAndTutor_IdAndCiclo_Id(String alumnoId, String tutorId, String cicloId);
+    
+    AlumnoTutor findTopByAlumno_IdAndCiclo_Id(String alumnoId, String cicloId);
+
+
 }

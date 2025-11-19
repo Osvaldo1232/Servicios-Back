@@ -52,6 +52,54 @@ public class InscritoAlumnoService {
     return inscritoAlumnoRepository.save(inscripcion);
 }
 
+  
+  public InscritoAlumno guardarInscripcions(InscritoAlumnoDTO dto) {
+
+	    Estudiante alumno = estudianteRepository.findById(dto.getAlumnoId())
+	            .orElseThrow(() -> new BusinessException(1000, "Alumno no encontrado"));
+
+	    AsignacionDocenteGradoGrupo asignacion = asignacionRepository.findById(dto.getAsignacionId())
+	            .orElseThrow(() -> new BusinessException(1000, "Asignación no encontrada"));
+
+
+	    // -----------------------------------------------------------------
+	    // 🔥 VALIDACIÓN 1: evitar inscripción repetida en la MISMA ASIGNACIÓN
+	    // -----------------------------------------------------------------
+	    inscritoAlumnoRepository.findByAlumno_IdAndAsignacion_Id(dto.getAlumnoId(), dto.getAsignacionId())
+	            .ifPresent(i -> {
+	                throw new BusinessException(1001, "El alumno ya está inscrito en esta asignación");
+	            });
+
+
+	    // -----------------------------------------------------------------
+	    // 🔥 VALIDACIÓN 2: evitar inscripción del alumno en OTRO grupo
+	    //     pero dentro del MISMO ciclo escolar
+	    // -----------------------------------------------------------------
+	    String cicloId = asignacion.getCiclo().getId();
+
+	    boolean yaInscritoEnElMismoCiclo =
+	            inscritoAlumnoRepository.existsByAlumno_IdAndAsignacion_Ciclo_Id(dto.getAlumnoId(), cicloId);
+
+	    if (yaInscritoEnElMismoCiclo) {
+	        throw new BusinessException(1002,
+	                "El alumno ya está inscrito en este ciclo escolar. Debe darse de baja primero.");
+	    }
+
+
+	    // -----------------------------------------------------------------
+	    // 🔥 GUARDADO FINAL
+	    // -----------------------------------------------------------------
+	    InscritoAlumno inscripcion = new InscritoAlumno();
+	    inscripcion.setAlumno(alumno);
+	    inscripcion.setAsignacion(asignacion);
+	    inscripcion.setFechaInscripcion(
+	            dto.getFechaInscripcion() != null ? dto.getFechaInscripcion() : LocalDateTime.now()
+	    );
+	    inscripcion.setEstatus(dto.getEstatus());
+
+	    return inscritoAlumnoRepository.save(inscripcion);
+	}
+
 
 
     public AlumnoInfoDTO obtenerInfoAlumno(String idAlumno) {
@@ -367,4 +415,77 @@ public class InscritoAlumnoService {
     public List<AlumnoInscritoDTO> obtenerAlumnosPorAsignacion(String idAsignacion) {
         return inscritoAlumnoRepository.listarAlumnosPorAsignacion(idAsignacion , Estatus.ACTIVO);
     }
+    
+    
+    public List<InscritoAlumnoDetallesDTO> obtenerPorAsignacion(String asignacionId) {
+
+        // 1) Obtener todas las inscripciones ligadas a esa asignación
+        List<InscritoAlumno> inscripciones =
+                inscritoAlumnoRepository.findByAsignacion_Id(asignacionId);
+
+        return inscripciones.stream().map(i -> {
+
+            var alumno = i.getAlumno();
+            var asign = i.getAsignacion();
+            var grado = asign != null ? asign.getGrado() : null;
+            var grupo = asign != null ? asign.getGrupo() : null;
+            var ciclo = asign != null ? asign.getCiclo() : null;
+
+            String alumnoId = alumno.getId();
+
+            // 2) Última inscripción del alumno
+            InscritoAlumno ultima = inscritoAlumnoRepository
+                    .findTopByAlumno_IdOrderByFechaInscripcionDesc(alumnoId);
+
+            boolean esUltima = ultima != null && ultima.getId().equals(i.getId());
+
+            // 3) Tutor del alumno en ese ciclo escolar
+            AlumnoTutor tutor = null;
+            boolean tieneTutor = false;
+
+            if (ciclo != null) {
+                tutor = alumnoTutorRepository
+                        .findTopByAlumno_IdAndCiclo_Id(alumnoId, ciclo.getId());
+
+                tieneTutor = tutor != null;
+            }
+
+            String tutorNombre = "";
+            String tutorTel = "";
+            String tutorCorreo = "";
+            String parentesco = "";
+
+            if (tutor != null && tutor.getTutor() != null) {
+                tutorNombre = tutor.getTutor().getNombre() + " " +
+                        tutor.getTutor().getApellidoPaterno() + " " +
+                        tutor.getTutor().getApellidoMaterno();
+
+                tutorTel = tutor.getTutor().getTelefono();
+                tutorCorreo = tutor.getTutor().getCorreo();
+                parentesco = tutor.getParentesco();
+            }
+
+            // 4) Construcción del DTO
+            return new InscritoAlumnoDetallesDTO(
+                    alumnoId,
+                    alumno.getNombre(),
+                    alumno.getApellidoPaterno(),
+                    alumno.getApellidoMaterno(),
+                    alumno.getMatricula(),
+                    alumno.getCurp(),
+                    grado != null ? grado.getId() : null,
+                    grado != null ? grado.getNombre() : "",
+                    grupo != null ? grupo.getId() : null,
+                    grupo != null ? grupo.getNombre() : "",
+                    esUltima,
+                    tieneTutor,
+                    tutorNombre,
+                    tutorTel,
+                    tutorCorreo,
+                    parentesco
+            );
+
+        }).collect(Collectors.toList());
+    }
+
 }

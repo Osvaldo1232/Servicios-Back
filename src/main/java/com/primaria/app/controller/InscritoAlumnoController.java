@@ -17,6 +17,7 @@ import com.primaria.app.DTO.AlumnoInscritoDTO;
 import com.primaria.app.DTO.AsignacionSelectDTO;
 import com.primaria.app.DTO.InfoAlumnoTutorDTO;
 import com.primaria.app.DTO.InscritoAlumnoDTO;
+import com.primaria.app.DTO.InscritoAlumnoDetallesDTO;
 import com.primaria.app.DTO.InscritoAlumnoInfoBasicaDTO;
 import com.primaria.app.DTO.InscritoAlumnoRecienteDTO;
 
@@ -53,6 +54,23 @@ public class InscritoAlumnoController {
         return respuesta;
     }
     
+    
+    @PostMapping("/guardarInscripcion")
+    @Operation(
+        summary = "RF4.34  Guardar inscripción de un alumno",
+        description = "Crea la inscripción de un alumno en un grado, grupo y ciclo escolar"
+    )
+
+    public Map<String, String> guardars(@RequestBody InscritoAlumnoDTO dto) {
+
+        InscritoAlumno inscripcion = inscritoAlumnoService.guardarInscripcions(dto);
+
+        Map<String, String> respuesta = new HashMap<>();
+        respuesta.put("mensaje", "Inscripción creada exitosamente");
+        respuesta.put("idInscripcion", inscripcion.getId());
+
+        return respuesta;
+    }
     
     @PostMapping("/guardar-masivo")
     @Operation(
@@ -200,5 +218,28 @@ public class InscritoAlumnoController {
     @GetMapping("/asignacioness/{idAsignacion}")
     public List<AlumnoInscritoDTO> obtenerPorAsignacion(@PathVariable String idAsignacion) {
         return inscritoAlumnoService.obtenerAlumnosPorAsignacion(idAsignacion);
+    }
+    
+    
+    
+    @Operation(
+            summary = "RF4.8? Obtener alumnos inscritos por asignación",
+            description = "Retorna todos los alumnos inscritos a una asignación (docente-grado-grupo-ciclo), " +
+                          "incluyendo: datos del alumno, grado, grupo, si es su última inscripción y su tutor."
+          
+    )
+    @GetMapping("/asignacion/{asignacionId}")
+    public ResponseEntity<List<InscritoAlumnoDetallesDTO>> obtenerAlumnosPorAsignacion(
+            @PathVariable String asignacionId
+    ) {
+
+        List<InscritoAlumnoDetallesDTO> lista =
+                inscritoAlumnoService.obtenerPorAsignacion(asignacionId);
+
+        if (lista.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(lista);
     }
 }

@@ -91,5 +91,9 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
         );
     
     Optional<InscritoAlumno> findByAlumno_IdAndAsignacion_Id(String alumnoId, String asignacionId);
+    List<InscritoAlumno> findByAsignacion_Id(String asignacionId);
+    
+    
+    boolean existsByAlumno_IdAndAsignacion_Ciclo_Id(String alumnoId, String cicloId);
 
 }
