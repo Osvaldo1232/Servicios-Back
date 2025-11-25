@@ -7,9 +7,15 @@ import com.primaria.app.DTO.MateriasCalificacionDTO;
 import com.primaria.app.DTO.PromedioAlumnoDTO;
 import com.primaria.app.DTO.ReprobadosDTO;
 import com.primaria.app.DTO.ResumenCalificacionesAsignacionDTO;
+import com.primaria.app.Model.CalificacionFinalMateria;
+import com.primaria.app.Model.InscritoAlumno;
+import com.primaria.app.repository.CalificacionFinalMateriaRepository;
 import com.primaria.app.repository.EstadisticasRepository;
 import com.primaria.app.repository.EstudianteRepository;
+import com.primaria.app.repository.InscritoAlumnoRepository;
 import com.primaria.app.repository.ReprobadosRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,6 +35,12 @@ public class ReprobadosService {
         this.estudianteRepo = estudianteRepo;
     }
 
+    @Autowired
+    private InscritoAlumnoRepository inscritoAlumnoRepository;
+
+    @Autowired
+    private CalificacionFinalMateriaRepository calificacionRepository;
+    
     public List<ReprobadosDTO> obtenerReprobadosPorAsignacion(String idAsignacion) {
 
         List<Object[]> rows = repo.obtenerReprobadosPorAsignacion(idAsignacion);
@@ -147,5 +159,42 @@ public class ReprobadosService {
 
         return resultado;
     }
+    public List<AlumnoMateriasDTO> obtenerAlumnosConMateriasPorAsignacion(String idAsignacion) {
 
+        // 1️⃣ Obtener alumnos inscritos en esa asignación
+        List<InscritoAlumno> inscritos = inscritoAlumnoRepository.findByAsignacionId(idAsignacion);
+
+        List<AlumnoMateriasDTO> resultado = new ArrayList<>();
+
+        for (InscritoAlumno inscrito : inscritos) {
+
+            String idAlumno = inscrito.getAlumno().getId();
+            String nombreAlumno = inscrito.getAlumno().getNombre()+ " " +inscrito.getAlumno().getApellidoPaterno()+ " "+ inscrito.getAlumno().getApellidoMaterno();
+
+            // 2️⃣ Obtener grado y ciclo de esa asignación (NO de otra)
+            String idGrado = inscrito.getAsignacion().getGrado().getId();
+            String idCiclo = inscrito.getAsignacion().getCiclo().getId();
+
+            // 3️⃣ Traer calificaciones del alumno SOLO en esa asignación
+            List<CalificacionFinalMateria> calificaciones =
+                    calificacionRepository.obtenerCalificacionesAlumno(idAlumno, idGrado, idCiclo);
+
+            // 4️⃣ Convertir a DTO de materias
+            List<MateriasCalificacionDTO> materiasDTO = calificaciones.stream()
+                    .map(c -> new MateriasCalificacionDTO(
+                            c.getMateria().getNombre(),
+                            c.getPromedio()
+                    ))
+                    .toList();
+
+            // 5️⃣ Armar DTO final
+            resultado.add(new AlumnoMateriasDTO(
+                    idAlumno,
+                    nombreAlumno,
+                    materiasDTO
+            ));
+        }
+
+        return resultado;
+    }
 }

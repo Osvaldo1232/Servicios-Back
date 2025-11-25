@@ -1,5 +1,6 @@
 package com.primaria.app.Service;
 
+import com.primaria.app.DTO.AlumnoMateriasDTO;
 import com.primaria.app.DTO.CalificacionFinalMateriaDTO;
 import com.primaria.app.DTO.CalificacionMateriaDTO;
 import com.primaria.app.DTO.CalificacionTotalAlumnoDTO;
@@ -41,6 +42,9 @@ public class CalificacionFinalMateriaService {
 
     @Autowired
     private GradosRepository gradoRepo;
+    
+    @Autowired
+    private InscritoAlumnoRepository inscrito;
 
     // 🔹 Crear nueva calificación final
     public CalificacionFinalMateriaDTO crearCalificacion(CalificacionFinalMateriaDTO dto) {
@@ -204,4 +208,7 @@ public Map<String, Object> obtenerPromediosPorAlumno(String idAlumno) {
     response.put("calificacionesPorGrado", resultado);
     return response;
 }
+
+
+
 }

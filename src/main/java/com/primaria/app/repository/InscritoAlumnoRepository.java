@@ -106,5 +106,5 @@ public interface InscritoAlumnoRepository extends JpaRepository<InscritoAlumno, 
             String cicloId,
             String docenteId
     );
-
+    List<InscritoAlumno> findByAsignacionId(String idAsignacion);
 }

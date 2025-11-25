@@ -82,4 +82,20 @@ public interface CalificacionFinalMateriaRepository extends JpaRepository<Califi
 	                ORDER BY g.nombre, m.nombre
 	            """)
 	            List<CalificacionMateriaDTO> obtenerPromediosPorAlumno(@Param("idAlumno") String idAlumno);
+	        
+	        
+	        
+	        
+	        @Query("""
+	                SELECT c 
+	                FROM CalificacionFinalMateria c
+	                WHERE c.alumno.id = :idAlumno
+	                AND c.grado.id = :idGrado
+	                AND c.cicloEscolar.id = :idCiclo
+	            """)
+	            List<CalificacionFinalMateria> obtenerCalificacionesAlumno(
+	                    @Param("idAlumno") String idAlumno,
+	                    @Param("idGrado") String idGrado,
+	                    @Param("idCiclo") String idCiclo
+	            );
 }

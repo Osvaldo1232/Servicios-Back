@@ -202,5 +202,24 @@ public class CalificacionFinalMateriaController {
             		reprobadosService.obtenerMateriasPorAlumno(idAsignacion)
             );
         }
+        
+        @Operation(
+                summary = "RF4.37 Obtener materias y calificaciones agrupadas por alumno",
+                description = """
+                    Devuelve todos los alumnos inscritos a una asignación,
+                    junto con todas sus materias y respectivas calificaciones.
+                    """
+        )
+        
+        
+        @GetMapping("/{idAsignacion}/alumnos-materias")
+        public ResponseEntity<List<AlumnoMateriasDTO>> obtenerAlumnosMaterias(
+                @PathVariable String idAsignacion) {
+
+            List<AlumnoMateriasDTO> lista =
+            		reprobadosService.obtenerAlumnosConMateriasPorAsignacion(idAsignacion);
+
+            return ResponseEntity.ok(lista);
+        }
 }
 
