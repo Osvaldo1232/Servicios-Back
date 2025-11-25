@@ -117,14 +117,14 @@ public class CalificacionesPDFService {
                     table.addCell(new PdfPCell(new Phrase(String.valueOf(materia.getTrimestre1()), textoNormal)));
                     table.addCell(new PdfPCell(new Phrase(String.valueOf(materia.getTrimestre2()), textoNormal)));
                     table.addCell(new PdfPCell(new Phrase(String.valueOf(materia.getTrimestre3()), textoNormal)));
-                    table.addCell(new PdfPCell(new Phrase(String.format("%.2f", materia.getCalificacionFinal()), textoNormal)));
+                    table.addCell(new PdfPCell(new Phrase(String.format("%.1f", materia.getCalificacionFinal()), textoNormal)));
 
                 }
 
                 document.add(table);
 
                 Paragraph pPromedioGrado = new Paragraph(
-                        "Promedio del " + gradoDTO.getGradoNombre() +": "+ String.format("%.2f", gradoDTO.getPromedioGrado()), 
+                        "Promedio del " + gradoDTO.getGradoNombre() +": "+ String.format("%.1f", gradoDTO.getPromedioGrado()), 
                         subTitulo
                 );
 

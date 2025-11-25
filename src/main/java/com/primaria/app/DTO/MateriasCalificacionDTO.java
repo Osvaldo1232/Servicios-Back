@@ -1,6 +1,7 @@
 package com.primaria.app.DTO;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class MateriasCalificacionDTO {
 
@@ -9,7 +10,9 @@ public class MateriasCalificacionDTO {
 
     public MateriasCalificacionDTO(String nombreMateria, BigDecimal calificacion) {
         this.nombreMateria = nombreMateria;
-        this.calificacion = calificacion;
+        
+        this.calificacion = calificacion.setScale(1, RoundingMode.HALF_UP);
+       
     }
 
     public String getNombreMateria() {

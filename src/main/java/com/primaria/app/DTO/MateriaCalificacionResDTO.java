@@ -1,6 +1,7 @@
 package com.primaria.app.DTO;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class MateriaCalificacionResDTO {
     private String idMateria;
@@ -14,7 +15,12 @@ public class MateriaCalificacionResDTO {
                                      String idGrado, String nombreGrado, String nombreCampoFormativo) {
         this.idMateria = idMateria;
         this.nombreMateria = nombreMateria;
-        this.calificacionActual = calificacionActual;
+        
+        this.calificacionActual = calificacionActual != null
+                ? calificacionActual.setScale(1, RoundingMode.HALF_UP)
+                : null;
+
+        
         this.idGrado = idGrado;
         this.nombreGrado = nombreGrado;
         this.nombreCampoFormativo = nombreCampoFormativo;

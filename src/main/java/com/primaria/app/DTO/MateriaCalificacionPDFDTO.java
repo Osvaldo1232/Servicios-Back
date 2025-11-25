@@ -9,10 +9,16 @@ public class MateriaCalificacionPDFDTO {
 
     public MateriaCalificacionPDFDTO(String nombreMateria, Double trimestre1, Double trimestre2, Double trimestre3, Double calificacionFinal) {
         this.nombreMateria = nombreMateria;
-        this.trimestre1 = trimestre1;
-        this.trimestre2 = trimestre2;
-        this.trimestre3 = trimestre3;
-        this.calificacionFinal = calificacionFinal;
+        this.trimestre1 = redondear(trimestre1);
+        this.trimestre2 = redondear(trimestre2);
+        this.trimestre3 = redondear(trimestre3);
+        this.calificacionFinal = redondear(calificacionFinal);
+    }
+
+    // Método para redondear a un decimal
+    private Double redondear(Double valor) {
+        if (valor == null) return null;
+        return Math.round(valor * 10.0) / 10.0; // ← un decimal
     }
 
     // Getters y setters
@@ -20,14 +26,14 @@ public class MateriaCalificacionPDFDTO {
     public void setNombreMateria(String nombreMateria) { this.nombreMateria = nombreMateria; }
 
     public Double getTrimestre1() { return trimestre1; }
-    public void setTrimestre1(Double trimestre1) { this.trimestre1 = trimestre1; }
+    public void setTrimestre1(Double trimestre1) { this.trimestre1 = redondear(trimestre1); }
 
     public Double getTrimestre2() { return trimestre2; }
-    public void setTrimestre2(Double trimestre2) { this.trimestre2 = trimestre2; }
+    public void setTrimestre2(Double trimestre2) { this.trimestre2 = redondear(trimestre2); }
 
     public Double getTrimestre3() { return trimestre3; }
-    public void setTrimestre3(Double trimestre3) { this.trimestre3 = trimestre3; }
+    public void setTrimestre3(Double trimestre3) { this.trimestre3 = redondear(trimestre3); }
 
     public Double getCalificacionFinal() { return calificacionFinal; }
-    public void setCalificacionFinal(Double calificacionFinal) { this.calificacionFinal = calificacionFinal; }
+    public void setCalificacionFinal(Double calificacionFinal) { this.calificacionFinal = redondear(calificacionFinal); }
 }

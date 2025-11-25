@@ -44,7 +44,8 @@ public class ReprobadosService {
             String ciclo = (String) r[4];
 
             String materia = (String) r[5];
-            java.math.BigDecimal promedio = (java.math.BigDecimal) r[6];
+            BigDecimal promedio = ((BigDecimal) r[6])
+                    .setScale(1, RoundingMode.HALF_UP);
 
             MateriaReprobadaDTO materiaDTO = new MateriaReprobadaDTO(materia, promedio);
 

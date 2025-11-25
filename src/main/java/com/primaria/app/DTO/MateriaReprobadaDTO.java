@@ -9,6 +9,8 @@ public class MateriaReprobadaDTO {
 
     public MateriaReprobadaDTO(String nombreMateria, BigDecimal promedio) {
         this.nombreMateria = nombreMateria;
+        
+        
         this.promedio = promedio;
     }
 
