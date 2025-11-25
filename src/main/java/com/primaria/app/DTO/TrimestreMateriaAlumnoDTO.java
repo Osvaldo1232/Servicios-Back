@@ -18,7 +18,10 @@ public class TrimestreMateriaAlumnoDTO {
         this.trimestre1 = trimestre1;
         this.trimestre2 = trimestre2;
         this.trimestre3 = trimestre3;
-        this.promedioFinal = promedioFinal;
+        
+        this.promedioFinal = promedioFinal != null
+                ? Math.round(promedioFinal * 10) / 10.0
+                : null;
     }
 
     // Getters y setters

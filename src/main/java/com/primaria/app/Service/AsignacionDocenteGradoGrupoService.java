@@ -81,6 +81,15 @@ public String guardarAsignacion(AsignacionDocenteGradoGrupoDTO dto) {
         throw new BusinessException(2002,
                 "Este grado, grupo y ciclo ya están asignados a otro docente");
     });
+    
+    // 3️⃣ Validar que el docente no tenga NINGUNA asignación en ese ciclo
+    repository.findByDocente_IdAndCiclo_Id(
+            dto.getIdDocente(),
+            dto.getIdCiclo()
+    ).ifPresent(a -> {
+        throw new BusinessException(2003,
+                "Este docente ya tiene una asignación dentro de este ciclo escolar");
+    });
 
     // Guardado
     AsignacionDocenteGradoGrupo asignacion = new AsignacionDocenteGradoGrupo();

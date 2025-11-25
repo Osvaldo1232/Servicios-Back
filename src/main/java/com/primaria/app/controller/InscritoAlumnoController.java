@@ -171,10 +171,14 @@ public class InscritoAlumnoController {
             description = "Devuelve una lista de alumnos con sus datos personales, grado, grupo y tutor, filtrados por ID del ciclo escolar."
         )
        
-        @GetMapping("/alumnos/{cicloId}")
-        public List<AlumnoCargaDTO> obtenerAlumnosPorCiclo(@PathVariable String cicloId) {
-            return inscritoAlumnoService.obtenerAlumnosPorCiclo(cicloId);
-        }
+    @GetMapping("/alumnos/{cicloId}/docente/{docenteId}")
+    public List<AlumnoCargaDTO> obtenerAlumnosPorCicloYDocente(
+            @PathVariable String cicloId,
+            @PathVariable String docenteId) {
+
+        return inscritoAlumnoService.obtenerlosAlumnosPorCicloYDocente(cicloId, docenteId);
+    }
+
     
     @Operation(
             summary = "Obtener docente por grado, grupo y ciclo",

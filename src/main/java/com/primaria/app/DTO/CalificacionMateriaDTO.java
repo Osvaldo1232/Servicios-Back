@@ -27,7 +27,12 @@ public class CalificacionMateriaDTO {
         this.nombreMateria = nombreMateria;
         this.idCampoFormativo = idCampoFormativo;
         this.nombreCampoFormativo = nombreCampoFormativo;
-        this.promedio = promedio;
+        
+        
+        this.promedio = promedio != null 
+        	    ? promedio.setScale(1, BigDecimal.ROUND_HALF_UP) 
+        	    : null;
+
     }
 
     // Getters y setters
@@ -39,5 +44,7 @@ public class CalificacionMateriaDTO {
     public String getNombreCampoFormativo() { return nombreCampoFormativo; }
     public BigDecimal getPromedio() { return promedio; }
 
+    
+    
     public void setPromedio(BigDecimal promedio) { this.promedio = promedio; }
 }

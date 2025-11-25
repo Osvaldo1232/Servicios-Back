@@ -281,35 +281,38 @@ public class InscritoAlumnoService {
     // ============================
     // Obtener alumnos por ciclo (usando asignacion.ciclo)
     // ============================
-    public List<AlumnoCargaDTO> obtenerAlumnosPorCiclo(String cicloId) {
-        return inscritoAlumnoRepository.findByAsignacion_Ciclo_Id(cicloId)
-                .stream()
-                .map(inscrito -> {
-                    var alumno = inscrito.getAlumno();
-                    var asign = inscrito.getAsignacion();
-                    var grado = asign != null ? asign.getGrado() : null;
-                    var grupo = asign != null ? asign.getGrupo() : null;
+   public List<AlumnoCargaDTO> obtenerlosAlumnosPorCicloYDocente(String cicloId, String docenteId) {
+    return inscritoAlumnoRepository
+            .findByAsignacion_Ciclo_IdAndAsignacion_Docente_Id(cicloId, docenteId)
+            .stream()
+            .map(inscrito -> {
+                var alumno = inscrito.getAlumno();
+                var asign = inscrito.getAsignacion();
+                var grado = asign != null ? asign.getGrado() : null;
+                var grupo = asign != null ? asign.getGrupo() : null;
 
-                    var tutor = alumnoTutorRepository.findByAlumno_IdAndCiclo_Id(alumno.getId(), cicloId)
-                            .map(AlumnoTutor::getTutor)
-                            .orElse(null);
+                var tutor = alumnoTutorRepository
+                        .findByAlumno_IdAndCiclo_Id(alumno.getId(), cicloId)
+                        .map(AlumnoTutor::getTutor)
+                        .orElse(null);
 
-                    return new AlumnoCargaDTO(
-                            safe(alumno.getNombre()),
-                            safe(alumno.getApellidoPaterno()),
-                            safe(alumno.getApellidoMaterno()),
-                            safe(alumno.getMatricula()),
-                            safe(alumno.getCurp()),
-                            safe(grado != null ? grado.getNombre() : ""),
-                            safe(grupo != null ? grupo.getNombre() : ""),
-                            safe(tutor != null ? tutor.getNombre() : ""),
-                            safe(tutor != null ? tutor.getApellidoPaterno() : ""),
-                            safe(tutor != null ? tutor.getApellidoMaterno() : ""),
-                            safe(tutor !=null ? tutor.getTelefono():"")
-                    );
-                })
-                .collect(Collectors.toList());
-    }
+                return new AlumnoCargaDTO(
+                        safe(alumno.getNombre()),
+                        safe(alumno.getApellidoPaterno()),
+                        safe(alumno.getApellidoMaterno()),
+                        safe(alumno.getMatricula()),
+                        safe(alumno.getCurp()),
+                        safe(grado != null ? grado.getNombre() : ""),
+                        safe(grupo != null ? grupo.getNombre() : ""),
+                        safe(tutor != null ? tutor.getNombre() : ""),
+                        safe(tutor != null ? tutor.getApellidoPaterno() : ""),
+                        safe(tutor != null ? tutor.getApellidoMaterno() : ""),
+                        safe(tutor != null ? tutor.getTelefono() : "")
+                );
+            })
+            .collect(Collectors.toList());
+}
+
 
     // ============================
     // Obtener docentes por grado/grupo/ciclo (desde asignacion)

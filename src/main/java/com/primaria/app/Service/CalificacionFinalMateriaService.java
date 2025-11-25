@@ -189,7 +189,7 @@ public Map<String, Object> obtenerPromediosPorAlumno(String idAlumno) {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal promedioGrado = total.divide(
-                BigDecimal.valueOf(lista.size()), 2, RoundingMode.HALF_UP);
+                BigDecimal.valueOf(lista.size()), 1, RoundingMode.HALF_UP);
 
         Map<String, Object> gradoData = new LinkedHashMap<>();
         gradoData.put("grado", nombreGrado);

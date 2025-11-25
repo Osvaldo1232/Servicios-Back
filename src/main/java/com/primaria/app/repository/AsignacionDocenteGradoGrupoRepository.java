@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface AsignacionDocenteGradoGrupoRepository extends JpaRepository<AsignacionDocenteGradoGrupo, String> {
 	List<AsignacionDocenteGradoGrupo> findByCiclo_Id(String cicloId);
+	Optional<AsignacionDocenteGradoGrupo> findByDocente_IdAndCiclo_Id(String idDocente, String idCiclo);
 
 	 List<AsignacionDocenteGradoGrupo> findByDocenteId(String docenteId);
 	 
