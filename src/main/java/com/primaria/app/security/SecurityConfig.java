@@ -92,7 +92,16 @@ public class SecurityConfig {
                     "/Tutor/**",
                    
                     "/AlumnoTutor/**",
-                    "/Profesores/**"
+                    "/Profesores/**",
+                    
+                    
+                    "/usuarios/**",
+                    "/libros/**",
+                    "/categorias/**",
+                    "/autores/**",
+                    "/carreras/**",
+                    "/alumnos/**",
+                    "/prestamos/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

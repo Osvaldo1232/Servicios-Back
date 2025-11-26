@@ -1,5 +1,6 @@
 package com.primaria.app.controller;
 
+import com.primaria.app.DTO.AdministradorDTO;
 import com.primaria.app.DTO.DirectorDTO;
 import com.primaria.app.DTO.EstudianteDTO;
 import com.primaria.app.DTO.ProfesorDTO;
@@ -120,5 +121,6 @@ public class UsuarioController {
             return ResponseEntity.status(404).body("Usuario no encontrado");
         }
     }
-
+    
+    
 }
