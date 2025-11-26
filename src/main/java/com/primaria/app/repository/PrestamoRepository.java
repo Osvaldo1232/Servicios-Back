@@ -18,8 +18,9 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, String> {
 		        SUM(p.cantidad)
 		    )
 		    FROM Prestamo p
-		    GROUP BY p.libro.titulo, p.fechaPrestamo
+		    GROUP BY p.fechaPrestamo
 		    ORDER BY SUM(p.cantidad) DESC
+		
 		""")
 		List<PrestamosResumenDTO> obtenerTop10FechasConMasPrestamos();
 	
