@@ -135,7 +135,14 @@ public class SecurityConfig {
     }
 
     // OpenAPI para Swagger con HTTPS
- 
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .servers(List.of(
+                    new Server().url("https://unusual-sharyl-utsemintegradora-3bae85c1.koyeb.app")
+                ));
+    }
+    
     // AuthenticationManager para poder usarlo en controladores si se necesita
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
