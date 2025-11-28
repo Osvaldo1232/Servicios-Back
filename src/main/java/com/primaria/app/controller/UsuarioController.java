@@ -1,6 +1,5 @@
 package com.primaria.app.controller;
 
-import com.primaria.app.DTO.AdministradorDTO;
 import com.primaria.app.DTO.DirectorDTO;
 import com.primaria.app.DTO.EstudianteDTO;
 import com.primaria.app.DTO.ProfesorDTO;
