@@ -292,7 +292,7 @@ public class CalificacionService {
 
     return resultado;
 }
-  public List<CicloCalificacionDTO> obtenerCalificacionesPorAlumnos(String idAlumno) {
+public List<CicloCalificacionDTO> obtenerCalificacionesPorAlumnos(String idAlumno) {
     List<Calificacion_final> calificaciones = calificacionRepo.findAllByAlumnoOrdenado(idAlumno);
 
     Map<String, List<Calificacion_final>> porCiclo = calificaciones.stream()
@@ -320,10 +320,13 @@ public class CalificacionService {
         List<GradoCalificacionDTO> gradosDTO = new ArrayList<>();
         boolean cicloValido = true;
 
-        // === ORDENAR Y RECORRER GRADOS ===
-        for (String gradoNombre : porGrado.keySet().stream()
+        // === ORDENAR GRADOS (corregido) ===
+        List<String> gradosOrdenados = porGrado.keySet().stream()
                 .sorted(Comparator.comparingInt(ordenGrados::indexOf))
-                .toList()) {
+                .toList();
+
+        // === RECORRER GRADOS ORDENADOS ===
+        for (String gradoNombre : gradosOrdenados) {
 
             List<Calificacion_final> calificacionesGrado = porGrado.get(gradoNombre);
 
@@ -374,6 +377,7 @@ public class CalificacionService {
 
     return resultado;
 }
+
 
 
    public List<TrimestreMateriaAlumnoDTO> obtenerCalificaciones(String idAlumno, String idGrado, String idMateria, String idCiclo) {

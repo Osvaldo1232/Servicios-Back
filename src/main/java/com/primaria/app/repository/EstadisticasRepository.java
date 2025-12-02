@@ -30,7 +30,7 @@ public interface EstadisticasRepository extends JpaRepository<CalificacionFinalM
     
     @Query("""
     	    SELECT c.alumno.id, 
-    	           CONCAT(u.nombre, ' ', u.apellidoPaterno, ' ', u.apellidoMaterno),
+    	           CONCAT( u.apellidoPaterno, ' ', u.apellidoMaterno, ' ',u.nombre, ' '),
     	           c.materia.nombre,
     	           c.promedio
     	    FROM InscritoAlumno i
@@ -38,7 +38,7 @@ public interface EstadisticasRepository extends JpaRepository<CalificacionFinalM
     	    JOIN Usuario u ON u.id = a.id
     	    JOIN CalificacionFinalMateria c ON c.alumno.id = a.id
     	    WHERE i.asignacion.id = :idAsignacion
-    	    ORDER BY a.id
+    	    ORDER BY u.apellidoPaterno DESC, u.apellidoMaterno DESC, u.nombre DESC
     	""")
     	List<Object[]> obtenerMateriasYCalificaciones(String idAsignacion);
 

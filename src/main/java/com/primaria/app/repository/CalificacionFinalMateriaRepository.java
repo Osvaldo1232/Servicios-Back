@@ -17,7 +17,7 @@ public interface CalificacionFinalMateriaRepository extends JpaRepository<Califi
 	@Query(value = """
 		    SELECT
 		        u.id AS idAlumno,
-		        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombreAlumno,
+		        CONCAT( u.apellido_paterno, ' ', u.apellido_materno, ' ',u.nombre) AS nombreAlumno,
 		        g.nombre AS grado,
 		        gr.nombre AS grupo,
 		        CONCAT(ce.anio_inicio, '-', ce.anio_fin) AS ciclo,

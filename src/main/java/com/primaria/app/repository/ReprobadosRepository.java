@@ -15,7 +15,7 @@ public interface ReprobadosRepository extends JpaRepository<CalificacionFinalMat
     @Query("""
         SELECT 
             a.id AS idAlumno,
-            CONCAT(a.nombre, ' ', a.apellidoPaterno, ' ', a.apellidoMaterno) AS nombreCompleto,
+            CONCAT(a.apellidoPaterno, ' ', a.apellidoMaterno, '',a.nombre ) AS nombreCompleto,
             g.nombre AS grado,
             gr.nombre AS grupo,
             CONCAT(c.anioInicio, '-', c.anioFin) AS ciclo,
@@ -34,6 +34,9 @@ public interface ReprobadosRepository extends JpaRepository<CalificacionFinalMat
           AND adgg.estatus = 'ACTIVO'
           AND adgg.id = :idAsignacion
           AND cfm.cicloEscolar.id = adgg.ciclo.id
+          
+          
+           ORDER BY a.apellidoPaterno ASC, a.apellidoMaterno ASC, a.nombre ASC
     """)
     List<Object[]> obtenerReprobadosPorAsignacion(@Param("idAsignacion") String idAsignacion);
 }
