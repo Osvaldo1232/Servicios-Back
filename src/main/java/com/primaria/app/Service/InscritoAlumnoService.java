@@ -1,6 +1,7 @@
 package com.primaria.app.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -509,7 +510,10 @@ public class InscritoAlumnoService {
                     parentesco
             );
 
-        }).collect(Collectors.toList());
+        })
+        		.sorted(Comparator.comparing(InscritoAlumnoDetallesDTO::getApellidoPaterno,
+                        Comparator.nullsLast(String::compareToIgnoreCase)))
+        		.collect(Collectors.toList());
     }
 
 }
