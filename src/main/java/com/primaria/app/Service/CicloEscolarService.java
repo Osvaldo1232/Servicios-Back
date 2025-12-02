@@ -34,10 +34,11 @@ public class CicloEscolarService {
     
     
     public List<CicloEscolarDTO> listarTodos() {
-        return CicloEscolaresRepository.findAll().stream()
-                .map(celular -> modelMapper.map(celular, CicloEscolarDTO.class))
-                .collect(Collectors.toList());
+        return CicloEscolaresRepository.findAllByOrderByAnioFinDesc().stream()
+                .map(ciclo -> modelMapper.map(ciclo, CicloEscolarDTO.class))
+                .toList();
     }
+
     public Optional<CicloEscolarDTO> obtenerPorUuid(String uuid) {
         return CicloEscolaresRepository.findById(uuid)
                 .map(celular -> modelMapper.map(celular, CicloEscolarDTO.class));

@@ -10,6 +10,8 @@ import com.primaria.app.Model.CicloEscolar;
 import com.primaria.app.Model.Estatus;
 public interface CicloEscolaresRepository extends JpaRepository<CicloEscolar, String>{
 	CicloEscolar findTopByOrderByFechaCreadoDesc();
+	List<CicloEscolar> findAllByOrderByAnioFinDesc();
+
 	Optional<CicloEscolar> findByEstatus(Estatus estatus);
 
 	 Optional<CicloEscolar> findByAnioInicioAndAnioFin(int anioInicio, int anioFin);

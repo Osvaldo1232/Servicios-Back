@@ -1,5 +1,6 @@
 package com.primaria.app.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,10 +24,30 @@ public class GradosService {
 	    
 	    
 	    public List<GradoDTO> listarTodos() {
+
+	        // Orden personalizado
+	        List<String> orden = List.of(
+	                "Primero",
+	                "Segundo",
+	                "Tercero",
+	                "Cuarto",
+	                "Quinto",
+	                "Sexto"
+	        );
+
 	        return gradoRepository.findAll().stream()
-	                .map(celular -> modelMapper.map(celular, GradoDTO.class))
+
+	                // Convertir a DTO
+	                .map(g -> modelMapper.map(g, GradoDTO.class))
+
+	                // Ordenar usando el orden personalizado
+	                .sorted(Comparator.comparing(
+	                        g -> orden.indexOf(g.getNombre())
+	                ))
+
 	                .collect(Collectors.toList());
 	    }
+
 	    public Optional<GradoDTO> obtenerPorUuid(String uuid) {
 	        return gradoRepository.findById(uuid)
 	                .map(celular -> modelMapper.map(celular, GradoDTO.class));

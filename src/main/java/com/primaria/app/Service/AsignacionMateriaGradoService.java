@@ -58,25 +58,22 @@ public class AsignacionMateriaGradoService {
     }
     
     public List<AsignacionMateriaGradoResumeDTO> listarAsignacionesPorGrado(String idGrado) {
-        return asignacionMateriaGradoRepository.findAll().stream()
-                .filter(a -> a.getGrado() != null && a.getGrado().getId().equals(idGrado))
-                .map(a -> {
-                    String idMateria = a.getMateria() != null ? a.getMateria().getId() : "";
-                    String nombreMateria = a.getMateria() != null ? a.getMateria().getNombre() : "";
+    	return asignacionMateriaGradoRepository.findAll().stream()
+    	        .filter(a -> a.getGrado() != null && a.getGrado().getId().equals(idGrado))
+    	        .map(a -> new AsignacionMateriaGradoResumeDTO(
+    	                a.getGrado().getId(),
+    	                a.getGrado().getNombre(),
+    	                a.getMateria().getId(),
+    	                a.getMateria().getNombre(),
+    	                a.getMateria().getCampoFormativo().getId(),
+    	                a.getMateria().getCampoFormativo().getNombre(),
+    	                a.getMateria().getEstatus() 
+    	        ))
+    	        .toList();
 
-                    String idCampoFormativo = (a.getMateria() != null && a.getMateria().getCampoFormativo() != null) 
-                                              ? a.getMateria().getCampoFormativo().getId() : "";
-                    String nombreCampoFormativo = (a.getMateria() != null && a.getMateria().getCampoFormativo() != null) 
-                                                  ? a.getMateria().getCampoFormativo().getNombre() : "";
-
-                    return new AsignacionMateriaGradoResumeDTO(
-                            idGrado, a.getGrado().getNombre(),
-                            idMateria, nombreMateria,
-                            idCampoFormativo, nombreCampoFormativo
-                    );
-                }).toList();
     }
-    
+
+
     public List<MateriaCalificacionResDTO> obtenerMateriasConPromedio(
             String idGrado, String idAlumno, String idCicloEscolar) {
 

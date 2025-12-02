@@ -1,6 +1,8 @@
 package com.primaria.app.Service;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,13 +40,21 @@ public class TrimestresService {
 	    
 	    
 	    public List<TrimestresDTO> listarTodos() {
+
+	        // Orden deseado
+	        List<String> orden = List.of("Trimestre 1", "Trimestre 2", "Trimestre 3");
+
 	        return trimestreRepository.findAll()
 	                .stream()
-	                .map(trimestre -> modelMapper.map(trimestre, TrimestresDTO.class))
+	                .sorted(Comparator.comparingInt(t ->
+	                        orden.indexOf(t.getNombre())
+	                ))
+	                .map(t -> modelMapper.map(t, TrimestresDTO.class))
 	                .toList();
 	    }
 
 	   
+	    
 	    public Optional<TrimestresDTO> obtenerPorUuid(String uuid) {
 	        return trimestreRepository.findById(uuid)
 	                .map(celular -> modelMapper.map(celular, TrimestresDTO.class));
