@@ -15,7 +15,7 @@ public interface ReprobadosRepository extends JpaRepository<CalificacionFinalMat
     @Query("""
         SELECT 
             a.id AS idAlumno,
-            CONCAT(a.apellidoPaterno, ' ', a.apellidoMaterno, '',a.nombre ) AS nombreCompleto,
+            CONCAT(a.apellidoPaterno, ' ', a.apellidoMaterno, ' ',a.nombre ) AS nombreCompleto,
             g.nombre AS grado,
             gr.nombre AS grupo,
             CONCAT(c.anioInicio, '-', c.anioFin) AS ciclo,

@@ -15,7 +15,7 @@ public interface CalificacionAlumnosGradoRepository extends JpaRepository<Califi
 	        SELECT 
 	            m.nombre AS nombre_materia,
 	            e.id AS id_alumno,
-	            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_alumno,
+	            CONCAT(u.apellido_paterno, ' ', u.apellido_materno, ' ' ,u.nombre) AS nombre_alumno,
 
 	            MAX(CASE WHEN t.nombre = 'Trimestre 1' THEN t.id END) AS id_trimestre_1,
 	            MAX(CASE WHEN t.nombre = 'Trimestre 1' THEN c.id END) AS id_calificacion_1,
@@ -40,12 +40,13 @@ public interface CalificacionAlumnosGradoRepository extends JpaRepository<Califi
 	          AND c.id_grado = :idGrado
 	          AND c.id_materia = :idMateria
 	        GROUP BY e.id, m.id, u.nombre, u.apellido_paterno, u.apellido_materno
-	        ORDER BY u.apellido_paterno, u.apellido_materno, u.nombre
+	        ORDER BY u.apellido_paterno DESC, u.apellido_materno DESC
 	        """, nativeQuery = true)
 	List<Object[]> obtenerCalificacionesAgrupadas(
 	        @Param("idCiclo") String idCiclo,
 	        @Param("idGrado") String idGrado,
 	        @Param("idMateria") String idMateria
 	);
+
 
 }
