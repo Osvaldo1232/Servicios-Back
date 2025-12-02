@@ -57,7 +57,7 @@ public class CalificacionesPDFService {
         encabezado.addCell(cellLogo);
 
         PdfPCell cellNombre = new PdfPCell(
-                new Phrase("Escuela Primaria José María", new Font(Font.HELVETICA, 18, Font.BOLD))
+                new Phrase("ESCUELA PRIMARIA RURAL FEDERAL “JOSÉ MARÍA MORELOS”", new Font(Font.HELVETICA, 18, Font.BOLD))
         );
         cellNombre.setBorder(Rectangle.NO_BORDER);
         cellNombre.setHorizontalAlignment(Element.ALIGN_CENTER);

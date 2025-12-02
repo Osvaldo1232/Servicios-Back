@@ -232,51 +232,57 @@ public class InscritoAlumnoService {
     // ============================
     // Obtener por grado/grupo/ciclo -> ahora por asignacion
     // ============================
-    public List<InscritoAlumnoInfoBasicaDTO> obtenerPorGradoGrupoCiclo(String gradoId, String grupoId, String cicloId) {
+    public List<InscritoAlumnoInfoBasicaDTO> obtenerPorGradoGrupoCiclo(
+        String gradoId, String grupoId, String cicloId) {
 
-        List<InscritoAlumno> inscripciones =
-                inscritoAlumnoRepository.findByAsignacion_Grado_IdAndAsignacion_Grupo_IdAndAsignacion_Ciclo_Id(
-                        gradoId, grupoId, cicloId
+    List<InscritoAlumno> inscripciones =
+            inscritoAlumnoRepository.findByAsignacion_Grado_IdAndAsignacion_Grupo_IdAndAsignacion_Ciclo_Id(
+                    gradoId, grupoId, cicloId
+            );
+
+    return inscripciones.stream()
+            // 🔥 ORDENAR POR APELLIDO PATERNO A-Z
+            .sorted(Comparator.comparing(
+                    i -> safe(i.getAlumno() != null ? i.getAlumno().getApellidoPaterno() : "")
+            ))
+            .map(i -> {
+
+                var alumno = i.getAlumno();
+                var asign = i.getAsignacion();
+                var grado = asign != null ? asign.getGrado() : null;
+                var grupo = asign != null ? asign.getGrupo() : null;
+
+                String alumnoId = alumno != null ? alumno.getId() : null;
+
+                // 1) Última inscripción
+                InscritoAlumno ultima = inscritoAlumnoRepository
+                        .findTopByAlumno_IdOrderByFechaInscripcionDesc(alumnoId);
+
+                boolean esUltima = (ultima != null && ultima.getId().equals(i.getId()));
+
+                // 2) Tutor
+                boolean tieneTutor = alumnoTutorRepository
+                        .existsByAlumno_IdAndCiclo_Id(alumnoId, cicloId);
+
+                return new InscritoAlumnoInfoBasicaDTO(
+                        alumnoId,
+                        safe(alumno != null ? alumno.getNombre() : ""),
+                        safe(alumno != null ? alumno.getApellidoPaterno() : ""),
+                        safe(alumno != null ? alumno.getApellidoMaterno() : ""),
+                        safe(alumno != null ? alumno.getMatricula() : ""),
+                        safe(alumno != null ? alumno.getCurp() : ""),
+                        grado != null ? grado.getId() : null,
+                        safe(grado != null ? grado.getNombre() : ""),
+                        grupo != null ? grupo.getId() : null,
+                        safe(grupo != null ? grupo.getNombre() : ""),
+                        i.getEstatus(),
+                        esUltima,
+                        tieneTutor
                 );
+            })
+            .collect(Collectors.toList());
+}
 
-        return inscripciones.stream()
-                .map(i -> {
-
-                    var alumno = i.getAlumno();
-                    var asign = i.getAsignacion();
-                    var grado = asign != null ? asign.getGrado() : null;
-                    var grupo = asign != null ? asign.getGrupo() : null;
-
-                    String alumnoId = alumno != null ? alumno.getId() : null;
-
-                    // 🔹 1) Buscar la última inscripción del alumno en general
-                    InscritoAlumno ultima = inscritoAlumnoRepository
-                            .findTopByAlumno_IdOrderByFechaInscripcionDesc(alumnoId);
-
-                    boolean esUltima = (ultima != null && ultima.getId().equals(i.getId()));
-
-                    // 🔹 2) Ver si el alumno tiene un tutor en este ciclo escolar
-                    boolean tieneTutor = alumnoTutorRepository
-                            .existsByAlumno_IdAndCiclo_Id(alumnoId, cicloId);
-
-                    return new InscritoAlumnoInfoBasicaDTO(
-                            alumnoId,
-                            safe(alumno != null ? alumno.getNombre() : ""),
-                            safe(alumno != null ? alumno.getApellidoPaterno() : ""),
-                            safe(alumno != null ? alumno.getApellidoMaterno() : ""),
-                            safe(alumno != null ? alumno.getMatricula() : ""),
-                            safe(alumno != null ? alumno.getCurp() : ""),
-                            grado != null ? grado.getId() : null,
-                            safe(grado != null ? grado.getNombre() : ""),
-                            grupo != null ? grupo.getId() : null,
-                            safe(grupo != null ? grupo.getNombre() : ""),
-                            i.getEstatus(),
-                            esUltima,      // 🔥 Nuevo valor 1
-                            tieneTutor     // 🔥 Nuevo valor 2
-                    );
-                })
-                .collect(Collectors.toList());
-    }
 
 
     // ============================
