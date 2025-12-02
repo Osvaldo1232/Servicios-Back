@@ -48,7 +48,7 @@ public class ReporteAlumnoService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (!campos.isEmpty()) {
-            promedioGeneral = promedioGeneral.divide(BigDecimal.valueOf(campos.size()), 2, RoundingMode.HALF_UP);
+            promedioGeneral = promedioGeneral.divide(BigDecimal.valueOf(campos.size()), 1, RoundingMode.HALF_UP);
         }
 
         return new ReporteAlumnoDTO(

@@ -1,6 +1,7 @@
 package com.primaria.app.DTO;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class PromedioCampoFormativoDTO {
 
@@ -11,16 +12,30 @@ public class PromedioCampoFormativoDTO {
     private BigDecimal promedioFinal;
 
     public PromedioCampoFormativoDTO(String nombreCampoFormativo,
-                                     Double promedioTrimestre1,
-                                     Double promedioTrimestre2,
-                                     Double promedioTrimestre3,
-                                     Double promedioFinal) {
-        this.nombreCampoFormativo = nombreCampoFormativo;
-        this.promedioTrimestre1 = BigDecimal.valueOf(promedioTrimestre1 == null ? 0 : promedioTrimestre1);
-        this.promedioTrimestre2 = BigDecimal.valueOf(promedioTrimestre2 == null ? 0 : promedioTrimestre2);
-        this.promedioTrimestre3 = BigDecimal.valueOf(promedioTrimestre3 == null ? 0 : promedioTrimestre3);
-        this.promedioFinal = BigDecimal.valueOf(promedioFinal == null ? 0 : promedioFinal);
-    }
+            Double promedioTrimestre1,
+            Double promedioTrimestre2,
+            Double promedioTrimestre3,
+            Double promedioFinal) {
+
+this.nombreCampoFormativo = nombreCampoFormativo;
+
+this.promedioTrimestre1 = BigDecimal
+.valueOf(promedioTrimestre1 == null ? 0 : promedioTrimestre1)
+.setScale(1, RoundingMode.HALF_UP);
+
+this.promedioTrimestre2 = BigDecimal
+.valueOf(promedioTrimestre2 == null ? 0 : promedioTrimestre2)
+.setScale(1, RoundingMode.HALF_UP);
+
+this.promedioTrimestre3 = BigDecimal
+.valueOf(promedioTrimestre3 == null ? 0 : promedioTrimestre3)
+.setScale(1, RoundingMode.HALF_UP);
+
+this.promedioFinal = BigDecimal
+.valueOf(promedioFinal == null ? 0 : promedioFinal)
+.setScale(1, RoundingMode.HALF_UP);
+}
+
 
     // Getters
     public String getNombreCampoFormativo() { return nombreCampoFormativo; }

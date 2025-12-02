@@ -35,7 +35,8 @@ public interface CalificacionFinalMateriaRepository extends JpaRepository<Califi
 		    GROUP BY 
 		        u.id, u.nombre, u.apellido_paterno, u.apellido_materno, 
 		        g.nombre, gr.nombre, ce.anio_inicio, ce.anio_fin
-		    ORDER BY nombreAlumno
+		   ORDER BY u.apellido_paterno ASC
+
 		    """, nativeQuery = true)
 		List<Object[]> obtenerPromedioPorCicloYDocente(
 		        @Param("cicloId") String cicloId,

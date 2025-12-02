@@ -40,7 +40,7 @@ public interface CalificacionAlumnosGradoRepository extends JpaRepository<Califi
 	          AND c.id_grado = :idGrado
 	          AND c.id_materia = :idMateria
 	        GROUP BY e.id, m.id, u.nombre, u.apellido_paterno, u.apellido_materno
-	        ORDER BY nombre_alumno
+	        ORDER BY u.apellido_paterno, u.apellido_materno, u.nombre
 	        """, nativeQuery = true)
 	List<Object[]> obtenerCalificacionesAgrupadas(
 	        @Param("idCiclo") String idCiclo,

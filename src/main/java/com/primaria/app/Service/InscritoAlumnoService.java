@@ -288,37 +288,43 @@ public class InscritoAlumnoService {
     // ============================
     // Obtener alumnos por ciclo (usando asignacion.ciclo)
     // ============================
-   public List<AlumnoCargaDTO> obtenerlosAlumnosPorCicloYDocente(String cicloId, String docenteId) {
-    return inscritoAlumnoRepository
-            .findByAsignacion_Ciclo_IdAndAsignacion_Docente_Id(cicloId, docenteId)
-            .stream()
-            .map(inscrito -> {
-                var alumno = inscrito.getAlumno();
-                var asign = inscrito.getAsignacion();
-                var grado = asign != null ? asign.getGrado() : null;
-                var grupo = asign != null ? asign.getGrupo() : null;
+    public List<AlumnoCargaDTO> obtenerlosAlumnosPorCicloYDocente(String cicloId, String docenteId) {
+        return inscritoAlumnoRepository
+                .findByAsignacion_Ciclo_IdAndAsignacion_Docente_Id(cicloId, docenteId)
+                .stream()
 
-                var tutor = alumnoTutorRepository
-                        .findByAlumno_IdAndCiclo_Id(alumno.getId(), cicloId)
-                        .map(AlumnoTutor::getTutor)
-                        .orElse(null);
+                // 🔥 Ordenar por apellido paterno (alfabético)
+                .sorted(Comparator.comparing(
+                        i -> safe(i.getAlumno().getApellidoPaterno()).toLowerCase()
+                ))
 
-                return new AlumnoCargaDTO(
-                        safe(alumno.getNombre()),
-                        safe(alumno.getApellidoPaterno()),
-                        safe(alumno.getApellidoMaterno()),
-                        safe(alumno.getMatricula()),
-                        safe(alumno.getCurp()),
-                        safe(grado != null ? grado.getNombre() : ""),
-                        safe(grupo != null ? grupo.getNombre() : ""),
-                        safe(tutor != null ? tutor.getNombre() : ""),
-                        safe(tutor != null ? tutor.getApellidoPaterno() : ""),
-                        safe(tutor != null ? tutor.getApellidoMaterno() : ""),
-                        safe(tutor != null ? tutor.getTelefono() : "")
-                );
-            })
-            .collect(Collectors.toList());
-}
+                .map(inscrito -> {
+                    var alumno = inscrito.getAlumno();
+                    var asign = inscrito.getAsignacion();
+                    var grado = asign != null ? asign.getGrado() : null;
+                    var grupo = asign != null ? asign.getGrupo() : null;
+
+                    var tutor = alumnoTutorRepository
+                            .findByAlumno_IdAndCiclo_Id(alumno.getId(), cicloId)
+                            .map(AlumnoTutor::getTutor)
+                            .orElse(null);
+
+                    return new AlumnoCargaDTO(
+                            safe(alumno.getNombre()),
+                            safe(alumno.getApellidoPaterno()),
+                            safe(alumno.getApellidoMaterno()),
+                            safe(alumno.getMatricula()),
+                            safe(alumno.getCurp()),
+                            safe(grado != null ? grado.getNombre() : ""),
+                            safe(grupo != null ? grupo.getNombre() : ""),
+                            safe(tutor != null ? tutor.getNombre() : ""),
+                            safe(tutor != null ? tutor.getApellidoPaterno() : ""),
+                            safe(tutor != null ? tutor.getApellidoMaterno() : ""),
+                            safe(tutor != null ? tutor.getTelefono() : "")
+                    );
+                })
+                .collect(Collectors.toList());
+    }
 
 
     // ============================
@@ -409,9 +415,10 @@ public class InscritoAlumnoService {
     
     public List<CicloAlumnosDTO> obtenerAlumnosSPorCiclo(String cicloId) {
         List<InscritoAlumno> inscritos = inscritoAlumnoRepository
-                .findDistinctByAsignacion_Ciclo_IdAndEstatus(cicloId,  Estatus.ACTIVO);
+                .findDistinctByAsignacion_Ciclo_IdAndEstatus(cicloId, Estatus.ACTIVO);
 
         return inscritos.stream()
+                .sorted(Comparator.comparing(ia -> ia.getAlumno().getApellidoPaterno(), String.CASE_INSENSITIVE_ORDER))
                 .map(ia -> {
                     String nombreCompleto = ia.getAlumno().getNombre() + " " +
                                             ia.getAlumno().getApellidoPaterno() + " " +
@@ -420,6 +427,7 @@ public class InscritoAlumnoService {
                 })
                 .collect(Collectors.toList());
     }
+
     public List<CicloAlumnosDTO> obtenerAlumnosPorCicloYDocente(String cicloId, String docenteId) {
 
         List<InscritoAlumno> inscritos = inscritoAlumnoRepository

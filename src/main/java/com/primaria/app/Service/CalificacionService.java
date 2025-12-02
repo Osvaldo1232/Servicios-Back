@@ -292,83 +292,89 @@ public class CalificacionService {
 
     return resultado;
 }
-   public List<CicloCalificacionDTO> obtenerCalificacionesPorAlumnos(String idAlumno) {
-	    List<Calificacion_final> calificaciones = calificacionRepo.findAllByAlumnoOrdenado(idAlumno);
+  public List<CicloCalificacionDTO> obtenerCalificacionesPorAlumnos(String idAlumno) {
+    List<Calificacion_final> calificaciones = calificacionRepo.findAllByAlumnoOrdenado(idAlumno);
 
-	    Map<String, List<Calificacion_final>> porCiclo = calificaciones.stream()
-	            .collect(Collectors.groupingBy(
-	                    cf -> cf.getCiclo().getAnioInicio() + "-" + cf.getCiclo().getAnioFin(),
-	                    LinkedHashMap::new,
-	                    Collectors.toList()
-	            ));
+    Map<String, List<Calificacion_final>> porCiclo = calificaciones.stream()
+            .collect(Collectors.groupingBy(
+                    cf -> cf.getCiclo().getAnioInicio() + "-" + cf.getCiclo().getAnioFin(),
+                    LinkedHashMap::new,
+                    Collectors.toList()
+            ));
 
-	    List<CicloCalificacionDTO> resultado = new ArrayList<>();
+    List<CicloCalificacionDTO> resultado = new ArrayList<>();
 
-	    for (Map.Entry<String, List<Calificacion_final>> entryCiclo : porCiclo.entrySet()) {
-	        String cicloNombre = entryCiclo.getKey();
-	        List<Calificacion_final> calificacionesCiclo = entryCiclo.getValue();
+    for (Map.Entry<String, List<Calificacion_final>> entryCiclo : porCiclo.entrySet()) {
+        String cicloNombre = entryCiclo.getKey();
+        List<Calificacion_final> calificacionesCiclo = entryCiclo.getValue();
 
-	        Map<String, List<Calificacion_final>> porGrado = calificacionesCiclo.stream()
-	                .collect(Collectors.groupingBy(cf -> cf.getGrado().getNombre(), LinkedHashMap::new, Collectors.toList()));
+        Map<String, List<Calificacion_final>> porGrado = calificacionesCiclo.stream()
+                .collect(Collectors.groupingBy(cf -> cf.getGrado().getNombre(), LinkedHashMap::new, Collectors.toList()));
 
-	        List<GradoCalificacionDTO> gradosDTO = new ArrayList<>();
-	        boolean cicloValido = true; // bandera para validar todo el ciclo
+        // === ORDEN CORRECTO DE GRADOS ===
+        List<String> ordenGrados = List.of(
+                "Primero", "Segundo", "Tercero",
+                "Cuarto", "Quinto", "Sexto"
+        );
 
-	        for (Map.Entry<String, List<Calificacion_final>> entryGrado : porGrado.entrySet()) {
-	            String gradoNombre = entryGrado.getKey();
-	            List<Calificacion_final> calificacionesGrado = entryGrado.getValue();
+        List<GradoCalificacionDTO> gradosDTO = new ArrayList<>();
+        boolean cicloValido = true;
 
-	            String alumnoId = calificacionesGrado.get(0).getAlumno().getId();
-	            String nombreAlumno = calificacionesGrado.get(0).getAlumno().getNombre() + " "
-	                    + calificacionesGrado.get(0).getAlumno().getApellidoPaterno() + " "
-	                    + calificacionesGrado.get(0).getAlumno().getApellidoMaterno();
+        // === ORDENAR Y RECORRER GRADOS ===
+        for (String gradoNombre : porGrado.keySet().stream()
+                .sorted(Comparator.comparingInt(ordenGrados::indexOf))
+                .toList()) {
 
-	            Map<String, List<Calificacion_final>> porMateria = calificacionesGrado.stream()
-	                    .collect(Collectors.groupingBy(cf -> cf.getMateria().getNombre(), LinkedHashMap::new, Collectors.toList()));
+            List<Calificacion_final> calificacionesGrado = porGrado.get(gradoNombre);
 
-	            List<MateriaCalificacionPDFDTO> materiasDTO = new ArrayList<>();
+            String alumnoId = calificacionesGrado.get(0).getAlumno().getId();
+            String nombreAlumno = calificacionesGrado.get(0).getAlumno().getNombre() + " "
+                    + calificacionesGrado.get(0).getAlumno().getApellidoPaterno() + " "
+                    + calificacionesGrado.get(0).getAlumno().getApellidoMaterno();
 
-	            for (Map.Entry<String, List<Calificacion_final>> entryMateria : porMateria.entrySet()) {
-	                List<Calificacion_final> calificacionesMateria = entryMateria.getValue();
+            Map<String, List<Calificacion_final>> porMateria = calificacionesGrado.stream()
+                    .collect(Collectors.groupingBy(cf -> cf.getMateria().getNombre(), LinkedHashMap::new, Collectors.toList()));
 
-	                // Si alguna materia no tiene las 3 calificaciones, el ciclo no es válido
-	                if (calificacionesMateria.size() < 3) {
-	                    cicloValido = false;
-	                    break;
-	                }
+            List<MateriaCalificacionPDFDTO> materiasDTO = new ArrayList<>();
 
-	                Double tri1 = calificacionesMateria.get(0).getPromedio();
-	                Double tri2 = calificacionesMateria.get(1).getPromedio();
-	                Double tri3 = calificacionesMateria.get(2).getPromedio();
+            for (Map.Entry<String, List<Calificacion_final>> entryMateria : porMateria.entrySet()) {
+                List<Calificacion_final> calificacionesMateria = entryMateria.getValue();
 
-	                Double promedioFinal = (tri1 + tri2 + tri3) / 3.0;
-	                promedioFinal = Math.round(promedioFinal * 100.0) / 100.0;
+                if (calificacionesMateria.size() < 3) {
+                    cicloValido = false;
+                    break;
+                }
 
-	                materiasDTO.add(new MateriaCalificacionPDFDTO(entryMateria.getKey(), tri1, tri2, tri3, promedioFinal));
-	            }
+                Double tri1 = calificacionesMateria.get(0).getPromedio();
+                Double tri2 = calificacionesMateria.get(1).getPromedio();
+                Double tri3 = calificacionesMateria.get(2).getPromedio();
 
-	            // Si el ciclo ya es inválido, no agregamos más grados
-	            if (!cicloValido) {
-	                break;
-	            }
+                Double promedioFinal = (tri1 + tri2 + tri3) / 3.0;
+                promedioFinal = Math.round(promedioFinal * 100.0) / 100.0;
 
-	            Double promedioGrado = materiasDTO.stream()
-	                    .mapToDouble(MateriaCalificacionPDFDTO::getCalificacionFinal)
-	                    .average()
-	                    .orElse(0.0);
-	            promedioGrado = Math.round(promedioGrado * 100.0) / 100.0;
+                materiasDTO.add(new MateriaCalificacionPDFDTO(entryMateria.getKey(), tri1, tri2, tri3, promedioFinal));
+            }
 
-	            gradosDTO.add(new GradoCalificacionDTO(gradoNombre, alumnoId, nombreAlumno, materiasDTO, promedioGrado));
-	        }
+            if (!cicloValido) break;
 
-	        // Solo agregamos el ciclo si es válido (todas las materias tienen 3 calificaciones)
-	        if (cicloValido) {
-	            resultado.add(new CicloCalificacionDTO(cicloNombre, gradosDTO));
-	        }
-	    }
+            Double promedioGrado = materiasDTO.stream()
+                    .mapToDouble(MateriaCalificacionPDFDTO::getCalificacionFinal)
+                    .average()
+                    .orElse(0.0);
 
-	    return resultado;
-	}
+            promedioGrado = Math.round(promedioGrado * 100.0) / 100.0;
+
+            gradosDTO.add(new GradoCalificacionDTO(gradoNombre, alumnoId, nombreAlumno, materiasDTO, promedioGrado));
+        }
+
+        if (cicloValido) {
+            resultado.add(new CicloCalificacionDTO(cicloNombre, gradosDTO));
+        }
+    }
+
+    return resultado;
+}
+
 
    public List<TrimestreMateriaAlumnoDTO> obtenerCalificaciones(String idAlumno, String idGrado, String idMateria, String idCiclo) {
        return calificacionMFinalRepository.obtenerCalificacionesPorFiltros(idAlumno, idGrado, idMateria, idCiclo);

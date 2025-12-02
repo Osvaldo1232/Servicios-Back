@@ -115,7 +115,8 @@ public class CalificacionFinalMateriaService {
                 (String) r[2],  // grado
                 (String) r[3],  // grupo
                 (String) r[4],  // ciclo
-                new BigDecimal(r[5].toString())  // calificacionTotal
+                new BigDecimal(r[5].toString()).setScale(1, RoundingMode.HALF_UP)
+
         )).collect(Collectors.toList());
     }
 public List<PromedioGradoCicloDTO> obtenerPromedios(String alumnoId) {
@@ -172,21 +173,38 @@ public Double obtenerPromedioGeneral(String idCiclo) {
     return calificacionRepo.obtenerPromedioGeneral(idCiclo);
 }
 public Map<String, Object> obtenerPromediosPorAlumno(String idAlumno) {
+
     List<CalificacionMateriaDTO> materias = calificacionRepo.obtenerPromediosPorAlumno(idAlumno);
+
+    // Orden correcto de los grados
+    List<String> ordenGrados = List.of(
+            "Primero",
+            "Segundo",
+            "Tercero",
+            "Cuarto",
+            "Quinto",
+            "Sexto"
+    );
 
     // Agrupar por grado
     Map<String, List<CalificacionMateriaDTO>> agrupadoPorGrado = new LinkedHashMap<>();
     for (CalificacionMateriaDTO dto : materias) {
         agrupadoPorGrado
-            .computeIfAbsent(dto.getNombreGrado(), k -> new ArrayList<>())
-            .add(dto);
+                .computeIfAbsent(dto.getNombreGrado(), k -> new ArrayList<>())
+                .add(dto);
     }
 
-    // Calcular promedio total por grado
+    // Ordenar los grados según la lista de prioridad
+    List<String> gradosOrdenados = agrupadoPorGrado.keySet().stream()
+            .sorted(Comparator.comparingInt(ordenGrados::indexOf))
+            .toList();
+
+    // Construir respuesta ordenada
     List<Map<String, Object>> resultado = new ArrayList<>();
-    for (Map.Entry<String, List<CalificacionMateriaDTO>> entry : agrupadoPorGrado.entrySet()) {
-        String nombreGrado = entry.getKey();
-        List<CalificacionMateriaDTO> lista = entry.getValue();
+
+    for (String nombreGrado : gradosOrdenados) {
+
+        List<CalificacionMateriaDTO> lista = agrupadoPorGrado.get(nombreGrado);
 
         BigDecimal total = lista.stream()
                 .map(CalificacionMateriaDTO::getPromedio)
@@ -203,9 +221,11 @@ public Map<String, Object> obtenerPromediosPorAlumno(String idAlumno) {
         resultado.add(gradoData);
     }
 
+    // Respuesta final
     Map<String, Object> response = new HashMap<>();
     response.put("idAlumno", idAlumno);
     response.put("calificacionesPorGrado", resultado);
+
     return response;
 }
 
